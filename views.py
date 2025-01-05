@@ -4,15 +4,19 @@ from API.album_cache import get_album_from_cache, update_likes_dislikes
 from emoji_links import streaming_emojis
 
 class RYMView(discord.ui.View):
-    def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None, streaming_links=None):
+    def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None, streaming_links=None, performers=None):
         super().__init__()
         self.album_wiki = album_wiki
         self.general_embed = general_embed
         self.original_message_id = original_message_id
         self.release_name = release_name
+        self.streaming_links = streaming_links
+        self.performers = performers
         self.message_ids = {}
         if album_wiki:
             self.add_item(AlbumInfoButton(album_wiki))
+        if performers:
+            self.add_item(CreditsButton(self.performers))
         self.add_item(LikeButton(self.original_message_id, self.release_name))
         self.add_item(DislikeButton(self.original_message_id, self.release_name))
         if streaming_links:
@@ -21,6 +25,7 @@ class RYMView(discord.ui.View):
                 emoji = streaming_emojis.get(service_name, service_name)
                 button = discord.ui.Button(label="", emoji=emoji, url=link)
                 self.add_item(button)
+
 
 
 class LikeButton(discord.ui.Button):
@@ -140,21 +145,59 @@ class AlbumInfoButton(discord.ui.Button):
             new_embed.set_thumbnail(url=interaction.message.embeds[0].thumbnail.url)
         new_embed.set_footer(text=interaction.message.embeds[0].footer.text)
         self.view.clear_items()
-        self.view.add_item(BackButton(self.view.general_embed, self.view.original_message_id, self.view.release_name))
+        self.view.add_item(BackButton(self.view.general_embed, self.view.original_message_id, self.view.release_name, self.view.streaming_links, self.view.performers))
         self.view.add_item(LikeButton(self.view.original_message_id, self.view.release_name))
         self.view.add_item(DislikeButton(self.view.original_message_id, self.view.release_name))
+        for link in self.view.streaming_links:
+            service_name = link.split('.')[1].capitalize()
+            emoji = streaming_emojis.get(service_name, service_name)
+            button = discord.ui.Button(label="", emoji=emoji, url=link)
+            self.view.add_item(button)
         await interaction.response.edit_message(embed=new_embed, view=self.view)
 
+
+
+class CreditsButton(discord.ui.Button):
+    def __init__(self, performers):
+        super().__init__(label='Credits', style=discord.ButtonStyle.primary, custom_id='credits_button')
+        self.performers = performers
+
+    async def callback(self, interaction: discord.Interaction):
+        new_embed = discord.Embed(title=interaction.message.embeds[0].title, description=self.performers, url=interaction.message.embeds[0].url)
+        if interaction.message.embeds[0].thumbnail:
+            new_embed.set_thumbnail(url=interaction.message.embeds[0].thumbnail.url)
+        new_embed.set_footer(text=interaction.message.embeds[0].footer.text)
+        self.view.clear_items()
+        self.view.add_item(BackButton(self.view.general_embed, self.view.original_message_id, self.view.release_name, self.view.streaming_links, self.view.performers))
+        self.view.add_item(LikeButton(self.view.original_message_id, self.view.release_name))
+        self.view.add_item(DislikeButton(self.view.original_message_id, self.view.release_name))
+        for link in self.view.streaming_links:
+            service_name = link.split('.')[1].capitalize()
+            emoji = streaming_emojis.get(service_name, service_name)
+            button = discord.ui.Button(label="", emoji=emoji, url=link)
+            self.view.add_item(button)
+        await interaction.response.edit_message(embed=new_embed, view=self.view)
+
+
+
 class BackButton(discord.ui.Button):
-    def __init__(self, general_embed, original_message_id, release_name):
+    def __init__(self, general_embed, original_message_id, release_name, streaming_links, performers):
         super().__init__(label='Back', style=discord.ButtonStyle.secondary, custom_id='back_button')
         self.general_embed = general_embed
         self.original_message_id = original_message_id
         self.release_name = release_name
+        self.streaming_links = streaming_links
+        self.performers = performers
 
     async def callback(self, interaction: discord.Interaction):
         self.view.clear_items()
         self.view.add_item(AlbumInfoButton(self.view.album_wiki))
+        self.view.add_item(CreditsButton(self.view.performers))
         self.view.add_item(LikeButton(self.original_message_id, self.release_name))
         self.view.add_item(DislikeButton(self.original_message_id, self.release_name))
+        for link in self.streaming_links:
+            service_name = link.split('.')[1].capitalize()
+            emoji = streaming_emojis.get(service_name, service_name)
+            button = discord.ui.Button(label="", emoji=emoji, url=link)
+            self.view.add_item(button)
         await interaction.response.edit_message(embed=self.general_embed, view=self.view)

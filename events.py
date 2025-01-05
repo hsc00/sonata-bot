@@ -88,26 +88,17 @@ async def process_rym_link_or_text(message):
         if album_cover_url:
             embed.set_thumbnail(url=album_cover_url)
 
-        if performers:
-            embed.add_field(name="Credits", value=performers, inline=False)
-
         embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
-        
 
         embed.set_footer(text=f"Requested by {message.author.display_name}")
         sent_message = await message.channel.send(embed=embed)
-        
-        view = RYMView(album_wiki, embed, original_message_id=sent_message.id, release_name=release_name)
+
+        view = RYMView(album_wiki, embed, original_message_id=sent_message.id, release_name=release_name, streaming_links=streaming_links, performers=performers)
         view.link = link
 
-        # Add streaming link buttons to the view
-        for streaming_link in streaming_links:
-            service_name = streaming_link.split('.')[1].capitalize()
-            emoji = streaming_emojis.get(service_name, service_name)
-            button = discord.ui.Button(label="", emoji=emoji, url=streaming_link)
-            view.add_item(button)
-
         await sent_message.edit(view=view)
+
+
 
 def setup(bot, tokens, cse, lastfm):
     global bot_instance, google_tokens, cse_id, lastfm_api_key
