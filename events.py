@@ -4,7 +4,7 @@ from views import RYMView
 import time
 from datetime import datetime
 import re
-from API.rym_search import search_rym
+from API.rym_search import search_rym, search_rym_artist
 
 bot_instance = None
 google_tokens = None
@@ -23,6 +23,23 @@ async def on_message(message):
         async with message.channel.typing(): 
             time.sleep(5)
         
+async def on_message(message):
+    if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
+        async with message.channel.typing():
+            await process_rym_link_or_text(message)
+            time.sleep(5)
+    elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'):
+        async with message.channel.typing():
+            await process_artist_link_or_text(message)
+            time.sleep(5)
+
+async def process_artist_link_or_text(message):
+    artist_query = message.content
+    if artist_query.startswith('!artist') or artist_query.startswith('!a'):
+        artist_query = artist_query.split(' ', 1)[1] 
+
+    artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
+    print(artist_info)
 
 # searches release on rym
 async def process_rym_link_or_text(message):
@@ -102,8 +119,6 @@ async def process_rym_link_or_text(message):
         view.link = link
 
         await sent_message.edit(view=view)
-
-
 
 def setup(bot, tokens, cse, lastfm):
     global bot_instance, google_tokens, cse_id, lastfm_api_key

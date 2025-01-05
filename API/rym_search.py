@@ -3,6 +3,7 @@ import re
 import logging
 from bs4 import BeautifulSoup
 from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_likes_dislikes
+from .artist_cache import get_artist_from_cache, update_artist_in_cache
 from .search_lastfm import get_album_info_from_lastfm
 
 def search_rym(query, google_tokens, cse_id, lastfm_api_key):
@@ -55,6 +56,36 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
     logging.warning('No RYM link found')
     return None
 
+def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
+    if 'rateyourmusic.com/' not in artist_query:
+        artist_query += " site:rateyourmusic.com"
+
+    for token in google_tokens:
+        try:
+            search_url = f"https://www.googleapis.com/customsearch/v1?q={artist_query}&key={token}&cx={cse_id}"
+            response = requests.get(search_url)
+            if response.status_code == 429:
+                logging.warning(f"Rate limit exceeded for token {token}, retrying with next token.")
+                continue
+            results = response.json().get('items', [])
+            if results:
+                for result in results:
+                    link = result['link']
+                    if link.startswith('https://rateyourmusic.com/artist/'):
+                        cached_artist = get_artist_from_cache(link)
+                        if cached_artist:
+                            if cached_artist['request_count'] > 5:
+                                cached_artist['request_count'] = 0
+                                update_artist_in_cache(link, cached_artist)
+                            else:
+                                update_artist_in_cache(link, cached_artist)
+                                return cached_artist
+                        album_data = results[0]
+                        album_data['link'] = link
+                        return album_data
+        except Exception as e:
+            logging.error(f"Error during Google search with token {token}: {e}")
+
 
 def get_streaming_links(artist, album, year):
     # Remove all '-' from the original names and then replace spaces with '-'
@@ -89,7 +120,6 @@ def get_streaming_links(artist, album, year):
     return streaming_links
 
 
-
 def extract_album_info(result):
     pagemap = result.get('pagemap', {})
     musicalbum = pagemap.get('musicalbum', [{}])[0]
@@ -121,8 +151,6 @@ def extract_album_info(result):
         'all_time_album_position': all_time_album_position,
         'performers': performers
     }
-
-import re
 
 def extract_release_year(description):
     # Try to find a date pattern like "Released 12 January 2023"

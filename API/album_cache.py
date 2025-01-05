@@ -88,5 +88,3 @@ def get_album_from_cache(link, increment_request_count=True):
         return album_data
     print(f"Link not found in cache: {normalized_link}")
     return None
-
-

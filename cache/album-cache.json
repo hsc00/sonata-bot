@@ -818,10 +818,36 @@
         "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/6f6ea4eaa3b4460aa7409e6b4e47a369.png",
         "album_wiki": null,
         "streaming_links": [],
-        "request_count": 2,
-        "likes": 0,
+        "request_count": 3,
+        "likes": 1,
         "dislikes": 0,
         "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/songs-ohia/live-vanquishers": {
+        "artist_name": "Songs: Ohia",
+        "release_name": "Live: Vanquishers",
+        "release_year": "2022",
+        "genres": "Slowcore, Contemporary Folk, Singer-Songwriter",
+        "rating_value": "4.10",
+        "formatted_rating_count": "143",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Dan Macadam (bass), Jeff Panall (drums), Dan Sullivan (guitar), Jason Molina (writer, guitar, voice), Matthew Barnhart (cutting engineer), Tjeerd van Erve (recording engineer).",
+        "link": "https://rateyourmusic.com/release/album/songs-ohia/live-vanquishers/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/b67b7b73de8911f671df661cb16408fc.jpg",
+        "album_wiki": null,
+        "streaming_links": [
+            "https://open.spotify.com/album/2YDgJLGd6rkxsLuatXEOmt?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lxSCobDKUpuMtoblcq1m4vRyCNy3ePFjA&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/live-vanquishers/1765004476"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            601054815417532462
+        ],
         "disliked_users": []
     }
 }
