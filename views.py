@@ -1,0 +1,159 @@
+import discord
+from API.rym_search import handle_like_dislike
+from API.cache import get_album_from_cache, update_likes_dislikes
+
+
+class RYMView(discord.ui.View):
+    def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None):
+        super().__init__()
+        self.album_wiki = album_wiki
+        self.general_embed = general_embed
+        self.original_message_id = original_message_id
+        self.release_name = release_name
+        self.message_ids = {}
+        if album_wiki:
+            self.add_item(AlbumInfoButton(album_wiki))
+        self.add_item(LikeButton(self.original_message_id, self.release_name))
+        self.add_item(DislikeButton(self.original_message_id, self.release_name))
+
+class LikeButton(discord.ui.Button):
+    def __init__(self, original_message_id, release_name):
+        super().__init__(label='❤️', style=discord.ButtonStyle.secondary, custom_id='like_button')
+        self.original_message_id = original_message_id
+        self.release_name = release_name
+
+    async def callback(self, interaction: discord.Interaction):
+        user_id = interaction.user.id
+        nickname = interaction.user.display_name
+
+        # Check if the user has already liked the release
+        album_data = get_album_from_cache(self.view.link)
+        if album_data and user_id in album_data.get('liked_users', []):
+            try:
+                await interaction.response.send_message('You have already liked this release.', ephemeral=True)
+            except discord.errors.NotFound:
+                print("Interaction not found or expired.")
+            return
+
+        handle_like_dislike(self.view.link, user_id, like=True)
+
+        # Delete the previous dislike message if it exists
+        previous_dislike_message_id = self.view.message_ids.get((user_id, 'dislike'))
+        if previous_dislike_message_id:
+            try:
+                previous_message = await interaction.channel.fetch_message(previous_dislike_message_id)
+                await previous_message.delete()
+            except discord.NotFound:
+                pass
+
+        # Send the ephemeral response
+        try:
+            await interaction.response.send_message('Your like has been recorded.', ephemeral=True)
+        except discord.errors.NotFound:
+            print("Interaction not found or expired.")
+
+        # Send the new like message as a reply to the album embed and store its ID
+        original_message = await interaction.channel.fetch_message(self.original_message_id)
+        message = await original_message.reply(f'{nickname} liked **{self.release_name}**!')
+        self.view.message_ids[(user_id, 'like')] = message.id
+
+        # Update the cache
+        update_likes_dislikes(self.view.link, user_id, like=True)
+
+        # Update the embed with the correct number of likes and dislikes
+        album_data = get_album_from_cache(self.view.link)
+        new_embed = interaction.message.embeds[0]
+        if len(new_embed.fields) >= 2:
+            new_embed.set_field_at(0, name='Likes', value=str(album_data['likes']), inline=True)
+            new_embed.set_field_at(1, name='Dislikes', value=str(album_data['dislikes']), inline=True)
+        else:
+            new_embed.add_field(name='Likes', value=str(album_data['likes']), inline=True)
+            new_embed.add_field(name='Dislikes', value=str(album_data['dislikes']), inline=True)
+        await interaction.message.edit(embed=new_embed)
+
+class DislikeButton(discord.ui.Button):
+    def __init__(self, original_message_id, release_name):
+        super().__init__(label='👎', style=discord.ButtonStyle.secondary, custom_id='dislike_button')
+        self.original_message_id = original_message_id
+        self.release_name = release_name
+
+    async def callback(self, interaction: discord.Interaction):
+        user_id = interaction.user.id
+        nickname = interaction.user.display_name
+
+        # Check if the user has already disliked the release
+        album_data = get_album_from_cache(self.view.link)
+        if album_data and user_id in album_data.get('disliked_users', []):
+            try:
+                await interaction.response.send_message('You have already disliked this release.', ephemeral=True)
+            except discord.errors.NotFound:
+                print("Interaction not found or expired.")
+            return
+
+        handle_like_dislike(self.view.link, user_id, like=False)
+
+        # Delete the previous like message if it exists
+        previous_like_message_id = self.view.message_ids.get((user_id, 'like'))
+        if previous_like_message_id:
+            try:
+                previous_message = await interaction.channel.fetch_message(previous_like_message_id)
+                await previous_message.delete()
+            except discord.NotFound:
+                pass
+
+        # Send the ephemeral response
+        try:
+            await interaction.response.send_message('Your dislike has been recorded.', ephemeral=True)
+        except discord.errors.NotFound:
+            print("Interaction not found or expired.")
+
+        # Send the new dislike message as a reply to the album embed and store its ID
+        original_message = await interaction.channel.fetch_message(self.original_message_id)
+        message = await original_message.reply(f'{nickname} disliked **{self.release_name}**!')
+        self.view.message_ids[(user_id, 'dislike')] = message.id
+
+        # Update the cache
+        update_likes_dislikes(self.view.link, user_id, like=False)
+
+        # Update the embed with the correct number of likes and dislikes
+        album_data = get_album_from_cache(self.view.link)
+        new_embed = interaction.message.embeds[0]
+        if len(new_embed.fields) >= 2:
+            new_embed.set_field_at(0, name='Likes', value=str(album_data['likes']), inline=True)
+            new_embed.set_field_at(1, name='Dislikes', value=str(album_data['dislikes']), inline=True)
+        else:
+            new_embed.add_field(name='Likes', value=str(album_data['likes']), inline=True)
+            new_embed.add_field(name='Dislikes', value=str(album_data['dislikes']), inline=True)
+        await interaction.message.edit(embed=new_embed)
+
+
+
+class AlbumInfoButton(discord.ui.Button):
+    def __init__(self, album_wiki):
+        super().__init__(label='Wiki', style=discord.ButtonStyle.primary, custom_id='album_info')
+        self.album_wiki = album_wiki
+
+    async def callback(self, interaction: discord.Interaction):
+        new_embed = discord.Embed(title=interaction.message.embeds[0].title, description=self.album_wiki, url=interaction.message.embeds[0].url)
+        if interaction.message.embeds[0].thumbnail:
+            new_embed.set_thumbnail(url=interaction.message.embeds[0].thumbnail.url)
+        new_embed.set_footer(text=interaction.message.embeds[0].footer.text)
+        self.view.clear_items()
+        self.view.add_item(BackButton(self.view.general_embed, self.view.original_message_id, self.view.release_name))
+        self.view.add_item(LikeButton(self.view.original_message_id, self.view.release_name))
+        self.view.add_item(DislikeButton(self.view.original_message_id, self.view.release_name))
+        await interaction.response.edit_message(embed=new_embed, view=self.view)
+
+class BackButton(discord.ui.Button):
+    def __init__(self, general_embed, original_message_id, release_name):
+        super().__init__(label='Back', style=discord.ButtonStyle.secondary, custom_id='back_button')
+        self.general_embed = general_embed
+        self.original_message_id = original_message_id
+        self.release_name = release_name
+
+    async def callback(self, interaction: discord.Interaction):
+        self.view.clear_items()
+        self.view.add_item(AlbumInfoButton(self.view.album_wiki))
+        self.view.add_item(LikeButton(self.original_message_id, self.release_name))
+        self.view.add_item(DislikeButton(self.original_message_id, self.release_name))
+        await interaction.response.edit_message(embed=self.general_embed, view=self.view)
