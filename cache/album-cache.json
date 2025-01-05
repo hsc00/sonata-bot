@@ -227,26 +227,6 @@
             316949786903314452
         ]
     },
-    "rateyourmusic.com/artist/magdalena-bay": {
-        "artist_name": "Magdalena Bay",
-        "release_name": "Unknown Album",
-        "release_year": "Unknown Year",
-        "genres": "Synthpop, Dance-Pop, Neo-Psychedelia",
-        "rating_value": "No Rating",
-        "formatted_rating_count": "No Ratings",
-        "best_album_position": null,
-        "all_time_album_position": null,
-        "performers": null,
-        "link": "https://rateyourmusic.com/artist/magdalena-bay",
-        "album_cover_url": null,
-        "album_wiki": null,
-        "streaming_links": [],
-        "request_count": 2,
-        "likes": 0,
-        "dislikes": 0,
-        "liked_users": [],
-        "disliked_users": []
-    },
     "rateyourmusic.com/release/album/boris/pink": {
         "artist_name": "Boris",
         "release_name": "Pink",
@@ -379,26 +359,6 @@
         ],
         "disliked_users": []
     },
-    "rateyourmusic.com/list/gojira2012/%E7%99%BE%E4%BB%A3%E5%94%B1%E7%89%87_pathe_s_cpax": {
-        "artist_name": "Unknown Artist",
-        "release_name": "Unknown Album",
-        "release_year": "Unknown Year",
-        "genres": "Unknown Genres",
-        "rating_value": "No Rating",
-        "formatted_rating_count": "No Ratings",
-        "best_album_position": null,
-        "all_time_album_position": null,
-        "performers": null,
-        "link": "https://rateyourmusic.com/list/gojira2012/%E7%99%BE%E4%BB%A3%E5%94%B1%E7%89%87_pathe_s_cpax/",
-        "album_cover_url": "",
-        "album_wiki": null,
-        "streaming_links": [],
-        "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
-        "liked_users": [],
-        "disliked_users": []
-    },
     "rateyourmusic.com/release/album/bladee-ecco2k/crest": {
         "artist_name": "Bladee",
         "release_name": "Crest",
@@ -489,6 +449,35 @@
             "https://music.apple.com/pt/album/around-the-fur/1099843198"
         ],
         "request_count": 2,
+        "likes": 4,
+        "dislikes": 0,
+        "liked_users": [
+            476180969523642379,
+            601054815417532462,
+            687581059424190464,
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/boris/boris-at-last-feedbacker-": {
+        "artist_name": "Boris",
+        "release_name": "Boris at Last -Feedbacker-",
+        "release_year": "2003",
+        "genres": "Post-Metal, Drone Metal, Drone, Noise Rock",
+        "rating_value": "4.03",
+        "formatted_rating_count": "21,153",
+        "best_album_position": "#3 of 2003",
+        "all_time_album_position": "#192 overall",
+        "performers": "Wata (guitar, echo, cover model), Takeshi (vocals, bass, guitar), Atsuo (drums, vocals), Boris (producer, composer, lyricist), \u4e2d\u6751\u5b97\u4e00\u90ce [Souichirou Nakamura] (recording engineer, mixing engineer, mastering engineer), \u67f4\u7530\u6075\u7406 [Eri Shibata] (photography), FangsAnalSatan (design), Toshihiko Hironaka (a&r).",
+        "link": "https://rateyourmusic.com/release/album/boris/boris-at-last-feedbacker-/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/44adc96e2eb18d67e14d58dd7603dc46.jpg",
+        "album_wiki": null,
+        "streaming_links": [
+            "https://open.spotify.com/album/2Xbd3EI9auhlw5WOKnNX3H?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lZFkQ6Fz5I9-VkzRT1OyhbAXbVMSpBM58&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/boris-at-last-feedbacker/1477920048"
+        ],
+        "request_count": 3,
         "likes": 0,
         "dislikes": 0,
         "liked_users": [],

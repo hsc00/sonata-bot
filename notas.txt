@@ -2,7 +2,7 @@
 nao aparece a posicao dos charts
 
 ## albums ##
-adicionar streaming links (ja estao em cache, estudar como adicionar as releases)
+streaming links - fazer pesquisa extra pelo link do bandcamp (futuro)
 
 ## setlist.fm ##
 adicionar setlists do setlist.fm

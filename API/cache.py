@@ -68,16 +68,17 @@ def update_likes_dislikes(link, user_id, like=True):
                 album_data['likes'] -= 1
                 album_data['liked_users'].remove(user_id)
         save_cache(cache)
-        print(f"Updated cache for {normalized_link}: {album_data}")
+        print(f"Updated cache for {normalized_link}")
     else:
         print(f"Link not found in cache: {normalized_link}")
 
-def get_album_from_cache(link):
+def get_album_from_cache(link, increment_request_count=True):
     cache = load_cache()
     normalized_link = normalize_url(link)
     if normalized_link in cache:
         album_data = cache[normalized_link]
-        album_data['request_count'] += 1
+        if increment_request_count:
+            album_data['request_count'] += 1
         album_data.setdefault('likes', 0)
         album_data.setdefault('dislikes', 0)
         album_data.setdefault('liked_users', [])
@@ -87,4 +88,5 @@ def get_album_from_cache(link):
         return album_data
     print(f"Link not found in cache: {normalized_link}")
     return None
+
 

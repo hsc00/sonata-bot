@@ -86,7 +86,7 @@ async def process_rym_link_or_text(message):
         # Add streaming link buttons to the view
         for streaming_link in streaming_links:
             service_name = streaming_link.split('.')[1].capitalize()
-            emoji = streaming_emojis.get(service_name, "🔗")
+            emoji = streaming_emojis.get(service_name, service_name)
             button = discord.ui.Button(label="", emoji=emoji, url=streaming_link)
             view.add_item(button)
 

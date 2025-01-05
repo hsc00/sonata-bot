@@ -3,7 +3,6 @@ from API.rym_search import handle_like_dislike
 from API.cache import get_album_from_cache, update_likes_dislikes
 from emoji_links import streaming_emojis
 
-
 class RYMView(discord.ui.View):
     def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None, streaming_links=None):
         super().__init__()
@@ -19,7 +18,7 @@ class RYMView(discord.ui.View):
         if streaming_links:
             for link in streaming_links:
                 service_name = link.split('.')[1].capitalize()
-                emoji = streaming_emojis.get(service_name, "🔗")
+                emoji = streaming_emojis.get(service_name, service_name)
                 button = discord.ui.Button(label="", emoji=emoji, url=link)
                 self.add_item(button)
 
@@ -35,7 +34,7 @@ class LikeButton(discord.ui.Button):
         nickname = interaction.user.display_name
 
         # Check if the user has already liked the release
-        album_data = get_album_from_cache(self.view.link)
+        album_data = get_album_from_cache(self.view.link, increment_request_count=False)
         if album_data and user_id in album_data.get('liked_users', []):
             try:
                 await interaction.response.send_message('You have already liked this release.', ephemeral=True)
@@ -69,14 +68,11 @@ class LikeButton(discord.ui.Button):
         update_likes_dislikes(self.view.link, user_id, like=True)
 
         # Update the embed with the correct number of likes and dislikes
-        album_data = get_album_from_cache(self.view.link)
+        album_data = album_data = get_album_from_cache(self.view.link, increment_request_count=False)
         new_embed = interaction.message.embeds[0]
-        if len(new_embed.fields) >= 2:
-            new_embed.set_field_at(0, name='Likes', value=str(album_data['likes']), inline=True)
-            new_embed.set_field_at(1, name='Dislikes', value=str(album_data['dislikes']), inline=True)
-        else:
-            new_embed.add_field(name='Likes', value=str(album_data['likes']), inline=True)
-            new_embed.add_field(name='Dislikes', value=str(album_data['dislikes']), inline=True)
+        new_embed.clear_fields()
+        new_embed.add_field(name="Credits", value=album_data['performers'], inline=False)
+        new_embed.add_field(name="\u200b", value=f"❤️ {album_data['likes']} \t 👎 {album_data['dislikes']}", inline=True)
         await interaction.message.edit(embed=new_embed)
 
 class DislikeButton(discord.ui.Button):
@@ -90,7 +86,7 @@ class DislikeButton(discord.ui.Button):
         nickname = interaction.user.display_name
 
         # Check if the user has already disliked the release
-        album_data = get_album_from_cache(self.view.link)
+        album_data = get_album_from_cache(self.view.link, increment_request_count=False)
         if album_data and user_id in album_data.get('disliked_users', []):
             try:
                 await interaction.response.send_message('You have already disliked this release.', ephemeral=True)
@@ -124,14 +120,11 @@ class DislikeButton(discord.ui.Button):
         update_likes_dislikes(self.view.link, user_id, like=False)
 
         # Update the embed with the correct number of likes and dislikes
-        album_data = get_album_from_cache(self.view.link)
+        album_data = get_album_from_cache(self.view.link, increment_request_count=False)
         new_embed = interaction.message.embeds[0]
-        if len(new_embed.fields) >= 2:
-            new_embed.set_field_at(0, name='Likes', value=str(album_data['likes']), inline=True)
-            new_embed.set_field_at(1, name='Dislikes', value=str(album_data['dislikes']), inline=True)
-        else:
-            new_embed.add_field(name='Likes', value=str(album_data['likes']), inline=True)
-            new_embed.add_field(name='Dislikes', value=str(album_data['dislikes']), inline=True)
+        new_embed.clear_fields()
+        new_embed.add_field(name="Credits", value=album_data['performers'], inline=False)
+        new_embed.add_field(name="\u200b", value=f"❤️ {album_data['likes']} \t 👎 {album_data['dislikes']}", inline=True)
         await interaction.message.edit(embed=new_embed)
 
 

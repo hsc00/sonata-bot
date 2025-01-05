@@ -50,7 +50,6 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
                 # Add or update album info in cache
                 cached_album = get_album_from_cache(link)
                 if cached_album:
-                    cached_album['request_count'] += 1  # Increment request_count
                     update_album_in_cache(link, cached_album)
                     print(f"Updated cached album: {album_data['release_name']}")
                 else:
@@ -65,12 +64,16 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
     return None
 
 def get_streaming_links(artist, album, year):
+    # Remove all '-' from the original names and then replace spaces with '-'
+    formatted_artist = artist.replace('-', '').replace(' ', '-').lower()
+    formatted_album = album.replace('-', '').replace(' ', '-').lower()
+
     # Check if streaming links are already in cache
-    cached_album = get_album_from_cache(f"https://rateyourmusic.com/release/album/{artist}/{album}")
+    cached_album = get_album_from_cache(f"rateyourmusic.com/release/album/{artist}/{album}", increment_request_count=False)
+
     if cached_album and 'streaming_links' in cached_album:
         return cached_album['streaming_links']
-
-    query = f"{artist} {album} {year} streaming"
+    query = f"{formatted_artist}-{formatted_album}-{year} streaming"
     url = f"https://www.google.com/search?q={query}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -88,9 +91,10 @@ def get_streaming_links(artist, album, year):
     # Update cache with streaming links
     if cached_album:
         cached_album['streaming_links'] = streaming_links
-        update_album_in_cache(f"https://rateyourmusic.com/release/album/{artist}/{album}", cached_album)
+        update_album_in_cache(f"rateyourmusic.com/release/album/{formatted_artist}/{formatted_album}", cached_album)
 
     return streaming_links
+
 
 
 def extract_album_info(result):
