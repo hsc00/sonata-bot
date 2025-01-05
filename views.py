@@ -1,6 +1,6 @@
 import discord
 from API.rym_search import handle_like_dislike
-from API.cache import get_album_from_cache, update_likes_dislikes
+from API.album_cache import get_album_from_cache, update_likes_dislikes
 from emoji_links import streaming_emojis
 
 class RYMView(discord.ui.View):

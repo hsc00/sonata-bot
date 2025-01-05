@@ -477,10 +477,12 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_lZFkQ6Fz5I9-VkzRT1OyhbAXbVMSpBM58&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/boris-at-last-feedbacker/1477920048"
         ],
-        "request_count": 3,
-        "likes": 0,
+        "request_count": 5,
+        "likes": 1,
         "dislikes": 0,
-        "liked_users": [],
+        "liked_users": [
+            408671768002297856
+        ],
         "disliked_users": []
     }
 }

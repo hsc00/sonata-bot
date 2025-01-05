@@ -2,7 +2,7 @@ import requests
 import re
 import logging
 from bs4 import BeautifulSoup
-from .cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_likes_dislikes
+from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_likes_dislikes
 
 def search_rym(query, google_tokens, cse_id, lastfm_api_key):
     # Check if the query is a plain text or link
