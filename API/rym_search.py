@@ -65,6 +65,11 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
     return None
 
 def get_streaming_links(artist, album, year):
+    # Check if streaming links are already in cache
+    cached_album = get_album_from_cache(f"https://rateyourmusic.com/release/album/{artist}/{album}")
+    if cached_album and 'streaming_links' in cached_album:
+        return cached_album['streaming_links']
+
     query = f"{artist} {album} {year} streaming"
     url = f"https://www.google.com/search?q={query}"
     headers = {
@@ -80,7 +85,13 @@ def get_streaming_links(artist, album, year):
             if any(service in href for service in ['spotify', 'apple', 'youtube', 'soundcloud', 'bandcamp']):
                 streaming_links.append(href)
 
+    # Update cache with streaming links
+    if cached_album:
+        cached_album['streaming_links'] = streaming_links
+        update_album_in_cache(f"https://rateyourmusic.com/release/album/{artist}/{album}", cached_album)
+
     return streaming_links
+
 
 def extract_album_info(result):
     pagemap = result.get('pagemap', {})

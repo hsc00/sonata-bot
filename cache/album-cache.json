@@ -464,7 +464,31 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_kOOF1Pg722uTm57pJsXLsmVNburZiAD_c&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/smile/1580679380"
         ],
-        "request_count": 1,
+        "request_count": 3,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/deftones/around-the-fur": {
+        "artist_name": "Deftones",
+        "release_name": "Around the Fur",
+        "release_year": "1997",
+        "genres": "Nu Metal, Alternative Metal",
+        "rating_value": "3.83",
+        "formatted_rating_count": "27,794",
+        "best_album_position": "#14 of 1997",
+        "all_time_album_position": "#641 overall",
+        "performers": "Stephen Carpenter (guitar), Chi Cheng (bass guitar, backing vocals), Abe Cunningham (drums), Chino Moreno (vocals), Deftones (producer, writer), Terry Date (producer, recording engineer, mixing), Ulrich Wild (recording engineer, mixing, editing), Ted Jensen (mastering engineer), Matt Bayles (assistant engineer), Steve Durkee (mixing assistant), Rick Kosick (photography), Kevin Estrada (photography), Kevin Reagan (art direction, design).",
+        "link": "https://rateyourmusic.com/release/album/deftones/around-the-fur/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/3e6814b457a9087e0c46d5a949de2766.jpg",
+        "album_wiki": "Around the Fur is Deftones' second major label album, released in 1997. The songs \"My Own Summer (Shove It)\" and \"Be Quiet and Drive (Far Away)\" were both released as singles with accompanying videos. The album was certified gold by the RIAA in June 1999, and was eventually certified platinum in 2011.\n\nAround the Fur has been described as alternative metal, nu metal, post-hardcore, and alternative rock. Guitarist Stephen Carpenter has since reflected, \"We didn't really pay much attention to that. I remember when these subgenre names didn't exist. It was just metal. So I don't think we made a decision to step away  \u2013 we've never paid attention to what anyone else was doing. We just did what we thought was right, and tried to make a killer album.\" Producer Terry Date stated that the band wanted to become \"more sophisticated\" with Around the Fur. Lyrically, much of the album addresses topics such as juvenile perception, existential angst, sex, romance, violence, the death of loved ones, and break ups.\n\nThe band had gathered inspiration off of their own internal issues and personal incidents, as the four of them rented an apartment in Southern Seattle whilst they were writing and recording the album. Moreno and Carpenter recall the band often drank and partied frequently, even recalling random moments of writing where Cheng and Carpenter would smoke marijuana frequently together and write riffs together; the two later included their voicemail of them smoking out of a bong as a hidden track between MX and Damone.\n\nIt was the second album to feature Frank Delgado under additional personnel; he eventually joined the band officially in 1999. The song \"Headup\" featured additional vocals by Max Cavalera of Soulfly. It was written by Cavalera and Deftones singer Chino Moreno as a way of venting some of their pain over the loss of Dana Wells, Cavalera's stepson and Chino's friend. The band name \"Soulfly\" was taken from a portmanteau invented for the song. While the album's lyrics were included in the booklet, not every single word was printed. A good example is the song \"Lhabia\": In the verses, Moreno whispers statements that are hard to decipher. There is also one verse missing from the song \"Headup\".\n\nThe album cover was shot by photographer Rick Kosick during a late-night party in Seattle where the band was recording. Upon seeing the candid photo of a woman, the band decided that they wanted to use it as the album cover. Kosick was unsure who the woman was, so the band had to find and track her down to obtain permission to use the photo, which she eventually granted. The woman appearing on the cover is Washington State resident Lisa M. Hughes, a friend of Stephen Carpenter. Hughes spoke publicly about the cover for the first time during the album's 20th anniversary in 2017. Moreno has since expressed his dislike of the cover, calling it \"horrible\". [Read more](https://www.last.fm/music/Deftones/Around+the+Fur). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/7o4UsmV37Sg5It2Eb7vHzu?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_nRSkRJt8rcj69IxpxI4GP1ilibtxJmoBg&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/around-the-fur/1099843198"
+        ],
+        "request_count": 2,
         "likes": 0,
         "dislikes": 0,
         "liked_users": [],
