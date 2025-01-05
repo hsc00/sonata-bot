@@ -289,7 +289,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_myQ7YUmLVjQ1RW9J5j4TkayX4shR3ay7I&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/unknown-pleasures-collectors-edition/266603040"
         ],
-        "request_count": 3,
+        "request_count": 2,
         "likes": 5,
         "dislikes": 0,
         "liked_users": [
@@ -448,7 +448,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_nRSkRJt8rcj69IxpxI4GP1ilibtxJmoBg&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/around-the-fur/1099843198"
         ],
-        "request_count": 2,
+        "request_count": 3,
         "likes": 4,
         "dislikes": 0,
         "liked_users": [
@@ -477,12 +477,154 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_lZFkQ6Fz5I9-VkzRT1OyhbAXbVMSpBM58&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/boris-at-last-feedbacker/1477920048"
         ],
-        "request_count": 5,
+        "request_count": 4,
         "likes": 1,
         "dislikes": 0,
         "liked_users": [
             408671768002297856
         ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/fiona-apple/the-idler-wheel-is-wiser-than-the-driver-of-the-screw-and-whipping-cords-will-serve-you-more-than-ropes-will-ever-do": {
+        "artist_name": "Fiona Apple",
+        "release_name": "The Idler Wheel Is Wiser Than the Driver of the Screw and Whipping Cords Will Serve You More Than Ropes Will Ever Do",
+        "release_year": "2012",
+        "genres": "Singer-Songwriter, Art Pop",
+        "rating_value": "3.91",
+        "formatted_rating_count": "16,228",
+        "best_album_position": "#9 of 2012",
+        "all_time_album_position": "#518 overall",
+        "performers": "Fiona Apple (field recordings, loops, performer, percussion, piano, celeste, strings, vocals, art, keyboard bass, producer), Charley Drayton (kora, autoharp, percussion, guitar, bouzouki, marimba, drum set, strings, field recordings, voice, baritone, harp, producer), John Would (recording engineer), Eddison Electrik (recording engineer), Dave Way (mixing engineer), Howie Weinberg (mastering engineer), Dan Gerbarg (mastering engineer), Fiona Apple (lyrics, music, artwork), Sebastian Steinberg (acoustic bass, guitar), Eric Roinestad (art direction, design), Andrew Slater (manager).",
+        "link": "https://rateyourmusic.com/release/album/fiona-apple/the-idler-wheel-is-wiser-than-the-driver-of-the-screw-and-whipping-cords-will-serve-you-more-than-ropes-will-ever-do/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/67e1eb60da884aa19adbfc3938619c7b.png",
+        "album_wiki": "The Idler Wheel Is Wiser Than the Driver of the Screw and Whipping Cords Will Serve You More Than Ropes Will Ever Do is the fourth studio album by Fiona Apple. Like her second album When the Pawn\u2026, its title derives from a poem written by Apple herself. It was released in the UK on June 18, 2012 and in the US on June 19 by Epic Records. The album debuted at number three on the Billboard 200, her highest debut yet, selling 72,000 copies in its first week. The album received a nomination at the 2013 Grammy Awards for Best Alternative Album. The album received widespread acclaim from critics, and was frequently included in year and decade-end lists by several publications; in 2020, Rolling Stone placed the album at number 213 on its list of the 500 Greatest Albums of All Time. [Read more](https://www.last.fm/music/Fiona+Apple/The+Idler+Wheel+Is+Wiser+Than+the+Driver+of+the+Screw+and+Whipping+Cords+Will+Serve+You+More+Than+Ropes+Will+Ever+Do). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/6B5favhKTShFTjRLsKIUfa?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_nNu5m7Dlo84sxr3AbMEeIlZtHfDMHX66I&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/the-idler-wheel-is-wiser-than-the-driver-of-the-screw/1462213924"
+        ],
+        "request_count": 2,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/new-order/low-life": {
+        "artist_name": "New Order",
+        "release_name": "Low-Life",
+        "release_year": "1985",
+        "genres": "Synthpop, New Wave, Alternative Dance",
+        "rating_value": "3.84",
+        "formatted_rating_count": "13,198",
+        "best_album_position": "#10 of 1985",
+        "all_time_album_position": "#1058 overall",
+        "performers": "Bernard Sumner (vocals, guitar, melodica, synthesizer, programming, percussion), Peter Hook (string bass, electronic percussion), Stephen Morris (drums, synthesizer, programming, guitar), Gillian Gilbert (synthesizer, programming, guitar), New Order (production, writer, composer), Michael Johnson (engineering), Peter Saville (design), Trevor Key (photography).",
+        "link": "https://rateyourmusic.com/release/album/new-order/low-life/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/dcaa9fe253cbbe78289aebb742c77150.png",
+        "album_wiki": "Low-Life is the third studio album by English rock band New Order, released on 13 May 1985 by Factory Records. It is considered to be among the band's strongest work, displaying the moment they completed their transformation from post-punk hold-overs to dance-rockers. The album shows New Order's increased incorporation of synthesisers and samplers, while still preserving the rock elements of their earlier work. The original Factory CD issues of the album were mastered with pre-emphasis. [Read more](https://www.last.fm/music/New+Order/Low-Life). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/6ls958BLJbeFT3OqAYTvQB?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_nf9hbmpirB8lV2HkJlQ6sjJE0KMy9a9FI&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/low-life-definitive/1653042841"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/the-avalanches/since-i-left-you": {
+        "artist_name": "The Avalanches",
+        "release_name": "Since I Left You",
+        "release_year": "2000",
+        "genres": "Plunderphonics, Dance, Nu-Disco",
+        "rating_value": "4.07",
+        "formatted_rating_count": "34,937",
+        "best_album_position": "#3 of 2000",
+        "all_time_album_position": "#101 overall",
+        "performers": "Robbie Chater (arranger, producer, mixing, sampler, guitar), Darren Seltmann (arranger, producer, mixing, sampler), The Avalanches (performer, recording engineer), Bobbydazzler (mixing, design), Richie Robinson (live producer), Dexter Fabay (performer), Gordon McQuilten (piano, percussion), Tony Di Blasi (performer), Dave Davies (assistant engineer), Jimi Maroudas (assistant engineer), Matt Maddock (assistant engineer), Chris Corby (assistant engineer), Mike Marsh (mastering engineer).",
+        "link": "https://rateyourmusic.com/release/album/the-avalanches/since-i-left-you/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/83f16d352da8e6e4fd0cb32c49bf9cfc.jpg",
+        "album_wiki": "Since I Left You is the debut studio album by Australian electronic dance music group The Avalanches, which was released on 27 November 2000. Produced by The Avalanches' members Robbie Chater and Darren Seltmann (under the pseudonym Bobbydazzler), it was issued on Modular Recordings. The album was created in two separate near-identical studios by Chater and Seltmann, passing audio mixes of records they sampled. The album contains about 3500 vinyl samples of various genres of music. As it was not originally intended for international release, the duo did not worry about copyright restrictions nor attempt to keep track of which samples they would need to clear.\n\nAfter the album's positive reception in Australia, the duo considered an international release \u2013 its date was held back until 2001 in both the United Kingdom and North America and appeared in slightly altered forms. The delay and changes occurred so that the group could obtain permission to use the samples or use replacements. Five singles were spawned by the album, \"Electricity\", \"Frontier Psychiatrist\", \"Since I Left You\", \"Radio\" and \"A Different Feeling\". The group promoted the album by organising headlining tours in Australia, Europe and the United States. Since I Left You was issued to favourable reception, it peaked in the top 30 on the ARIA Albums Chart, number 12 in Norway, number eight on the UK Album Charts and, in the United States, at number ten on the Top Electronic Albums chart and in the top 40 on the Top Heatseekers chart. At the ARIA Music Awards of 2001 it won in three categories: Breakthrough Artist \u2013 Album and Best Dance Release, Producer of the Year for Bobbydazzler. The Avalanches won a fourth award, Breakthrough Artist \u2013 Single for \"Frontier Psychiatrist\". Since I Left You became one of the best reviewed albums of the 2000s. In October 2010, it was listed at No. 10 in the book, 100 Best Australian Albums. [Read more](https://www.last.fm/music/The+Avalanches/Since+I+Left+You). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/0YtYaaO0aipyeQl0xhAWTO?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mRxaFGCmd_wAI5tj5PJYFVONZkcjBx0ik&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/since-i-left-you-20th-anniversary-deluxe-edition/1559888850"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/list/Omega_Switch/omega_switchs_listism__the_worst_of_black_metal": {
+        "artist_name": "Unknown Artist",
+        "release_name": "Prototype",
+        "release_year": "Unknown Year",
+        "genres": "Unknown Genres",
+        "rating_value": "No Rating",
+        "formatted_rating_count": "No Ratings",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": null,
+        "link": "https://rateyourmusic.com/list/Omega_Switch/omega_switchs_listism__the_worst_of_black_metal/",
+        "album_cover_url": null,
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/asking-alexandria/stand-up-and-scream": {
+        "artist_name": "Asking Alexandria",
+        "release_name": "Stand Up and Scream",
+        "release_year": "2009",
+        "genres": "Electronicore, Melodic Metalcore",
+        "rating_value": "2.29",
+        "formatted_rating_count": "1,942",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Danny Worsnop (vocals, keyboards, programming, songwriting), Ben Bruce (lead guitar, backing vocals, keyboards, programming, songwriting), Cameron Liddell (rhythm guitar), Sam Bettley (bass), James Cassells (drums, songwriting), Joey Sturgis (production, engineering, mixing, mastering engineer), Nick Sampson (editing), Sons of Nero (artwork), Phill Mamula (photography).",
+        "link": "https://rateyourmusic.com/release/album/asking-alexandria/stand-up-and-scream/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/a2d9c6598abefab938048dc5eeebc955.png",
+        "album_wiki": "Stand Up and Scream is the debut album by English metalcore band Asking Alexandria, released on September 15, 2009 through Sumerian Records. The album has charted at number 170 on the Billboard 200, number 29 on Top Independent albums, and number 5 on Top Heatseekers. As of July 28, 2010, the album is still on Top Heatseekers at number 36\n\nThe track listing is in order of appearance on the CD\n\n1. Alerion - 2:15\n2. Final Episode (Let's Change The Channel) - 4:02\n3. A Candlelit Dinner With Inamorta - 4:04\n4. Nobody Don't Dance No More - 4:00\n5. Hey There Mr.Brookes (Featuring Shawn Milke Of Alesana) - 4:10\n6. Hiatus - 1:45\n7. If You Can't Ride Two Horses At Once... You Should Get Out Of The Circus - 3:46\n8. A Single Moment Of Sincerity - 3:51\n9. Not The American Average - 4:39\n10. I Used To Have A Best Friend (But Then He Gave Me An STD) - 4:06\n11. A Prophecy - 3:34\n12. I Was Once, Possibly, Maybe, Perhaps A Cowboy King - 3:41\n13. When Everyday's The Weekend - 4:23\n\n\n [Read more](https://www.last.fm/music/Asking+Alexandria/Stand+Up+And+Scream). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/5TCwGgyw8ZXXyKIcUFCj47?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mFxXMjBRryRfZRXGsTumzwFlOGuMJ7LKo&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/stand-up-and-scream/1650496504"
+        ],
+        "request_count": 3,
+        "likes": 0,
+        "dislikes": 1,
+        "liked_users": [],
+        "disliked_users": [
+            408671768002297856
+        ]
+    },
+    "rateyourmusic.com/release/album/luacollider/%E6%96%B0%E4%B8%96%E7%B4%80-sunbelt-princess": {
+        "artist_name": "LUACOLLIDER",
+        "release_name": "\u65b0\u4e16\u7d00 Sunbelt Princess",
+        "release_year": "2025",
+        "genres": "Post-Rock, Math Rock, Neo-Psychedelia",
+        "rating_value": "3.68",
+        "formatted_rating_count": "259",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Lua Trilogy! (producer), SUPERCOLLIDER (producer, samples), John \"The Drum Tamer\" (drums), Toast (cover art).",
+        "link": "https://rateyourmusic.com/release/album/luacollider/%E6%96%B0%E4%B8%96%E7%B4%80-sunbelt-princess/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/ad1c694c94e70377ecc70a57a841628c.jpg",
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 5,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
         "disliked_users": []
     }
 }

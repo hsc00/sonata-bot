@@ -3,7 +3,9 @@ import discord
 from views import RYMView
 from API.rym_search import search_rym
 import time
+from datetime import datetime
 from emoji_links import streaming_emojis
+import re
 
 bot_instance = None
 google_tokens = None
@@ -62,12 +64,27 @@ async def process_rym_link_or_text(message):
 
         embed_title = f"{artist_name} - {release_name} ({release_year})"
         embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
-        if best_album_position:
-            embed_description += f"\n{best_album_position}"
-        if all_time_album_position:
-            embed_description += f", {all_time_album_position}"
+        embed_color = discord.Color.blue()
 
-        embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+        if best_album_position:
+            best_album_number = int(re.search(r'#(\d+)', best_album_position).group(1))
+            embed_description += f"\n**{best_album_number}** of {release_year}"
+        if all_time_album_position:
+            all_time_album_number = int(re.search(r'#(\d+)', all_time_album_position).group(1))
+            embed_description += f", #**{all_time_album_number}** overall"
+            embed_color = (
+                discord.Color.gold() if all_time_album_number <= 250 else
+                discord.Color.from_rgb(214, 214, 214) if all_time_album_number <= 1000 else
+                discord.Color.from_rgb(151, 117, 71) if all_time_album_number > 1000 else
+                embed_color
+            )
+        if float(rating_value) < 2.50:
+            embed_color = discord.Color.red()
+        if int(release_year) == datetime.now().year:
+            embed_color = discord.Color.green()
+
+
+        embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
         if album_cover_url:
             embed.set_thumbnail(url=album_cover_url)
 
@@ -89,8 +106,6 @@ async def process_rym_link_or_text(message):
             emoji = streaming_emojis.get(service_name, service_name)
             button = discord.ui.Button(label="", emoji=emoji, url=streaming_link)
             view.add_item(button)
-
-
 
         await sent_message.edit(view=view)
 
