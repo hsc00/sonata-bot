@@ -129,13 +129,23 @@ def extract_album_info(result):
         'performers': performers
     }
 
+import re
+
 def extract_release_year(description):
+    # Try to find a date pattern like "Released 12 January 2023"
     release_year_match = re.search(r'Released (\d{1,2} \w+ \d{4})', description)
     if not release_year_match:
+        # Try to find a date pattern like "Released January 2023"
         release_year_match = re.search(r'Released (\w+ \d{4})', description)
     if not release_year_match:
+        # Try to find a date pattern like "Released 2023"
         release_year_match = re.search(r'Released (\d{4})', description)
+    if not release_year_match:
+        # Try to find a date pattern like "Released in November 2023"
+        release_year_match = re.search(r'Released in (\w+ \d{4})', description)
+    # Extract and return the year part of the date, or 'Unknown Year' if no match is found
     return release_year_match.group(1).split()[-1] if release_year_match else 'Unknown Year'
+
 
 def extract_genres(description):
     genres_match = re.search(r'Genres: (.+?)\.', description)

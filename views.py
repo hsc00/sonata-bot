@@ -162,7 +162,7 @@ class CreditsButton(discord.ui.Button):
 
 class StreamingButton(discord.ui.Button):
     def __init__(self, streaming_links):
-        super().__init__(label='Streaming', style=discord.ButtonStyle.secondary, custom_id='streaming_button')
+        super().__init__(label='Streaming', style=discord.ButtonStyle.primary, custom_id='streaming_button')
         self.streaming_links = streaming_links
 
     async def callback(self, interaction: discord.Interaction):
