@@ -33,6 +33,10 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
                 album_data = extract_album_info(results[0])
                 album_data['link'] = link
 
+                # Check if no release was found
+                if album_data['release_name'] == 'Unknown Album': 
+                    return None
+
                 # Get album cover and wiki info from Last.fm API
                 lastfm_url = f"http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key={lastfm_api_key}&artist={album_data['artist_name']}&album={album_data['release_name']}&format=json"
                 lastfm_response = requests.get(lastfm_url)

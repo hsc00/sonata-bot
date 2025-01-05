@@ -339,7 +339,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
-        "request_count": 5,
+        "request_count": 3,
         "likes": 5,
         "dislikes": 1,
         "liked_users": [
@@ -424,6 +424,26 @@
             290082376300888064,
             907362326011854858
         ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/fantasia/fantasia": {
+        "artist_name": "Fantasia",
+        "release_name": "Fantasia",
+        "release_year": "1975",
+        "genres": "Progressive Rock",
+        "rating_value": "3.58",
+        "formatted_rating_count": "160",
+        "best_album_position": "#377 of 1975",
+        "all_time_album_position": null,
+        "performers": "Roul Helantie (electric piano, Moog, Hammond organ, synthesizer), Hannu Lindblom (guitar, vocal), Harri Piha (bass), Karl-Erik R\u00f6nng\u00e5rd (drums).",
+        "link": "https://rateyourmusic.com/release/album/fantasia/fantasia/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/251286fd908475f71463e088513ea344.jpg",
+        "album_wiki": "Fantasia is the eponymous second studio album by American recording artist of the same name, released by J Records on December 12, 2006. In its first week of sales, Fantasia entered the US Billboard 200 chart at number nineteen, with 133,000 copies sold. In June 2007, Fantasia was certified Gold by the RIAA for shipments of 500,000 copies. [Read more](https://www.last.fm/music/Fantasia/Fantasia). ",
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
         "disliked_users": []
     }
 }
