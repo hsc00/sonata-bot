@@ -1,11 +1,10 @@
 import logging
 import discord
 from views import RYMView
-from API.rym_search import search_rym
 import time
 from datetime import datetime
-from emoji_links import streaming_emojis
 import re
+from API.rym_search import search_rym
 
 bot_instance = None
 google_tokens = None
@@ -16,11 +15,16 @@ async def on_ready():
     logging.info(f'Logged in as {bot_instance.user}')
 
 async def on_message(message):
-    if 'rateyourmusic.com/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
+    if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
         async with message.channel.typing():
             await process_rym_link_or_text(message)
             time.sleep(5)
+    elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'): 
+        async with message.channel.typing(): 
+            time.sleep(5)
+        
 
+# searches release on rym
 async def process_rym_link_or_text(message):
     if message.content.startswith('!album') or message.content.startswith('!ab'):
         content_parts = message.content.split(' ', 1)

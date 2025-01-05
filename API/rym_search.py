@@ -3,13 +3,12 @@ import re
 import logging
 from bs4 import BeautifulSoup
 from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_likes_dislikes
+from .search_lastfm import get_album_info_from_lastfm
 
 def search_rym(query, google_tokens, cse_id, lastfm_api_key):
-    # Check if the query is a plain text or link
     if 'rateyourmusic.com/' not in query:
         query += " site:rateyourmusic.com"
 
-    # Use Google API to search for the RYM link and fetch album info
     for token in google_tokens:
         try:
             search_url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={token}&cx={cse_id}"
@@ -23,7 +22,6 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
                 cached_album = get_album_from_cache(link)
                 if cached_album:
                     if cached_album['request_count'] > 5:
-                        # Reset request_count and check online again
                         cached_album['request_count'] = 0
                         update_album_in_cache(link, cached_album)
                     else:
@@ -33,27 +31,21 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
                 album_data = extract_album_info(results[0])
                 album_data['link'] = link
 
-                # Check if no release was found
                 if album_data['release_name'] == 'Unknown Album': 
                     return None
 
-                # Get album cover and wiki info from Last.fm API
-                lastfm_url = f"http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key={lastfm_api_key}&artist={album_data['artist_name']}&album={album_data['release_name']}&format=json"
-                lastfm_response = requests.get(lastfm_url)
-                lastfm_data = lastfm_response.json()
-                album_data['album_cover_url'] = lastfm_data['album']['image'][-1]['#text'] if 'album' in lastfm_data and 'image' in lastfm_data['album'] else None
-                album_data['album_wiki'] = clean_wiki_text(lastfm_data['album']['wiki']['content']) if 'album' in lastfm_data and 'wiki' in lastfm_data['album'] else None
+                album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
+                album_data['album_cover_url'] = album_cover_url
+                album_data['album_wiki'] = album_wiki
 
-                # Get streaming links
                 album_data['streaming_links'] = get_streaming_links(album_data['artist_name'], album_data['release_name'], album_data['release_year'])
 
-                # Add or update album info in cache
                 cached_album = get_album_from_cache(link)
                 if cached_album:
                     update_album_in_cache(link, cached_album)
                     print(f"Updated cached album: {album_data['release_name']}")
                 else:
-                    album_data['request_count'] = 1  # Initialize request_count to 1
+                    album_data['request_count'] = 1
                     add_album_to_cache(link, album_data)
                     print(f"Added new album to cache: {album_data['release_name']}")
 
@@ -62,6 +54,7 @@ def search_rym(query, google_tokens, cse_id, lastfm_api_key):
             logging.error(f"Error during Google search with token {token}: {e}")
     logging.warning('No RYM link found')
     return None
+
 
 def get_streaming_links(artist, album, year):
     # Remove all '-' from the original names and then replace spaces with '-'

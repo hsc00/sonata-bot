@@ -289,7 +289,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_myQ7YUmLVjQ1RW9J5j4TkayX4shR3ay7I&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/unknown-pleasures-collectors-edition/266603040"
         ],
-        "request_count": 2,
+        "request_count": 3,
         "likes": 6,
         "dislikes": 1,
         "liked_users": [
@@ -602,7 +602,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_mFxXMjBRryRfZRXGsTumzwFlOGuMJ7LKo&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/stand-up-and-scream/1650496504"
         ],
-        "request_count": 3,
+        "request_count": 4,
         "likes": 0,
         "dislikes": 1,
         "liked_users": [],
@@ -738,6 +738,90 @@
         "liked_users": [
             290082376300888064
         ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/facs/still-life-in-decay": {
+        "artist_name": "FACS",
+        "release_name": "Still Life in Decay",
+        "release_year": "2023",
+        "genres": "Post-Punk",
+        "rating_value": "3.35",
+        "formatted_rating_count": "458",
+        "best_album_position": "#1042 of 2023",
+        "all_time_album_position": null,
+        "performers": "Brian Case (guitar, vocals), Alianna Kalaba (bass, vocals), Noah Leger (drums), FACS (producer), Sanford Parker (producer, recording engineer, mixer), Matthew Barnhart (mastering), Michael Vallera (cover photography).",
+        "link": "https://rateyourmusic.com/release/album/facs/still-life-in-decay/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/063f7fbeec40700ede8fe2b87ad7cb07.jpg",
+        "album_wiki": null,
+        "streaming_links": [
+            "https://open.spotify.com/album/4QSyg2uSOqiBEXBtAygjHg?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_nZa1AG6SASr07K0BtmLaesZ-HxW73JFoE&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/still-life-in-decay/1666613304"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/mono/oath": {
+        "artist_name": "MONO",
+        "release_name": "Oath",
+        "release_year": "2024",
+        "genres": "Post-Rock",
+        "rating_value": "3.37",
+        "formatted_rating_count": "511",
+        "best_album_position": "#713 of 2024",
+        "all_time_album_position": null,
+        "performers": "Steve Albini (recording engineer, producer, mixing).",
+        "link": "https://rateyourmusic.com/release/album/mono/oath/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/3323c69e0f93b068c81d0fa1359672ec.jpg",
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/staatsorchester-stuttgart-lithuanian-chamber-orchestra-the-12-cellists-of-the-berlin-philharmonic-orchestra-dennis-russell-davies-saulius-sondeckis-gidon-kremer-keith-jarrett-tatjana-grindenko-alfred-schnittke/tabula-rasa": {
+        "artist_name": "Staatsorchester Stuttgart / Lithuanian Chamber Orchestra / The 12 Cellists of the Berlin Philharmonic Orchestra / Dennis Russell Davies / Saulius Sondeckis / Gidon Kremer / Keith Jarrett /...",
+        "release_name": "Tabula rasa",
+        "release_year": "1984",
+        "genres": "Holy Minimalism",
+        "rating_value": "3.97",
+        "formatted_rating_count": "8,105",
+        "best_album_position": "#6 of 1984",
+        "all_time_album_position": "#443 overall",
+        "performers": "Heinz Wildhagen (recording engineer), Peter Laenger (recording engineer), Eberhard Sengpiel (recording engineer), Dieter Frobeen (recording engineer), Kalju Suur (photography), Juri Gurewichs (photography), Barbara Wojirsch (cover design), Manfred Eicher (production), Wolfgang Sandner (liner notes), Anne Cattaneo (liner notes translation).",
+        "link": "https://rateyourmusic.com/release/album/staatsorchester-stuttgart-lithuanian-chamber-orchestra-the-12-cellists-of-the-berlin-philharmonic-orchestra-dennis-russell-davies-saulius-sondeckis-gidon-kremer-keith-jarrett-tatjana-grindenko-alfred-schnittke/tabula-rasa/",
+        "album_cover_url": null,
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/boris/praparat": {
+        "artist_name": "Boris",
+        "release_name": "Pr\u00e4parat",
+        "release_year": "2013",
+        "genres": "Post-Rock",
+        "rating_value": "3.20",
+        "formatted_rating_count": "1,423",
+        "best_album_position": "#1160 of 2013",
+        "all_time_album_position": null,
+        "performers": "Wata (guitar, keyboards), Takeshi (vocals, bass, guitar), Atsuo (drums, percussion), Boris (composer, lyricist, producer), FangsAnalSatan (recording engineer, mixing engineer, photography, design), \u4e2d\u6751\u5b97\u4e00\u90ce [Souichirou Nakamura] (mastering engineer).",
+        "link": "https://rateyourmusic.com/release/album/boris/praparat/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/6f6ea4eaa3b4460aa7409e6b4e47a369.png",
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 2,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
         "disliked_users": []
     }
 }
