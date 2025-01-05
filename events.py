@@ -3,6 +3,7 @@ import discord
 from views import RYMView
 from API.rym_search import search_rym
 import time
+from emoji_links import streaming_emojis
 
 bot_instance = None
 google_tokens = None
@@ -54,6 +55,7 @@ async def process_rym_link_or_text(message):
         performers = search_result['performers']
         album_cover_url = search_result['album_cover_url']
         album_wiki = search_result['album_wiki']
+        streaming_links = search_result['streaming_links']
         link = search_result['link']
         likes = search_result.get('likes', 0)
         dislikes = search_result.get('dislikes', 0)
@@ -73,12 +75,23 @@ async def process_rym_link_or_text(message):
             embed.add_field(name="Credits", value=performers, inline=False)
 
         embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
+        
 
         embed.set_footer(text=f"Requested by {message.author.display_name}")
         sent_message = await message.channel.send(embed=embed)
         
         view = RYMView(album_wiki, embed, original_message_id=sent_message.id, release_name=release_name)
         view.link = link
+
+        # Add streaming link buttons to the view
+        for streaming_link in streaming_links:
+            service_name = streaming_link.split('.')[1].capitalize()
+            emoji = streaming_emojis.get(service_name, "🔗")
+            button = discord.ui.Button(label="", emoji=emoji, url=streaming_link)
+            view.add_item(button)
+
+
+
         await sent_message.edit(view=view)
 
 def setup(bot, tokens, cse, lastfm):

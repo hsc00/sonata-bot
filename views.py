@@ -1,10 +1,11 @@
 import discord
 from API.rym_search import handle_like_dislike
 from API.cache import get_album_from_cache, update_likes_dislikes
+from emoji_links import streaming_emojis
 
 
 class RYMView(discord.ui.View):
-    def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None):
+    def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None, streaming_links=None):
         super().__init__()
         self.album_wiki = album_wiki
         self.general_embed = general_embed
@@ -15,6 +16,13 @@ class RYMView(discord.ui.View):
             self.add_item(AlbumInfoButton(album_wiki))
         self.add_item(LikeButton(self.original_message_id, self.release_name))
         self.add_item(DislikeButton(self.original_message_id, self.release_name))
+        if streaming_links:
+            for link in streaming_links:
+                service_name = link.split('.')[1].capitalize()
+                emoji = streaming_emojis.get(service_name, "🔗")
+                button = discord.ui.Button(label="", emoji=emoji, url=link)
+                self.add_item(button)
+
 
 class LikeButton(discord.ui.Button):
     def __init__(self, original_message_id, release_name):

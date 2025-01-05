@@ -1,4 +1,5 @@
 streaming_emojis = {
-    "Apple Music": "<:applemusic:1324928695634366464>",  
-    "Spotify": "<:spotify:1324929461077938328>"          
+    "Apple": "<:applemusic:1325108813120012298>",  
+    "Spotify": "<:spotify:1325108838801739778>",
+    "Youtube": "<:youtube:1325476355999006805>"        
 }

@@ -217,7 +217,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_lVmAmCyM1N7XUj9XkxMK3eEpRUVmG3P_o&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/mercurial-world/1570541671"
         ],
-        "request_count": 2,
+        "request_count": 5,
         "likes": 1,
         "dislikes": 1,
         "liked_users": [
@@ -339,7 +339,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
-        "request_count": 3,
+        "request_count": 4,
         "likes": 5,
         "dislikes": 1,
         "liked_users": [
@@ -440,6 +440,30 @@
         "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/251286fd908475f71463e088513ea344.jpg",
         "album_wiki": "Fantasia is the eponymous second studio album by American recording artist of the same name, released by J Records on December 12, 2006. In its first week of sales, Fantasia entered the US Billboard 200 chart at number nineteen, with 133,000 copies sold. In June 2007, Fantasia was certified Gold by the RIAA for shipments of 500,000 copies. [Read more](https://www.last.fm/music/Fantasia/Fantasia). ",
         "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/boris/smile": {
+        "artist_name": "Boris",
+        "release_name": "Smile",
+        "release_year": "2008",
+        "genres": "Psychedelic Rock, Stoner Metal, Post-Rock, Post-Metal",
+        "rating_value": "3.64",
+        "formatted_rating_count": "2,223",
+        "best_album_position": "#122 of 2008",
+        "all_time_album_position": "#9543 overall",
+        "performers": "Takeshi (vocals, guitar, bass), Wata (vocals, guitar, echo), Atsuo (vocals, drums, percussion), Boris (producer), \u4e2d\u6751\u5b97\u4e00\u90ce [Souichirou Nakamura] (recording engineer, mixing, mastering engineer), FangsAnalSatan (recording engineer, mixing), \u677e\u5cf6\u5e79 [Miki Matsushima] (photography), Yoshiko Ikeda (translation), Stephen O'Malley (design), Nene (drawings).",
+        "link": "https://rateyourmusic.com/release/album/boris/smile/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/c2dcefff2c134cc48dc386d5d9f0c969.jpg",
+        "album_wiki": "Smile is the fourteenth full-length album by Japanese experimental band Boris. It was released through Diwphalanx Records in early 2008 (late 2008 for the live version accordingly), featuring guest musicians Michio Kurihara of Ghost and Stephen O'Malley of Sunn O))), both of whom have collaborated with Boris in the past. Shortly after this initial release, the album was released by American label Southern Lord with a slightly different track listing, different artwork (by Stephen O'Malley), and an almost entirely different sound. The first 3000 copies of this edition include a DVD containing videos for \"Statement\", \"Pink\" and \"My Neighbor Satan\". Notably, this release is the second Boris album to feature vocals on every track (the first, excluding any one-track albums, was Amplifier Worship). [Read more](https://www.last.fm/music/Boris/Smile). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/49JY9t0A5zrJDju607rmeg?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_kOOF1Pg722uTm57pJsXLsmVNburZiAD_c&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/smile/1580679380"
+        ],
         "request_count": 1,
         "likes": 0,
         "dislikes": 0,
