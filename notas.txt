@@ -4,6 +4,7 @@ nao aparece a posicao dos charts
 ## albums ##
 streaming links - fazer pesquisa extra pelo link do bandcamp (futuro)
 adicionar links de albuns manualmente (futuro)
+construir o link do rym com uma pesquisa para encontrar cache sem precisar de ir buscar o link online
 
 ## setlist.fm ##
 adicionar setlists do setlist.fm

@@ -80,8 +80,9 @@ async def process_rym_link_or_text(message):
             )
         if float(rating_value) < 2.50:
             embed_color = discord.Color.red()
-        if int(release_year) == datetime.now().year:
-            embed_color = discord.Color.green()
+        if release_year !="Unknown Year":
+            if int(release_year) == datetime.now().year:
+                embed_color = discord.Color.green()
 
 
         embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
