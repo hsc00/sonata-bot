@@ -4,7 +4,7 @@ from views import RYMView
 import time
 from datetime import datetime
 import re
-from API.rym_search import search_rym, search_rym_artist
+from API.rym_search import search_rym_release, search_rym_artist
 from API.search_lastfm import search_lastfm_artist
 
 bot_instance = None
@@ -18,7 +18,7 @@ async def on_ready():
 async def on_message(message):
     if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
         async with message.channel.typing():
-            await process_rym_link_or_text(message)
+            await process_release_link_or_text(message)
             time.sleep(5)
     elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'):
         async with message.channel.typing():
@@ -28,32 +28,53 @@ async def on_message(message):
 async def process_artist_link_or_text(message):
     artist_query = message.content
     if artist_query.startswith('!artist') or artist_query.startswith('!a'):
+        content_parts = message.content.split(' ', 1)
+        if len(content_parts) > 1:
+            artist_query = content_parts[1]
+        else:
+            await message.channel.send('Please provide an artist.')
+            return
         artist_query = artist_query.split(' ', 1)[1] 
+        
+        artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
+        print(artist_info)
+    else:
+        #clean message link
+        match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', artist_query)
+        artist_query = match.group(0)
 
-    artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
-    print(artist_info)
+        # Check if the query is a valid RYM link
+        if artist_query.startswith('rateyourmusic.com/artist/') or artist_query.startswith('https://rateyourmusic.com/artist/') and len(artist_query.split('/')) > 3:
+            artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
+            print(artist_info)
+        elif artist_query.startswith('rateyourmusic.com/'):
+            await message.channel.send('Invalid link. Please provide a valid RateYourMusic **artist** link.')
+            return
+        
 
 # searches release on rym
-async def process_rym_link_or_text(message):
+async def process_release_link_or_text(message):
     if message.content.startswith('!album') or message.content.startswith('!ab'):
         content_parts = message.content.split(' ', 1)
         if len(content_parts) > 1:
             query = content_parts[1]
         else:
-            await message.channel.send('Please provide a search query or link.')
+            await message.channel.send('Please provide a release.')
             return
     else:
-        query = message.content
+        #clean message link
+        match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', message.content)
+        query = match.group(0)
 
     # Check if the query is a valid RYM link
-    if query.startswith('rateyourmusic.com/release/'):
-        search_result = search_rym(query, google_tokens, cse_id, lastfm_api_key)
-    elif query.startswith('rateyourmusic.com/'):
+    if query.startswith('rateyourmusic.com/release/') and len(query.split('/')) > 4:
+        search_result = search_rym_release(query, google_tokens, cse_id, lastfm_api_key)
+    elif query.startswith('rateyourmusic.com/') or query.startswith('https://rateyourmusic.com/'):
         await message.channel.send('Invalid link. Please provide a valid RateYourMusic **release** link.')
         return
     else:
         # Perform a Google search if it's plain text
-        search_result = search_rym(query, google_tokens, cse_id, lastfm_api_key)
+        search_result = search_rym_release(query, google_tokens, cse_id, lastfm_api_key)
         if not search_result or not search_result['link'].startswith('https://rateyourmusic.com/release/'):
             await message.channel.send('Please provide a valid RateYourMusic **release** name.')
             return

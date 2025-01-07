@@ -1,4 +1,7 @@
-criar ficheiro google_search.py
+terminaste de conseguir os dados do artista via link ou prompt no rym_search, agora trata da cache 
+e depois podes começar o embed. Good job :)
+
+
 
 ## mixtapes ##
 nao aparece a posicao dos charts
@@ -11,13 +14,17 @@ dar fix à pesquisa pela cache de artistas (neste momento vais direto à pesquis
 só estas a pesquisar a cache para saberes se guardas ou nao um registo novo)
 adicionar critic score do aoty
 pesquisar se os artistas ja estao em cache sem link do rym com o artist_name
+o bug dos albuns aparecerem sem likes acontece quando a cache é reposta, provavelmente nao passa pelo check de likes ai
 
 ## setlist.fm ##
 adicionar setlists do setlist.fm
 
 ## artist ##
 faz o average rating de todas as suas releases
-pesquisar sobre os albuns recebidos nas pesquisas para os guardar em cache tambem
+quando se pesquisa um artista pesquisar as releases que o rym manda e adicionar à cache de albuns
+(é so usares o metodo search_rym_release e passares cada uma das releases dos og:descriptors lá)
+procurar albuns do artista em cache para apresentar na parte de Popular albuns e o seu rating
+
 
 ## tracks ##
 devolve o bocado das lyrics in real time do que se esta a ouvir - https://pypi.org/project/lyrics-transcriber/

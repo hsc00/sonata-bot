@@ -8,7 +8,7 @@ from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
 from .google_search import google_search
 
-def search_rym(query, google_tokens, cse_id, lastfm_api_key):
+def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
     if 'rateyourmusic.com/' not in query:
         query += " site:rateyourmusic.com"
 
@@ -52,53 +52,40 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
     if 'rateyourmusic.com/' not in artist_query:
         artist_name = artist_query
         artist_query += " site:rateyourmusic.com"
-        for token in google_tokens:
-            try:
-                search_url = f"https://www.googleapis.com/customsearch/v1?q={artist_query}&key={token}&cx={cse_id}"
-                response = requests.get(search_url)
-                if response.status_code == 429:
-                    logging.warning(f"Rate limit exceeded for token {token}, retrying with next token.")
-                    continue
-                results = response.json().get('items', [])
-                if results:
-                    for result in results:
-                        link = result['link']
-                            
-            except Exception as e:
-                logging.error(f"Error during Google search with token {token}: {e}")
-
-        lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key)
-
-        return lastfm_info
-    else:
-        artist_name = artist_query.split('/')[-1] 
-        if link.startswith('https://rateyourmusic.com/artist/'):
-            cached_artist = get_artist_from_cache(link)
-            if cached_artist:
-                if cached_artist['request_count'] > 5:
-                    cached_artist['request_count'] = 0
-                    update_artist_in_cache(link, cached_artist)
+        results = google_search(artist_query, google_tokens, cse_id)
+        if results:
+            link = results[0]['link']
+            cached_album = get_artist_from_cache(link)
+            if cached_album:
+                if cached_album['request_count'] > 5:
+                    cached_album['request_count'] = 0
+                    update_artist_in_cache(link, cached_album)
                 else:
-                    update_artist_in_cache(link, cached_artist)
-                    artist_query = cached_artist
-            artist_data = results[0]
-            artist_data['link'] = link
-            return search_lastfm_artist(artist_name, lastfm_api_key)
-        for token in google_tokens:
-            try:
-                search_url = f"https://www.googleapis.com/customsearch/v1?q={artist_query}&key={token}&cx={cse_id}"
-                response = requests.get(search_url)
-                if response.status_code == 429:
-                    logging.warning(f"Rate limit exceeded for token {token}, retrying with next token.")
-                    continue
-                results = response.json().get('items', [])
-                if results:
-                    for result in results:
-                        link = result['link']
-                            
-            except Exception as e:
-                logging.error(f"Error during Google search with token {token}: {e}")
+                    update_artist_in_cache(link, cached_album)
+                    return cached_album
 
+            rym_info = extract_artist_info(results[0])
+            rym_info['link'] = link
+    else:
+        link = artist_query
+        artist_name = re.sub(r'\W+', ' ', artist_query.split('/')[-1])
+        cached_artist = get_artist_from_cache(artist_query)
+        if cached_artist:
+            if cached_artist['request_count'] > 5:
+                cached_artist['request_count'] = 0
+                update_artist_in_cache(link, cached_artist)
+            else:
+                update_artist_in_cache(link, cached_artist)
+                return cached_artist
+
+        results = google_search(artist_query, google_tokens, cse_id)
+        rym_info = extract_artist_info(results[0])
+        rym_info['link'] = link
+
+    lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key)
+    artist_info = {**rym_info, **lastfm_info}
+    return artist_info
+    
 
 def get_streaming_links(artist, album, year):
     # Remove all - from the original names and then replace spaces with - for the url
@@ -164,6 +151,35 @@ def extract_album_info(result):
         'all_time_album_position': all_time_album_position,
         'performers': performers
     }
+
+
+def extract_artist_info(result):
+    pagemap = result.get('pagemap', {})
+    metatags = pagemap.get('metatags', [{}])[0]
+
+    artist_name = pagemap.get('musicgroup', [{}])[0].get('name', 'Unknown Artist')
+    rym_img_url = pagemap.get('cse_thumbnail', [{}])[0].get('src', '')
+    og_description = metatags.get('og:description', '')
+    release_year = extract_founded_year(og_description)
+    genres = extract_genres(og_description)
+
+    return {
+        'artist_name': artist_name,
+        'rym_img_url': rym_img_url,
+        'founded_year': release_year,
+        'genres': genres,
+    }
+
+
+def extract_founded_year(description):
+    # Try to find a pattern like "formed YEAR"
+    founded_year_match = re.search(r'formed (\d{4})', description)
+    if not founded_year_match:
+        # Try to find a pattern like "formed MONTH YEAR"
+        founded_year_match = re.search(r'formed (\w+ \d{4})', description)
+    # Extract and return the year part, or 'Unknown Year' if no match is found
+    return founded_year_match.group(1).split()[-1] if founded_year_match else 'Unknown'
+
 
 def extract_release_year(description):
     # Try to find a date pattern like "Released 12 January 2023"
