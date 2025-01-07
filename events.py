@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import re
 from API.rym_search import search_rym, search_rym_artist
+from API.search_lastfm import search_lastfm_artist
 
 bot_instance = None
 google_tokens = None
@@ -13,15 +14,6 @@ lastfm_api_key = None
 
 async def on_ready():
     logging.info(f'Logged in as {bot_instance.user}')
-
-async def on_message(message):
-    if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
-        async with message.channel.typing():
-            await process_rym_link_or_text(message)
-            time.sleep(5)
-    elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'): 
-        async with message.channel.typing(): 
-            time.sleep(5)
         
 async def on_message(message):
     if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):

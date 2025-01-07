@@ -1,5 +1,5 @@
 import requests
-import logging
+import logging 
 
 def google_search(query, google_tokens, cse_id):
     for token in google_tokens:
