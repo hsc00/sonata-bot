@@ -1,9 +1,8 @@
 import requests
 import re
-import logging
 from bs4 import BeautifulSoup
-from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_likes_dislikes
-from .artist_cache import get_artist_from_cache, update_artist_in_cache
+from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_releases_likes_dislikes
+from .artist_cache import get_artist_from_cache, update_artist_in_cache, add_artist_to_cache, update_artist_likes_dislikes
 from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
 from .google_search import google_search
@@ -55,14 +54,14 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
         results = google_search(artist_query, google_tokens, cse_id)
         if results:
             link = results[0]['link']
-            cached_album = get_artist_from_cache(link)
-            if cached_album:
-                if cached_album['request_count'] > 5:
-                    cached_album['request_count'] = 0
-                    update_artist_in_cache(link, cached_album)
+            cached_artist = get_artist_from_cache(link)
+            if cached_artist:
+                if cached_artist['request_count'] > 5:
+                    cached_artist['request_count'] = 0
+                    update_artist_in_cache(link, cached_artist)
                 else:
-                    update_artist_in_cache(link, cached_album)
-                    return cached_album
+                    update_artist_in_cache(link, cached_artist)
+                    return cached_artist
 
             rym_info = extract_artist_info(results[0])
             rym_info['link'] = link
@@ -84,6 +83,16 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
 
     lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key)
     artist_info = {**rym_info, **lastfm_info}
+
+    cached_artist = get_artist_from_cache(link)
+    if cached_artist:
+        update_artist_in_cache(link, cached_artist)
+        print(f"Updated cached artist: {artist_info['artist_name']}")
+    else:
+        artist_info['request_count'] = 1
+        add_artist_to_cache(link, artist_info)
+        print(f"Added new artist to cache: {artist_info['artist_name']}")
+
     return artist_info
     
 
@@ -222,5 +231,8 @@ def clean_wiki_text(html):
     text = re.sub('User-contributed text is available under the Creative Commons By-SA License; additional terms may apply\.', '', text)
     return text
 
-def handle_like_dislike(link, user_id, like=True):
-    update_likes_dislikes(link, user_id, like)
+def handle_like_dislike(type, link, user_id, like=True):
+    if type == "release":
+        update_releases_likes_dislikes(link, user_id, like)
+    elif type == "artist":
+        update_artist_likes_dislikes(link, user_id, like)

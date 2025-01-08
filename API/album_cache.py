@@ -46,7 +46,7 @@ def update_album_in_cache(link, album_data):
     save_cache(cache)
 
 
-def update_likes_dislikes(link, user_id, like=True):
+def update_releases_likes_dislikes(link, user_id, like=True):
     cache = load_cache()
     normalized_link = normalize_url(link)
     if normalized_link in cache:

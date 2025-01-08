@@ -1,6 +1,6 @@
 import discord
 from API.rym_search import handle_like_dislike
-from API.album_cache import get_album_from_cache, update_likes_dislikes
+from API.album_cache import get_album_from_cache, update_releases_likes_dislikes
 from emoji_links import streaming_emojis
 
 class RYMView(discord.ui.View):
@@ -43,7 +43,7 @@ class LikeButton(discord.ui.Button):
                 print("Interaction not found or expired.")
             return
 
-        handle_like_dislike(self.view.link, user_id, like=True)
+        handle_like_dislike("release", self.view.link, user_id, like=True)
 
         # Delete the previous dislike message if it exists
         previous_dislike_message_id = self.view.message_ids.get((user_id, 'dislike'))
@@ -66,7 +66,7 @@ class LikeButton(discord.ui.Button):
         self.view.message_ids[(user_id, 'like')] = message.id
 
         # Update the cache
-        update_likes_dislikes(self.view.link, user_id, like=True)
+        update_releases_likes_dislikes(self.view.link, user_id, like=True)
 
         # Update the embed with the correct number of likes and dislikes
         album_data = album_data = get_album_from_cache(self.view.link, increment_request_count=False)
@@ -94,7 +94,7 @@ class DislikeButton(discord.ui.Button):
                 print("Interaction not found or expired.")
             return
 
-        handle_like_dislike(self.view.link, user_id, like=False)
+        handle_like_dislike("release", self.view.link, user_id, like=False)
 
         # Delete the previous like message if it exists
         previous_like_message_id = self.view.message_ids.get((user_id, 'like'))
@@ -117,7 +117,7 @@ class DislikeButton(discord.ui.Button):
         self.view.message_ids[(user_id, 'dislike')] = message.id
 
         # Update the cache
-        update_likes_dislikes(self.view.link, user_id, like=False)
+        update_releases_likes_dislikes(self.view.link, user_id, like=False)
 
         # Update the embed with the correct number of likes and dislikes
         album_data = get_album_from_cache(self.view.link, increment_request_count=False)

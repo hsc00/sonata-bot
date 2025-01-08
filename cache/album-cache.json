@@ -289,7 +289,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_myQ7YUmLVjQ1RW9J5j4TkayX4shR3ay7I&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/unknown-pleasures-collectors-edition/266603040"
         ],
-        "request_count": 1,
+        "request_count": 2,
         "likes": 6,
         "dislikes": 1,
         "liked_users": [
@@ -1044,6 +1044,52 @@
         "likes": 0,
         "dislikes": 0,
         "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/ep/ethel-cain/perverts/": {
+        "artist_name": "Unknown Artist",
+        "release_name": "Perverts",
+        "release_year": "2025",
+        "genres": "Dark Ambient, Drone",
+        "rating_value": "3.98",
+        "formatted_rating_count": "179",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Ethel Cain (songwriter, vocals, producer, mixing engineer), Dale Becker (mastering engineer).",
+        "link": "https://rateyourmusic.com/release/ep/ethel-cain/perverts/reviews/2/",
+        "album_cover_url": null,
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/vyva-melinkolya/unbecoming": {
+        "artist_name": "Vyva Melinkolya",
+        "release_name": "Unbecoming",
+        "release_year": "2023",
+        "genres": "Shoegaze, Slowcore",
+        "rating_value": "3.55",
+        "formatted_rating_count": "679",
+        "best_album_position": "#304 of 2023",
+        "all_time_album_position": null,
+        "performers": "Vyva Melinkolya (performer, vocals, composer, writer, lyrics, producer, additional recordings, guitar, lap steel, piano, samples), Midwife (additional vocals), SRSQ (additional vocals), Chyype Crosby (mixer, drums, bass), Matt Tomasi (mastering engineer), Ethel Cain (additional vocals), Dollie (cover photography), Delilah Famina (spoken word), Moth Magdalene (poetry reading).",
+        "link": "https://rateyourmusic.com/release/album/vyva-melinkolya/unbecoming/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/b462f04458f86997c5841aa695efc3bb.jpg",
+        "album_wiki": null,
+        "streaming_links": [
+            "https://open.spotify.com/album/08u4TJCcZUmIe22D5tYdQ1?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lW5mfnx_uaRWkx3gxm8BsK-Ha-OTRHG5c&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/unbecoming/1713606792"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
         "disliked_users": []
     }
 }

@@ -1,5 +1,5 @@
 terminaste de conseguir os dados do artista via link ou prompt no rym_search, agora trata da cache 
-e depois podes começar o embed. Good job :)
+e depois podes começar o embed. Good job
 
 
 
