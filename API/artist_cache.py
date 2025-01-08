@@ -75,7 +75,7 @@ def update_artist_likes_dislikes(link, user_id, like=True):
         save_cache(ARTIST_CACHE_FILE, cache)
         print(f"Updated cache for {normalized_link}")
     else:
-        print(f"Link not found in cache: {normalized_link}")
+        print(f"Link not found in artist cache: {normalized_link}")
 
 def get_artist_from_cache(link, increment_request_count=True):
     cache = load_cache(ARTIST_CACHE_FILE)
@@ -91,5 +91,5 @@ def get_artist_from_cache(link, increment_request_count=True):
         save_cache(ARTIST_CACHE_FILE, cache)
         print(f"Retrieved from cache for {normalized_link}")
         return artist_data
-    print(f"Link not found in cache: {normalized_link}")
+    print(f"Link not found in artist cache: {normalized_link}")
     return None

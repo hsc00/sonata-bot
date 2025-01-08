@@ -1,20 +1,54 @@
 {
-    "rateyourmusic.com/artist/joy-division": {
-        "artist_name": "Joy Division",
-        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxkhhjD4AS9ZjWgJxpQ2u02fL9cfT0Lb4RClBDV-TUbjNrIoCTbRDPKYY&s",
-        "founded_year": "1977",
-        "genres": "Post-Punk, Punk Rock, Gothic Rock",
-        "link": "https://rateyourmusic.com/artist/joy-division",
-        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/1529a18e3a8e5005c71a02f7279c9a74.jpg",
-        "listeners": "2943706",
+    "rateyourmusic.com/artist/the-beatles": {
+        "artist_name": "The Beatles",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4bewAgmI5zovqIchRi40BIC9mrJbaJ6_5vB58xAPALibnCtZZe81pDE9T&s",
+        "founded_year": "1960",
+        "genres": "Pop Rock, Merseybeat, Psychedelic Pop",
+        "link": "https://rateyourmusic.com/artist/the-beatles",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/55efc33bcd234fd8a1d65b3d49bf9661.jpg",
+        "listeners": "5,594,199",
         "similar_artists": [
-            "New Order",
-            "The Cure",
-            "Bauhaus",
-            "Siouxsie and the Banshees",
-            "The Smiths"
+            "John Lennon",
+            "George Harrison",
+            "Paul McCartney",
+            "Ringo Starr",
+            "Wings"
         ],
-        "summary": "Joy Division were a post-punk band formed in 1976 in Salford, Greater Manchester, United Kingdom. Originally named Warsaw, the band consisted of Ian Curtis (vocals and occasional guitar), Bernard Sumner (guitar and keyboards), Peter Hook (bass guitar and backing vocals) and Stephen Morris (drums and percussion). The band dissolved in May 1980 after the suicide of its lead singer, Ian Curtis. Much of their popularity/reputation arguably resulted from frequent playings on air by iconic DJ John Peel <a href=\"https://www.last.fm/music/Joy+Division\">Read more on Last.fm</a>",
+        "summary": "The Beatles were an English rock band formed in Liverpool, Lancashire in 1960. With the line-up comprising John Lennon, Paul McCartney,  George Harrison and Ringo Starr, they are regarded as the most popular and influential band of all time. The group was integral to the development of 1960s counterculture and popular music's recognition as an art form. Rooted in skiffle, beat and 1950s rock and roll, their sound incorporated elements of classical [Read more](https://www.last.fm/music/The+Beatles)",
+        "streaming_links": [
+            "https://music.apple.com/pt/artist/the-beatles/136975",
+            "https://open.spotify.com/artist/3WrFJ7ztbogyGnTHbHJFl2?autoplay=true",
+            "https://music.youtube.com/channel/UC2XdaAVUannpujzv32jcouQ?feature=gws_kp_artist&feature=gws_kp_artist"
+        ],
+        "request_count": 3,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/radiohead": {
+        "artist_name": "Radiohead",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqvz_EcnWxYMlW5uKGrvJesqWHMws9UcZPQOAFcreevMFK2Pv4tz0D0E4&s",
+        "founded_year": "1991",
+        "genres": "Alternative Rock, Art Rock, Electronic",
+        "link": "https://rateyourmusic.com/artist/radiohead",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/57711743b8c85cca50c796d68bdd6381.jpg",
+        "listeners": "6,934,766",
+        "similar_artists": [
+            "Thom Yorke",
+            "Atoms for Peace",
+            "Jeff Buckley",
+            "Nirvana",
+            "Pixies"
+        ],
+        "summary": "Radiohead are an English rock band formed in Abingdon, Oxfordshire, in 1985. The band consists of Thom Yorke (vocals, guitar, piano, keyboards); brothers Jonny Greenwood (lead guitar, keyboards, other instruments) and Colin Greenwood (bass); Ed O'Brien (guitar, backing vocals); and Philip Selway (drums, percussion). They have worked with the producer Nigel Godrich and the cover artist Stanley Donwood since 1994. Radiohead's experimental approach is credited with advancing the sound of alternative rock. [Read more](https://www.last.fm/music/Radiohead)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/4Z8W4fKeB5YxbusRsdQVPb?autoplay=true",
+            "https://music.youtube.com/channel/UCr_iyUANcn9OX_yy9piYoLw?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/radiohead/657515"
+        ],
         "request_count": 1,
         "likes": 0,
         "dislikes": 0,

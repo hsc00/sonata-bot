@@ -291,18 +291,16 @@
         ],
         "request_count": 2,
         "likes": 6,
-        "dislikes": 1,
+        "dislikes": 0,
         "liked_users": [
             601054815417532462,
-            408671768002297856,
             687581059424190464,
             269251294848352256,
             112640617686843392,
-            442438894714224653
+            442438894714224653,
+            408671768002297856
         ],
-        "disliked_users": [
-            290082376300888064
-        ]
+        "disliked_users": []
     },
     "rateyourmusic.com/release/album/joy-division/closer": {
         "artist_name": "Joy Division",
@@ -323,17 +321,15 @@
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
         "request_count": 2,
-        "likes": 5,
-        "dislikes": 1,
+        "likes": 4,
+        "dislikes": 0,
         "liked_users": [
             601054815417532462,
             476180969523642379,
             269251294848352256,
             408671768002297856
         ],
-        "disliked_users": [
-            290082376300888064
-        ]
+        "disliked_users": []
     },
     "rateyourmusic.com/release/album/swans/the-glowing-man": {
         "artist_name": "Swans",
@@ -380,7 +376,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_kJjM28-DvkYvFxF2TZymVJlzPJTImNGas&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/crest/1613300234"
         ],
-        "request_count": 7,
+        "request_count": 1,
         "likes": 4,
         "dislikes": 0,
         "liked_users": [
@@ -1083,6 +1079,54 @@
             "https://open.spotify.com/album/08u4TJCcZUmIe22D5tYdQ1?autoplay=true",
             "https://music.youtube.com/playlist?list=OLAK5uy_lW5mfnx_uaRWkx3gxm8BsK-Ha-OTRHG5c&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/unbecoming/1713606792"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/boris-with-merzbow/sun-baked-snow-cave": {
+        "artist_name": "Boris With Merzbow",
+        "release_name": "Sun Baked Snow Cave",
+        "release_year": "2005",
+        "genres": "Drone",
+        "rating_value": "3.21",
+        "formatted_rating_count": "1,179",
+        "best_album_position": "#961 of 2005",
+        "all_time_album_position": null,
+        "performers": "Masami Akita (computer), Takeshi (guitar, bass guitar), Wata (guitar, echo), Atsuo (feedback, computer), FangsAnalSatan (mixing), Stephen O'Malley (art).",
+        "link": "https://rateyourmusic.com/release/album/boris-with-merzbow/sun-baked-snow-cave/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/0def5115ade1886bc95a91d494012f2c.jpg",
+        "album_wiki": "\"The roar of a (gigantic) wheel as it turns uncontrollably.\nI vaguely recall it in a warm snow cave.\nA boom like a chorus of thousands of cicadas heard under the sun.\nSuch a story deserves to be born.\" [Read more](https://www.last.fm/music/Boris+with+Merzbow/Sun+Baked+Snow+Cave). ",
+        "streaming_links": [],
+        "request_count": 3,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/the-beatles/revolver": {
+        "artist_name": "The Beatles",
+        "release_name": "Revolver",
+        "release_year": "1966",
+        "genres": "Pop Rock, Psychedelic Pop",
+        "rating_value": "4.23",
+        "formatted_rating_count": "67,440",
+        "best_album_position": "#1 of 1966",
+        "all_time_album_position": "#17 overall",
+        "performers": "George Martin (mixing, producer), Ken Townsend (engineer), Geoff Emerick (recording engineer, mixing), Klaus Voormann (cover design), Robert Whitaker (photography).",
+        "link": "https://rateyourmusic.com/release/album/the-beatles/revolver/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/21394faeb4c2e3696ac5c2bfb6e93672.png",
+        "album_wiki": "Revolver is the seventh studio album by English rock band the Beatles, released on 5 August 1966 on the Parlophone label and produced by George Martin. Many of the tracks on Revolver feature an electric guitar-rock sound that contrasts with their previous LP, the folk rock inspired Rubber Soul (1965). In Britain, the fourteen tracks from Revolver were released to radio stations throughout July 1966, \"building anticipation for what would clearly be a radical new phase in the group's recording career\".\n\nIt reached number one on both the British chart and American chart and stayed at the top spot for seven weeks and six weeks, respectively. The album was remastered 9 September 2009 for the first time since its 1987 digital compact disc release. Placed at number 1 in the All-Time Top 1000 Albums and number 3 in the Rolling Stone magazine's list of the 500 greatest albums of all time, the album is often regarded as one of the greatest achievements in music history and one of the Beatles' greatest studio achievements. [Read more](https://www.last.fm/music/The+Beatles/Revolver). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/3PRoXYsngSwjEQWR5PsHWR?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_n9q-ezB2RZF1WS7PR3h3drrTgNCf-DRSk&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/revolver/1441164670"
         ],
         "request_count": 1,
         "likes": 1,

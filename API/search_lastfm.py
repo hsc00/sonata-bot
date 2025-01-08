@@ -31,15 +31,19 @@ def search_lastfm_artist(artist_name, lastfm_api_key):
             end = style.find(')', start)
             image_url = style[start:end]
         else:
-            image_url = ""
+            image_url = None
             print("Image not found for artist: {artist_name}")
+
+        listeners = lastfm_data['artist']['stats']['listeners'] if 'artist' in lastfm_data and 'stats' in lastfm_data['artist'] else None
+        formatted_listeners = f"{int(listeners):,}" if listeners.isdigit() else listeners
+        summary = clean_wiki_text(lastfm_data['artist']['bio']['summary']) if 'artist' in lastfm_data and 'bio' in lastfm_data['artist'] else None
 
         artist_info = {
             # "name": lastfm_data['artist']['name'] if 'artist' in lastfm_data else None,
             "artist_img_url": image_url,
-            "listeners": lastfm_data['artist']['stats']['listeners'] if 'artist' in lastfm_data and 'stats' in lastfm_data['artist'] else None,
+            "listeners": formatted_listeners,
             "similar_artists": [sim_artist['name'] for sim_artist in lastfm_data['artist']['similar']['artist']] if 'artist' in lastfm_data and 'similar' in lastfm_data['artist'] else [],
-            "summary": lastfm_data['artist']['bio']['summary'] if 'artist' in lastfm_data and 'bio' in lastfm_data['artist'] else None
+            "summary": summary
         }
         
         return artist_info

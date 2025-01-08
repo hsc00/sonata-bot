@@ -1,11 +1,10 @@
 import logging
 import discord
-from views import RYMView
+from views import RYMViewReleases, RYMViewArtists
 import time
 from datetime import datetime
 import re
 from API.rym_search import search_rym_release, search_rym_artist
-from API.search_lastfm import search_lastfm_artist
 
 bot_instance = None
 google_tokens = None
@@ -29,15 +28,12 @@ async def process_artist_link_or_text(message):
     artist_query = message.content
     if artist_query.startswith('!artist') or artist_query.startswith('!a'):
         content_parts = message.content.split(' ', 1)
-        if len(content_parts) > 1:
-            artist_query = content_parts[1]
-        else:
+        if len(content_parts) < 2:
             await message.channel.send('Please provide an artist.')
             return
         artist_query = artist_query.split(' ', 1)[1] 
         
         artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
-        print(artist_info)
     else:
         #clean message link
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', artist_query)
@@ -46,11 +42,40 @@ async def process_artist_link_or_text(message):
         # Check if the query is a valid RYM link
         if artist_query.startswith('rateyourmusic.com/artist/') or artist_query.startswith('https://rateyourmusic.com/artist/') and len(artist_query.split('/')) > 3:
             artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
-            print(artist_info)
         elif artist_query.startswith('rateyourmusic.com/'):
             await message.channel.send('Invalid link. Please provide a valid RateYourMusic **artist** link.')
             return
         
+    if artist_info:
+        artist_name = artist_info['artist_name']
+        founded_year = artist_info['founded_year']
+        genres = artist_info['genres']
+        listeners = artist_info['listeners']
+        similar_artists = artist_info['similar_artists']
+        artist_img_url = artist_info['artist_img_url']
+        artist_summary = artist_info['summary']
+        streaming_links = artist_info['streaming_links']
+        link = artist_info['link']
+        likes = artist_info.get('likes', 0)
+        dislikes = artist_info.get('dislikes', 0)
+
+        embed_title = f"{artist_name}"
+        embed_description = f"*{genres}*\n\nListeners: **{listeners}**\n Founded in: **{founded_year}**\n\n {artist_summary}"
+
+        embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+        if artist_img_url:
+            embed.set_thumbnail(url=artist_img_url)
+
+        embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
+
+        embed.set_footer(text=f"Requested by {message.author.display_name}")
+        sent_message = await message.channel.send(embed=embed)
+
+        view = RYMViewArtists(artist_name, similar_artists, embed, original_message_id=sent_message.id, streaming_links=streaming_links)
+        view.link = link
+
+        await sent_message.edit(view=view)
+
 
 # searches release on rym
 async def process_release_link_or_text(message):
@@ -102,7 +127,7 @@ async def process_release_link_or_text(message):
 
         if best_album_position:
             best_album_number = int(re.search(r'#(\d+)', best_album_position).group(1))
-            embed_description += f"\n**{best_album_number}** of {release_year}"
+            embed_description += f"\n#**{best_album_number}** of {release_year}"
         if all_time_album_position:
             all_time_album_number = int(re.search(r'#(\d+)', all_time_album_position).group(1))
             embed_description += f", #**{all_time_album_number}** overall"
@@ -128,7 +153,7 @@ async def process_release_link_or_text(message):
         embed.set_footer(text=f"Requested by {message.author.display_name}")
         sent_message = await message.channel.send(embed=embed)
 
-        view = RYMView(album_wiki, embed, original_message_id=sent_message.id, release_name=release_name, streaming_links=streaming_links, performers=performers)
+        view = RYMViewReleases(album_wiki, embed, original_message_id=sent_message.id, release_name=release_name, streaming_links=streaming_links, performers=performers)
         view.link = link
 
         await sent_message.edit(view=view)

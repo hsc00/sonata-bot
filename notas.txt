@@ -1,6 +1,10 @@
-terminaste de conseguir os dados do artista via link ou prompt no rym_search, agora trata da cache 
-e depois podes começar o embed. Good job
+artistas e albuns devem aparecer mesmo que com bugs, tens de dar fix rapido a:
+- estamos a cortar as carateres maximos da wiki dos albuns no "frontend", passa para backend
+para quando a cache é recolhida
+- tenta diminuir os response times de todos os botoes
 
+proximo feature: faz o average rating de todas as releases de um artista que estejam na cache
+e apresenta essas releases com link para elas num botao novo
 
 
 ## mixtapes ##
@@ -20,7 +24,6 @@ o bug dos albuns aparecerem sem likes acontece quando a cache é reposta, provav
 adicionar setlists do setlist.fm
 
 ## artist ##
-faz o average rating de todas as suas releases
 quando se pesquisa um artista pesquisar as releases que o rym manda e adicionar à cache de albuns
 (é so usares o metodo search_rym_release e passares cada uma das releases dos og:descriptors lá)
 procurar albuns do artista em cache para apresentar na parte de Popular albuns e o seu rating
