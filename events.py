@@ -66,10 +66,10 @@ async def process_release_link_or_text(message):
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', message.content)
         query = match.group(0)
 
-    # Check if the query is a valid RYM link
-    if query.startswith('rateyourmusic.com/release/') and len(query.split('/')) > 4:
+   # Check if the query is a valid RYM link
+    if (query.startswith('rateyourmusic.com/release/') or query.startswith('https://rateyourmusic.com/release/')) and len(query.split('/')) > 5:
         search_result = search_rym_release(query, google_tokens, cse_id, lastfm_api_key)
-    elif query.startswith('rateyourmusic.com/') or query.startswith('https://rateyourmusic.com/'):
+    elif query.startswith('rateyourmusic.com/'):
         await message.channel.send('Invalid link. Please provide a valid RateYourMusic **release** link.')
         return
     else:
