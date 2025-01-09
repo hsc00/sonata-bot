@@ -82,7 +82,7 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
         rym_info = extract_artist_info(results[0])
         rym_info['link'] = link
 
-    lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key)
+    lastfm_info = search_lastfm_artist(rym_info['artist_name'], lastfm_api_key)
     artist_info = {**rym_info, **lastfm_info}
     artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")  
 
@@ -113,25 +113,22 @@ def get_streaming_links(action_type, artist, album, year):
         if cached_artist and 'streaming_links' in cached_artist:
             return cached_artist['streaming_links']
     
-    if action_type == "release" : query = f"{formatted_artist}-{formatted_album}-{year} streaming"
-    elif action_type == "artist" : query = f"{artist} streaming"
-
-    url = f"https://www.google.com/search?q={query}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    }
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
+    # Initial query and action
+    if action_type == "release":
+        queries = [f"{formatted_artist}-{formatted_album}-{year} streaming"]
+        action = 'listen_album'
+    elif action_type == "artist":
+        queries = [f"{artist} streaming", f"{artist} band streaming", f"{artist} artist streaming"]
+        action = 'listen_artist'
 
     streaming_links = []
-    if action_type == "release" : action =  'listen_album'
-    elif action_type == "artist" : action = 'listen_artist'
+    for query in queries:
+        streaming_links = fetch_streaming_links(query, action)
+        if streaming_links:
+            break
 
-    for div in soup.find_all('div', {'data-attrid': 'action:' + action}):
-        for a in div.find_all('a', href=True):
-            href = a['href']
-            if any(service in href for service in ['spotify', 'apple', 'music.youtube', 'soundcloud', 'bandcamp']):
-                streaming_links.append(href)
+    if not streaming_links:
+        print("No streaming links found.")
 
     # Update cache with streaming links
     if action_type == "release" :
@@ -143,6 +140,23 @@ def get_streaming_links(action_type, artist, album, year):
                 cached_artist['streaming_links'] = streaming_links
                 update_artist_in_cache(f"rateyourmusic.com/artist/{formatted_artist}", cached_artist)
 
+    return streaming_links
+
+
+def fetch_streaming_links(query, action):
+    url = f"https://www.google.com/search?q={query}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+
+    streaming_links = []
+    for div in soup.find_all('div', {'data-attrid': 'action:' + action}):
+        for a in div.find_all('a', href=True):
+            href = a['href']
+            if any(service in href for service in ['spotify', 'apple', 'music.youtube', 'soundcloud', 'bandcamp']):
+                streaming_links.append(href)
     return streaming_links
 
 
@@ -186,13 +200,13 @@ def extract_artist_info(result):
     artist_name = pagemap.get('musicgroup', [{}])[0].get('name', 'Unknown Artist')
     rym_img_url = pagemap.get('cse_thumbnail', [{}])[0].get('src', '')
     og_description = metatags.get('og:description', '')
-    release_year = extract_founded_year(og_description)
+    founded_year = extract_founded_year(og_description)
     genres = extract_genres(og_description)
 
     return {
         'artist_name': artist_name,
         'rym_img_url': rym_img_url,
-        'founded_year': release_year,
+        'founded_year': founded_year,
         'genres': genres,
     }
 
@@ -200,14 +214,26 @@ def extract_artist_info(result):
 def extract_founded_year(description):
     # Try to find a pattern like "formed YEAR"
     founded_year_match = re.search(r'formed (\d{4})', description)
-    if not founded_year_match:
-        # Try to find a pattern like "formed MONTH YEAR"
-        founded_year_match = re.search(r'formed (\w+ \d{4})', description)
-    if not founded_year_match:
-        # Try to find a pattern like "formed DAY MONTH YEAR"
-        founded_year_match = re.search(r'formed (\d{1,2} \w+ \d{4})', description)
-    # Extract and return the year part, or 'Unknown Year' if no match is found
-    return founded_year_match.group(1).split()[-1] if founded_year_match else 'Unknown'
+    if founded_year_match:
+        return f"Formed in: {founded_year_match.group(1)}"
+    
+    # Try to find a pattern like "formed MONTH YEAR"
+    founded_year_match = re.search(r'formed (\w+ \d{4})', description)
+    if founded_year_match:
+        return f"Formed in: {founded_year_match.group(1).split()[-1]}"
+    
+    # Try to find a pattern like "formed DAY MONTH YEAR"
+    founded_year_match = re.search(r'formed (\d{1,2} \w+ \d{4})', description)
+    if founded_year_match:
+        return f"Formed in: {founded_year_match.group(1).split()[-1]}"
+    
+    # Try to find a pattern like "born DAY MONTH YEAR" for individual artists
+    founded_year_match = re.search(r'born (\d{1,2} \w+ \d{4})', description)
+    if founded_year_match:
+        return f"Born in: {founded_year_match.group(1).split()[-1]}"
+    
+    # Return 'Unknown' if no match is found
+    return 'Unknown'
 
 
 def extract_release_year(description):

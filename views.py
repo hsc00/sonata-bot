@@ -111,6 +111,7 @@ class LikeButton(discord.ui.Button):
 
         await interaction.message.edit(embed=new_embed)
 
+
 class DislikeButton(discord.ui.Button):
     def __init__(self, action_type, original_message_id, data_name):
         super().__init__(label='👎', style=discord.ButtonStyle.secondary, custom_id='dislike_button')
@@ -183,7 +184,8 @@ class DislikeButton(discord.ui.Button):
 class AlbumInfoButton(discord.ui.Button):
     def __init__(self, album_wiki):
         super().__init__(label='Wiki', style=discord.ButtonStyle.primary, custom_id='album_info')
-        read_more_link = ' [Read more](https://www.last.fm/music/Joy+Division/Unknown+Pleasures)'
+        read_more_link_start = album_wiki.rfind("[Read more](") 
+        read_more_link = album_wiki[read_more_link_start:]
         max_length = 1200 - len(read_more_link)
         if len(album_wiki) > max_length:
             truncated_wiki = album_wiki[:max_length-3] + '...' + read_more_link  # Ensure it ends with '...' if truncated
@@ -200,7 +202,6 @@ class AlbumInfoButton(discord.ui.Button):
         self.view.clear_items()
         self.view.add_item(BackButton(self.view))
         await interaction.edit_original_response(embed=new_embed, view=self.view)
-
 
 
 class SimilarArtistsButton(discord.ui.Button):
@@ -258,21 +259,24 @@ class BackButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         self._view.clear_items()
-        
+
         self._view.add_item(LikeButton(self._view.action_type, self._view.original_message_id, self._view.release_name if self._view.action_type == "release" else self._view.artist_name))
         self._view.add_item(DislikeButton(self._view.action_type, self._view.original_message_id, self._view.release_name if self._view.action_type == "release" else self._view.artist_name))
-        
+
         if self._view.action_type == "release":
-            self._view.add_item(AlbumInfoButton(self._view.album_wiki))
-            if hasattr(self._view, 'performers') and self._view.performers:
+            if self._view.album_wiki:
+                self._view.add_item(AlbumInfoButton(self._view.album_wiki))
+            if self._view.performers:
                 self._view.add_item(CreditsButton(self._view.performers))
-        if self._view.action_type == "artist" and hasattr(self._view, 'similar_artists') and self._view.similar_artists:
-            self._view.add_item(SimilarArtistsButton(self._view.similar_artists))
+                
+        if self._view.action_type == "artist":
+            if self._view.similar_artists:
+                self._view.add_item(SimilarArtistsButton(self._view.similar_artists))
+
         if self._view.streaming_links:
             self._view.add_item(StreamingButton(self._view.streaming_links))
-            
-        await interaction.response.edit_message(embed=self._view.general_embed, view=self._view)
 
+        await interaction.response.edit_message(embed=self._view.general_embed, view=self._view)
 
 
 def handle_like_dislike(action_type, link, user_id, like=True):

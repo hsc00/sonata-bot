@@ -2,7 +2,7 @@
     "rateyourmusic.com/artist/the-beatles": {
         "artist_name": "The Beatles",
         "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4bewAgmI5zovqIchRi40BIC9mrJbaJ6_5vB58xAPALibnCtZZe81pDE9T&s",
-        "founded_year": "1960",
+        "founded_year": "Founded in: 1960",
         "genres": "Pop Rock, Merseybeat, Psychedelic Pop",
         "link": "https://rateyourmusic.com/artist/the-beatles",
         "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/55efc33bcd234fd8a1d65b3d49bf9661.jpg",
@@ -31,7 +31,7 @@
     "rateyourmusic.com/artist/radiohead": {
         "artist_name": "Radiohead",
         "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqvz_EcnWxYMlW5uKGrvJesqWHMws9UcZPQOAFcreevMFK2Pv4tz0D0E4&s",
-        "founded_year": "1991",
+        "founded_year": "Founded in: 1991",
         "genres": "Alternative Rock, Art Rock, Electronic",
         "link": "https://rateyourmusic.com/artist/radiohead",
         "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/57711743b8c85cca50c796d68bdd6381.jpg",
@@ -48,6 +48,272 @@
             "https://open.spotify.com/artist/4Z8W4fKeB5YxbusRsdQVPb?autoplay=true",
             "https://music.youtube.com/channel/UCr_iyUANcn9OX_yy9piYoLw?feature=gws_kp_artist&feature=gws_kp_artist",
             "https://music.apple.com/pt/artist/radiohead/657515"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/ekcetera": {
+        "artist_name": "Ekcetera",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtU-MEbAAoxpUBtpZO6UOI-B5lrCSkbB5Wpy-qxeNBkDFMuEfalrpG9H8&s",
+        "founded_year": "Founded in: 2022",
+        "genres": "Noise Rock, Post-Hardcore",
+        "link": "https://rateyourmusic.com/artist/ekcetera",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/ae381f903556b814f2e8beee4f1cc004.jpg",
+        "listeners": "282",
+        "similar_artists": [
+            "J/A",
+            "Sereias",
+            "MAQUINA.",
+            "Vangas",
+            "Sentries"
+        ],
+        "summary": " [Read more](https://www.last.fm/music/Ekcetera)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/0yQplh150EDTfHbCRv76A4?autoplay=true",
+            "https://music.youtube.com/channel/UCwMU-13YLFLt0vPRL_v695Q?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/ekcetera/1681317096"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            361203809101414422
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/j_a-1": {
+        "artist_name": "J/A",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ57kr3Zb7VIXoSObapjQNH4HzxqimnXJ6Jwa4AfhaaHL4QwuMcxqId1lcE&s",
+        "founded_year": "Unknown",
+        "genres": "Alternative Rock",
+        "link": "https://rateyourmusic.com/artist/j_a-1",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/0eddb87888c4f9541b3ed07c20b00902.jpg",
+        "listeners": "60",
+        "similar_artists": [
+            "Ekcetera",
+            "Sereias",
+            "O Triunfo dos Ac\u00e9falos",
+            "MAQUINA.",
+            "Maria Reis"
+        ],
+        "summary": " [Read more](https://www.last.fm/music/J%2FA)",
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/the-rolling-stones": {
+        "artist_name": "The Rolling Stones",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTwBlXsTaLHf-ubJBUl6OGQ66ii4E1Y45tEVpxmGqDmt186AmKf3oX1jk&s",
+        "founded_year": "Formed in: 1962",
+        "genres": "Rock, Blues Rock, British Rhythm & Blues",
+        "link": "https://rateyourmusic.com/artist/the-rolling-stones",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/b5b897a0fc43d95c3c831e959c7c2d13.jpg",
+        "listeners": "5,218,273",
+        "similar_artists": [
+            "Keith Richards",
+            "The Who",
+            "The Kinks",
+            "Ron Wood",
+            "Mick Jagger"
+        ],
+        "summary": "The Rolling Stones is a rock band formed in London in 1962. Active for six decades, they are one of the most popular and enduring bands of the rock era. In the early 1960s, the Rolling Stones pioneered the gritty, rhythmically driven sound that came to define hard rock. Their first stable line-up consisted of vocalist Mick Jagger, multi-instrumentalist Brian Jones, guitarist Keith Richards, bassist Bill Wyman, and drummer Charlie Watts. During their formative years [Read more](https://www.last.fm/music/The+Rolling+Stones)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/22bE4uQ6baNwSHPVcDxLCe?autoplay=true",
+            "https://music.youtube.com/channel/UCNYhhkQqeFLUc-YEDcLpSYQ?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/the-rolling-stones/1249595"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/charli-xcx": {
+        "artist_name": "Charli XCX",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3ZPepjxUOvQBqm_Wucf2q8qIvz68hsWbdJww3gtlz4T8VSGXgPgdeP5E9&s",
+        "founded_year": "Born in: 1992",
+        "genres": "Electropop, Bubblegum Bass, Dance-Pop",
+        "link": "https://rateyourmusic.com/artist/charli-xcx",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/17379eb7b00706946c95dc8d73effb4c.jpg",
+        "listeners": "2,910,208",
+        "similar_artists": [],
+        "summary": "Charlotte Emma Aitchison, known professionally as Charli xcx, is an English singer and songwriter. Born in Cambridge and raised in Start Hill, Essex, she began posting songs on MySpace in 2008, which led to her discovery by a promoter who invited her to perform at warehouse raves and parties. In 2010, she signed a recording contract with Asylum Records, releasing a series of singles and mixtapes throughout 2011 and 2012.\n\nIn 2012, Charli xcx rose to prominence with the Icona Pop collaboration \"I Love It\" [Read more](https://www.last.fm/music/Charli+XCX)",
+        "streaming_links": [
+            "https://music.apple.com/pt/artist/charli-xcx/432942256",
+            "https://open.spotify.com/artist/25uiPmTg16RbhZWAqwLBy5?autoplay=true",
+            "https://music.youtube.com/channel/UCI4YNnmHjXFaaKvfdmpWvJQ?feature=gws_kp_artist&feature=gws_kp_artist"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/new-order": {
+        "artist_name": "New Order",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVF3MuR_D0RR5dqvHhiFGhLAjKgOseoA4KBiGRZfukQ7ypUUDpg2zZ_1o&s",
+        "founded_year": "Formed in: 1980",
+        "genres": "Alternative Dance, Synthpop, Post-Punk",
+        "link": "https://rateyourmusic.com/artist/new-order",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/e95d741efead74498821089b772ab7de.jpg",
+        "listeners": "2,729,189",
+        "similar_artists": [
+            "Electronic",
+            "Joy Division",
+            "The Other Two",
+            "Orchestral Manoeuvres in the Dark",
+            "Monaco"
+        ],
+        "summary": "New Order are a new wave/synthpop band which formed in 1980 in Salford, England, United Kingdom by the three remaining members of Joy Division. The band's classic lineup consists of Bernard Sumner (vocals, guitar, keyboards), Peter Hook (bass, electronic percussion), Gillian Gilbert (keyboards, guitar) and Stephen Morris (drums, keyboards). The group effectively disbanded in 1993 but reformed in 1998. Gilbert left in 2001 to look after her and Morris' children and was replaced by guitarist/keyboardist Phil Cunningham. [Read more](https://www.last.fm/music/New+Order)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/0yNLKJebCb8Aueb54LYya3?autoplay=true",
+            "https://music.youtube.com/channel/UCXExK7We8VKsIzFFQYNEgBg?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/new-order/176722"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/swans": {
+        "artist_name": "Swans",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTRuwdKKcW_tCAlLZGC1QdWqkGrkTuK1Puvfi5uZjjYDEfh2SxHcKOMgrP&s",
+        "founded_year": "Formed in: 1981",
+        "genres": "Experimental Rock, Post-Rock, Noise Rock",
+        "link": "https://rateyourmusic.com/artist/swans",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/550a905b42df059126219fcb1cdc2ac6.jpg",
+        "listeners": "665,491",
+        "similar_artists": [
+            "Michael Gira",
+            "Godspeed You! Black Emperor",
+            "Jarboe",
+            "Glenn Branca",
+            "This Heat"
+        ],
+        "summary": "Swans are an American experimental rock band from New York, United States, active from 1982 to 1997, reformed in 2010, led by singer, songwriter and multi-instrumentalist Michael Gira.\n\nMarginally associated with the no wave scene at first, their original sound was slow and extremely heavy, with live performances that were often so brutal and physical that in a number of instances certain audience members were made ill, police were called and venues were shut down. [Read more](https://www.last.fm/music/Swans)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/79S80ZWgVhIPMCHuvl6SkA?autoplay=true",
+            "https://music.apple.com/pt/artist/swans/1052906269"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/boris": {
+        "artist_name": "Boris",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQt3wy1LGw9K5sqYzGDlW1c_dapkb83-ZA9qBTxa94b8HPQPWH-X7570Q8I&s",
+        "founded_year": "Formed in: 1992",
+        "genres": "Drone Metal, Stoner Metal, Drone",
+        "link": "https://rateyourmusic.com/artist/boris",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/b7c8fd5cf27a4ac194d772c7514d86ce.jpg",
+        "listeners": "516,239",
+        "similar_artists": [
+            "Boris with Merzbow",
+            "Boris with Michio Kurihara",
+            "Sunn O))) & Boris",
+            "Sunn O)))",
+            "Les Rallizes D\u00e9nud\u00e9s"
+        ],
+        "summary": "1. Boris are a Japanese experimental    metal band formed in Tokyo in 1992.  The band's original lineup consisted of lead vocalist Atsuo, bassist/rhythm guitarist Takeshi, lead guitarist Wata, and drummer Nagata.  After Nagata's departure in 1996, Atsuo took over drums and the lineup has remained consistent to this day. [Read more](https://www.last.fm/music/Boris)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/3EgMK920cIH5aLxFnJ6zSi?autoplay=true",
+            "https://music.youtube.com/channel/UCQw0ksJNGo4bMlj2EViW8LQ?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/boris/429514621"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/taylor-swift": {
+        "artist_name": "Taylor Swift",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8gGJEpW_zCz-HcTf11bdp_1J2zes1S7IfvjFViLlQx9klm0yFEDtKN6RM&s",
+        "founded_year": "Born in: 1989",
+        "genres": "Singer-Songwriter, Pop Rock, Country Pop",
+        "link": "https://rateyourmusic.com/artist/taylor-swift",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/2f3621786e7e820c77e9bac66abf4089.jpg",
+        "listeners": "4,975,188",
+        "similar_artists": [
+            "Olivia Rodrigo",
+            "Sabrina Carpenter",
+            "Gracie Abrams",
+            "Chappell Roan",
+            "Lorde"
+        ],
+        "summary": "Taylor Alison Swift is an American singer-songwriter. Her discography spans multiple genres, and her narrative songwriting, which is often inspired by her personal life, has received widespread media coverage and critical praise.\n\nSwift rose to mainstream prominence with her sophomore studio album, Fearless (2008), a country pop record with crossover appeal. Aided by the top-five singles \u201cLove Story\u201d and \u201cYou Belong with Me\u201d, Fearless was certified Diamond by the Recording Industry Recording Industry Association of America (RIAA). [Read more](https://www.last.fm/music/Taylor+Swift)",
+        "streaming_links": [
+            "https://music.apple.com/pt/artist/taylor-swift/159260351",
+            "https://open.spotify.com/artist/06HL4z0CvFAxyc27GXpf02?autoplay=true",
+            "https://music.youtube.com/channel/UCPC0L1d253x-KuMNwa05TpA?feature=gws_kp_artist&feature=gws_kp_artist"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/death-from-above-1979": {
+        "artist_name": "Death From Above 1979",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR9GQOPM7qyw6fvqXlb78q6NHC9d0ap85FftnlcN7r2XuI_9BfWfFvuQcvz&s",
+        "founded_year": "Formed in: 2001",
+        "genres": "Dance-Punk, Post-Hardcore, Sass",
+        "link": "https://rateyourmusic.com/artist/death-from-above-1979",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/2d45d50d29e44d6bcd1b34bbbfe30a7a.jpg",
+        "listeners": "980,119",
+        "similar_artists": [
+            "The Vines",
+            "Demob Happy",
+            "Blood Red Shoes",
+            "Bloc Party",
+            "!!!"
+        ],
+        "summary": "Death from Above 1979  is the Toronto-based duo of Jesse F. Keeler (bass, synths) and Sebastien Grainger (vocals, drums), which formed in 2001. Refusing to employ a lead guitarist, they played loud synth infused dance punk on the drum and bass combination alone.\n\nThey added the 1979 suffix to the name following a legal dispute with New York City dance-punk label Death From Above (known as DFA Records since the September 11, 2001 attacks). \"Death from above\" was written on a helicopter in the movie Apocalypse Now, which was copyrighted in 1979. [Read more](https://www.last.fm/music/Death+from+Above+1979)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/18H0sAptzdwid08XGg1Lcj?autoplay=true",
+            "https://music.apple.com/pt/artist/death-from-above-1979/31683901"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/aurora-5": {
+        "artist_name": "AURORA",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRooYa_BaIU6kO6H7Z53eu2lRYO1h3Ho0CBYHrB_41i-NP9HZsuovSXxdE&s",
+        "founded_year": "Born in: 1996",
+        "genres": "Alt-Pop, Art Pop, Synthpop",
+        "link": "https://rateyourmusic.com/artist/aurora-5",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/acf0b2d09b3445c4078bcc149053eaa9.jpg",
+        "listeners": "1,438,651",
+        "similar_artists": [
+            "Caroline Polachek",
+            "Marina",
+            "Melanie Martinez",
+            "Sigrid",
+            "Lorde"
+        ],
+        "summary": "Aurora Aksnes (born June 15, 1996), known mononymously as AURORA, is a Norwegian singer, songwriter and record producer. She is considered one of Norway's biggest artists. Born in Stavanger and raised in the towns of H\u00f8le and Os, she began writing her first songs and learning dance at the age of six. After some of her songs were uploaded online and became popular in Norway, she signed a recording contract with Petroleum Records, Decca and Glassnote Records in 2014. [Read more](https://www.last.fm/music/Aurora)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/1WgXqy2Dd70QQOU7Ay074N?autoplay=true",
+            "https://music.youtube.com/channel/UC4G-AJa7kn8oumI6TT2WXYw?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/aurora/947171999"
         ],
         "request_count": 1,
         "likes": 0,

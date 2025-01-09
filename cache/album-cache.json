@@ -320,7 +320,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
-        "request_count": 2,
+        "request_count": 3,
         "likes": 4,
         "dislikes": 0,
         "liked_users": [
@@ -1129,6 +1129,28 @@
             "https://music.apple.com/pt/album/revolver/1441164670"
         ],
         "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/%E6%A0%B8p-model/%E3%83%93%E3%82%B9%E3%83%88%E3%83%AD%E3%83%B3": {
+        "artist_name": "\u6838P-Model [Kaku P-Model]",
+        "release_name": "\u30d3\u30b9\u30c8\u30ed\u30f3",
+        "release_year": "2004",
+        "genres": "Electropop, Art Pop, Electro-Industrial",
+        "rating_value": "3.82",
+        "formatted_rating_count": "454",
+        "best_album_position": "#30 of 2004",
+        "all_time_album_position": "#2385 overall",
+        "performers": "\u5e73\u6ca2\u9032 [Susumu Hirasawa] (producer, writer, liner notes), Masanori Chinzei (mixing, mastering engineer), non graph (design), Mika Hirano (music coordinator), Rihito Yumoto (music coordinator), Kenji Sato (executive producer), Masaru Owaku (photography).",
+        "link": "https://rateyourmusic.com/release/album/%E6%A0%B8p-model/%E3%83%93%E3%82%B9%E3%83%88%E3%83%AD%E3%83%B3/",
+        "album_cover_url": null,
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 2,
         "likes": 1,
         "dislikes": 0,
         "liked_users": [
