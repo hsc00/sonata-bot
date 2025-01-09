@@ -184,14 +184,7 @@ class DislikeButton(discord.ui.Button):
 class AlbumInfoButton(discord.ui.Button):
     def __init__(self, album_wiki):
         super().__init__(label='Wiki', style=discord.ButtonStyle.primary, custom_id='album_info')
-        read_more_link_start = album_wiki.rfind("[Read more](") 
-        read_more_link = album_wiki[read_more_link_start:]
-        max_length = 1200 - len(read_more_link)
-        if len(album_wiki) > max_length:
-            truncated_wiki = album_wiki[:max_length-3] + '...' + read_more_link  # Ensure it ends with '...' if truncated
-        else:
-            truncated_wiki = album_wiki + read_more_link
-        self.album_wiki = truncated_wiki
+        self.album_wiki = album_wiki
 
     async def callback(self, interaction: discord.Interaction):
         await interaction.response.defer()  # Acknowledge the interaction to avoid timeout

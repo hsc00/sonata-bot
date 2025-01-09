@@ -9,6 +9,16 @@ def get_album_info_from_lastfm(artist_name, album_name, lastfm_api_key):
     lastfm_data = lastfm_response.json()
     album_cover_url = lastfm_data['album']['image'][-1]['#text'] if 'album' in lastfm_data and 'image' in lastfm_data['album'] else None
     album_wiki = clean_wiki_text(lastfm_data['album']['wiki']['content']) if 'album' in lastfm_data and 'wiki' in lastfm_data['album'] else None
+    
+    if album_wiki:
+        read_more_link_start = album_wiki.rfind("[Read more](")
+        read_more_link = album_wiki[read_more_link_start:] if read_more_link_start != -1 else ''
+        max_length = 1200 - len(read_more_link)
+        if len(album_wiki) > max_length:
+            album_wiki = album_wiki[:max_length-3] + '...' + read_more_link
+        elif read_more_link and not album_wiki.endswith(read_more_link):
+            album_wiki = album_wiki + read_more_link
+    
     return album_cover_url, album_wiki
 
 def search_lastfm_artist(artist_name, lastfm_api_key):
@@ -41,6 +51,15 @@ def search_lastfm_artist(artist_name, lastfm_api_key):
         # Extract and clean the first artist's summary if there are more than one
         if '\n\n1. ' in summary: 
             summary = summary.split('\n\n1. ')[1].split('\n\n')[0].strip() 
+
+        # Limit text to 1200 chars
+        read_more_link_start = summary.rfind("[Read more](")
+        read_more_link = summary[read_more_link_start:] if read_more_link_start != -1 else ''
+        max_length = 1200 - len(read_more_link)
+        if len(summary) > max_length:
+            summary = summary[:max_length-3] + '...' + read_more_link
+        elif read_more_link and not summary.endswith(read_more_link):
+            summary = summary + read_more_link
 
         artist_info = {
             # "name": lastfm_data['artist']['name'] if 'artist' in lastfm_data else None,

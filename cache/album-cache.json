@@ -1157,5 +1157,29 @@
             408671768002297856
         ],
         "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/the-beatles/abbey-road": {
+        "artist_name": "The Beatles",
+        "release_name": "Abbey Road",
+        "release_year": "1969",
+        "genres": "Pop Rock",
+        "rating_value": "4.28",
+        "formatted_rating_count": "71,359",
+        "best_album_position": "#2 of 1969",
+        "all_time_album_position": "#11 overall",
+        "performers": "John Lennon (electric guitar, 12 string electric guitar, acoustic guitar, 12 string acoustic guitar), Paul McCartney (bass guitar), George Harrison (electric guitar, acoustic guitar, bass guitar), Ringo Starr (drums), George Martin (producer, mixing engineer), Mike Vickers (Moog), Geoff Emerick (recording engineer, mixing engineer), Phil McDonald (recording engineer, mixing engineer), Alan Parsons (assistant engineer), Iain MacMillan (photography).",
+        "link": "https://rateyourmusic.com/release/album/the-beatles/abbey-road/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/f304ba0296794c6fc9d0e1cccd194ed0.jpg",
+        "album_wiki": "Abbey Road is the 11th studio album released by the English rock band The Beatles. It is their last recorded album, although Let It Be was the last album released before the band's dissolution in 1970. Work on Abbey Road began in April 1969, and the album was released on 26 September 1969 in the United Kingdom, and 1 October 1969 in the United States.\n\nAbbey Road is widely regarded as one of The Beatles' most tightly constructed albums, although the band was barely operating as a functioning unit at the time. Despite the tensions within the band, Abbey Road was released to near universal acclaim and is considered to be one of the greatest albums of all time. In 2012, Abbey Road was voted 14th on Rolling Stone magazine's list of the \"500 Greatest Albums of All Time\". In 2009, readers of the magazine also named Abbey Road the greatest Beatles album. [Read more](https://www.last.fm/music/The+Beatles/Abbey+Road). [Read more](https://www.last.fm/music/The+Beatles/Abbey+Road). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/0ETFjACtuP2ADo6LFhL6HN?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lj7SrLMlCLYsWHRdwAe4Qej8bRUQfppf0&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/abbey-road-remastered/1441164426"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
     }
 }

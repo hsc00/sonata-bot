@@ -1,6 +1,4 @@
 artistas e albuns devem aparecer mesmo que com bugs, tens de dar fix rapido a:
-- estamos a cortar as carateres maximos da wiki dos albuns no "frontend", passa para backend
-para quando a cache é recolhida
 - tenta diminuir os response times de todos os botoes
 - -alterar o nome da posicao para o nome da banda e o rym-link ser outro campo
 para ao usar os comandos sem ter link nao precisar de estar sempre a pesquisar no google pelo link

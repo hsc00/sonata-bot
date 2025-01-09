@@ -320,5 +320,32 @@
         "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
+    },
+    "rateyourmusic.com/artist/joy-division": {
+        "artist_name": "Joy Division",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxkhhjD4AS9ZjWgJxpQ2u02fL9cfT0Lb4RClBDV-TUbjNrIoCTbRDPKYY&s",
+        "founded_year": "Formed in: 1977",
+        "genres": "Post-Punk, Punk Rock, Gothic Rock",
+        "link": "https://rateyourmusic.com/artist/joy-division",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/1529a18e3a8e5005c71a02f7279c9a74.jpg",
+        "listeners": "2,944,271",
+        "similar_artists": [
+            "New Order",
+            "The Cure",
+            "Bauhaus",
+            "Siouxsie and the Banshees",
+            "The Smiths"
+        ],
+        "summary": "Joy Division were a post-punk band formed in 1976 in Salford, Greater Manchester, United Kingdom. Originally named Warsaw, the band consisted of Ian Curtis (vocals and occasional guitar), Bernard Sumner (guitar and keyboards), Peter Hook (bass guitar and backing vocals) and Stephen Morris (drums and percussion). The band dissolved in May 1980 after the suicide of its lead singer, Ian Curtis. Much of their popularity/reputation arguably resulted from frequent playings on air by iconic DJ John Peel [Read more](https://www.last.fm/music/Joy+Division)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/432R46LaYsJZV2Gmc4jUV5?autoplay=true",
+            "https://music.youtube.com/channel/UCj9bYSgqVuUxqd3x9myLWKA?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/joy-division/722383"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
     }
 }
