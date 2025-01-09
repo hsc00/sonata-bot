@@ -235,10 +235,12 @@
             "https://music.youtube.com/channel/UCQw0ksJNGo4bMlj2EViW8LQ?feature=gws_kp_artist&feature=gws_kp_artist",
             "https://music.apple.com/pt/artist/boris/429514621"
         ],
-        "request_count": 1,
-        "likes": 0,
+        "request_count": 2,
+        "likes": 1,
         "dislikes": 0,
-        "liked_users": [],
+        "liked_users": [
+            907362326011854858
+        ],
         "disliked_users": []
     },
     "rateyourmusic.com/artist/taylor-swift": {
@@ -342,10 +344,302 @@
             "https://music.youtube.com/channel/UCj9bYSgqVuUxqd3x9myLWKA?feature=gws_kp_artist&feature=gws_kp_artist",
             "https://music.apple.com/pt/artist/joy-division/722383"
         ],
+        "request_count": 3,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/merzbow": {
+        "artist_name": "Merzbow",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqcFRqoaXfUM7t9z3xgI_AGMZnmkD33S1wlXdxUuKMCU3_DV70tWPXwJyt&s",
+        "founded_year": "Formed in: 1979",
+        "genres": "Noise, Harsh Noise, Free Improvisation",
+        "link": "https://rateyourmusic.com/artist/merzbow",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/fbe31381d14147bd91ad101841e35718.jpg",
+        "listeners": "186,917",
+        "similar_artists": [
+            "Masonna",
+            "Incapacitants",
+            "The Gerogerigegege",
+            "\u7070\u91ce\u656c\u4e8c",
+            "C.C.C.C."
+        ],
+        "summary": "Merzbow (\u30e1\u30eb\u30c4\u30d0\u30a6) is an experimental music project created in Tokyo in 1979 under the direction of musician Masami Akita (\u79cb\u7530\u660c\u7f8e). Since 1979, Akita has formed two record labels and has contributed releases to numerous independent record labels. As well as being a prolific artist, he has also written a number of books and has been the editor of several magazines in Japan. He has written about a variety of subjects, mostly about art, avant-garde music and post-modern culture. [Read more](https://www.last.fm/music/Merzbow)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/5UezsklPScipW64XJm7qql?autoplay=true",
+            "https://music.youtube.com/channel/UC4U05gp1wd2oq0_xNIX5GSQ?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/merzbow/21317692"
+        ],
         "request_count": 1,
         "likes": 0,
         "dislikes": 0,
         "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/bjork": {
+        "artist_name": "Bj\u00f6rk",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTArsny2w_ixSTpINylEfpVqfiCHQ8GFv6tnfXCGZwfZWt6npLg3Gsz3Vo&s",
+        "founded_year": "Born in: 1965",
+        "genres": "Art Pop, Electronic, Glitch Pop",
+        "link": "https://rateyourmusic.com/artist/bjork",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/69590d05cc8732472ccc6531f0e78dcf.jpg",
+        "listeners": "3,048,065",
+        "similar_artists": [
+            "Arca",
+            "The Sugarcubes",
+            "FKA twigs",
+            "Kate Bush",
+            "Fiona Apple"
+        ],
+        "summary": "Bj\u00f6rk Gu\u00f0mundsd\u00f3ttir (born 21 November 1965), known mononymously as Bj\u00f6rk, is an Icelandic singer, songwriter, composer, record producer, and actress. Noted for her distinct three-octave vocal range and eccentric persona, she has developed an eclectic musical style over her four-decade career that has drawn on electronic, pop, experimental, trip hop, jazz, classical, and avant-garde music.\n\nBorn and raised in Reykjav\u00edk, Bj\u00f6rk began her music [Read more](https://www.last.fm/music/+noredirect/Bj%C3%B6rk)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/7w29UYBi0qsHi5RTcv3lmA?autoplay=true",
+            "https://music.youtube.com/channel/UCAjidy3vxRkgGVNIFqZMl_Q?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/bj%C3%B6rk/295015"
+        ],
+        "request_count": 2,
+        "likes": 2,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856,
+            907362326011854858
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/fishmans": {
+        "artist_name": "Fishmans",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR26Ap_Q4KSq7_gHRIVv_LUeP7iAFUu81rW_OaJT0dVbqdy9Pz4ZEjtrx8r&s",
+        "founded_year": "Formed in: 1987",
+        "genres": "Neo-Psychedelia, Dream Pop, Shibuya-kei",
+        "link": "https://rateyourmusic.com/artist/fishmans",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/d9e90d61fe073d2be2e9a209f02a7ea7.jpg",
+        "listeners": "373,299",
+        "similar_artists": [
+            "Supercar",
+            "Doopees",
+            "bonobos",
+            "Candy Claws",
+            "\u30b5\u30cb\u30fc\u30c7\u30a4\u30fb\u30b5\u30fc\u30d3\u30b9"
+        ],
+        "summary": "Fishmans (\u30d5\u30a3\u30c3\u30b7\u30e5\u30de\u30f3\u30ba) were an influential Japanese  band formed in 1987. They were ranked number 83 in a list of Japan\u2019s top 100 musicians provided by HMV, and are renowned for their unique sound and the distinctive vocals of lead singer Shinji Sato.\n\nThe band was formed in 1987 by Sato (vocals, guitar, trumpet), Kin-Ichi Motegi (drums, vocals, sampler) and Kensuke Ojima (guitar and vocals). The addition of Yuzuru Kashiwabara (bass) and Hakase (keyboards) rounded up the original line-up. [Read more](https://www.last.fm/music/Fishmans)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/1g8HCTiMwBtFtpRR9JXAZR?autoplay=true",
+            "https://music.youtube.com/channel/UC7xvvw65sBv6VkZwua70lgA?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/fishmans/304929223"
+        ],
+        "request_count": 1,
+        "likes": 4,
+        "dislikes": 0,
+        "liked_users": [
+            907362326011854858,
+            408671768002297856,
+            615613695317377035,
+            784774186967105547
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/the-cure": {
+        "artist_name": "The Cure",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTDz9lwWuVV9U0AtvIsZ3n0nvNNOc7scO40xr_5EfR3hImsizXlTSHkBo&s",
+        "founded_year": "Formed in: 1976",
+        "genres": "Post-Punk, Alternative Rock, Gothic Rock",
+        "link": "https://rateyourmusic.com/artist/the-cure",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/adb30de168061c7fc32b729a4326cbd1.jpg",
+        "listeners": "4,592,370",
+        "similar_artists": [
+            "Siouxsie and the Banshees",
+            "Bauhaus",
+            "Joy Division",
+            "The Glove",
+            "Echo & the Bunnymen"
+        ],
+        "summary": "The Cure are a band which formed in 1976 in Crawley, England, United Kingdom. The band originally consisted of Robert Smith (vocals, guitar), Pearl Thompson (guitar), Michael Dempsey (bass) and Lol Tolhurst (drums), with the band's lineup overgoing several changes throughout the years and Smith remaining as the only constant member throughout the band's history. The band currently consists of Smith (vocals, guitar), Simon Gallup (bass), Roger O'Donnell (keyboards), Jason Cooper (drums) and Reeves Gabrels (guitar). [Read more](https://www.last.fm/music/The+Cure)",
+        "streaming_links": [
+            "https://music.apple.com/pt/artist/the-cure/566519",
+            "https://open.spotify.com/artist/7bu3H8JO7d0UbMoVzbo70s?autoplay=true",
+            "https://music.youtube.com/channel/UCKuG9-MGolUuWbEcoz5qijw?feature=gws_kp_artist&feature=gws_kp_artist"
+        ],
+        "request_count": 1,
+        "likes": 2,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856,
+            907362326011854858
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/hi-c-1": {
+        "artist_name": "Hi-C",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQd_qXejS0BHXoPIDHpkUTvaHlHtGvSjom36dsmtSbZ79ce_7rvTGf81TY&s",
+        "founded_year": "Born in: 1998",
+        "genres": "Cloud Rap, Trap, Southern Hip Hop",
+        "link": "https://rateyourmusic.com/artist/hi-c-1",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/4802bebc0cddae141ba7dad5b3861f4e.jpg",
+        "listeners": "168,265",
+        "similar_artists": [
+            "Reptilian Club Boyz",
+            "Diamondsonmydick",
+            "Lil Shine",
+            "Cartier God",
+            "Black Kray"
+        ],
+        "summary": "Hi-C, born Crawford Wilkerson and also known as Crawf Dog, is a rapper born in New Orleans, Louisiana, and raised in Compton, California. He is a member of the Westside Piru Bloods. Wilkerson is known for his high-pitched voice and raunchy, humourous lyrics. He has worked with DJ Quik, 2nd II None, Nate Dogg and AMG. More recently, Hi-C followed the lead of other West Coast rappers such [Read more](https://www.last.fm/music/Hi-C)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/3EIRAkpuy9odn1jDz6PaU8?autoplay=true",
+            "https://music.youtube.com/channel/UC4LIIdq6aseOfWBNWp9PWdA?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/hi-c/1505323752"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/fontaines-d_c": {
+        "artist_name": "Fontaines D.C.",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAM_ihyXwJB5cGHa7kHIjTeIbLLwJ6hdvE-3tfmLXnf24xhJLe_ueKXm8&s",
+        "founded_year": "Formed in: 2014",
+        "genres": "Post-Punk, Indie Rock, Gothic Rock",
+        "link": "https://rateyourmusic.com/artist/fontaines-d_c",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/4b368de459c48ed772ee1a5b917f333e.jpg",
+        "listeners": "620,938",
+        "similar_artists": [
+            "Wunderhorse",
+            "The Murder Capital",
+            "Shame",
+            "Deadletter",
+            "IDLES"
+        ],
+        "summary": "Fontaines D.C. are an Irish post-punk band formed in Dublin, Ireland, in 2014. They have since moved to London, United Kingdom. The band comprises Grian Chatten (vocals), Carlos O'Connell (guitar), Conor Curley (guitar), Conor Deegan III (bass) and Tom Coll (drums). \n\nAfter meeting while attending music college, and bonding over a common love of poetry, the band began self-releasing singles and performing live regularly, signing to Partisan Records in 2018. [Read more](https://www.last.fm/music/Fontaines+D.C.)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/3SXwqSqAoBz9WCI9PDQzY6?autoplay=true",
+            "https://music.youtube.com/channel/UC0nEcTGDKDsdF4KcCh3-NUQ?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/fontaines-d-c/1341828470"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 2,
+        "liked_users": [
+            601054815417532462
+        ],
+        "disliked_users": [
+            623169290904010769,
+            907362326011854858
+        ]
+    },
+    "rateyourmusic.com/release/album/portishead/portishead": {
+        "artist_name": "Portishead",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSGjVk9mOZxuZAx3FpTXKKumtqtw7EMs4lljyeLG316v1UJfajtV3Nd60n&s",
+        "founded_year": "Unknown",
+        "genres": "Trip Hop",
+        "link": "https://rateyourmusic.com/release/album/portishead/portishead/",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/4cd1292a02452e2b71ab73e3bc94f9f6.jpg",
+        "listeners": "2,771,361",
+        "similar_artists": [
+            "The Funky Lowlives",
+            "Hird",
+            "Soulstice",
+            "A Forest Mighty Black",
+            "Marsmobil"
+        ],
+        "summary": "Portishead are an English band formed in 1991 in Bristol. Portishead are named after Portishead, Somerset, eight miles west of Bristol, along the coast. The band comprises vocalist Beth Gibbons, producer Geoff Barrow and musician Adrian Utley.\n\nPortishead's debut album, Dummy (1994), fused hip hop production with an atmospheric, cinematic style reminiscent of spy film soundtracks. The album was met with commercial and critical acclaim, quickly becoming a landmark album in the emerging trip hop genre. [Read more](https://www.last.fm/music/Portishead)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/6liAMWkVf5LH7YR9yfFy1Y?autoplay=true",
+            "https://music.youtube.com/channel/UCweAx0TIRdAylp6G1nviqbQ?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/portishead/853090"
+        ],
+        "request_count": 1,
+        "likes": 4,
+        "dislikes": 0,
+        "liked_users": [
+            623169290904010769,
+            601054815417532462,
+            408671768002297856,
+            784774186967105547
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/natural-snow-buildings": {
+        "artist_name": "Natural Snow Buildings",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLIUJlPf5zLiQMFFcFMd1L5rD4XNRBjOljzYCWSw8pOwYidfMvZoaPcu8&s",
+        "founded_year": "Formed in: 1998",
+        "genres": "Drone, Free Folk, Psychedelic Folk",
+        "link": "https://rateyourmusic.com/artist/natural-snow-buildings",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/76f605c404efcf54132ded0f1efc23b3.jpg",
+        "listeners": "84,573",
+        "similar_artists": [
+            "TwinSisterMoon",
+            "Isengrind",
+            "Yellow Swans",
+            "NSB Archive",
+            "Jim O'Rourke"
+        ],
+        "summary": "Natural Snow Buildings are a duo from Vitr\u00e9, France, consisting of artists Mehdi Ameziane and Solange Gularte. They play music which can be classified as experimental,  psychedelic folk with drone elements and ambient influences. Formed in 1997, they have released numerous albums, many of them in extremely limited quantities. \n\nBoth members of Natural Snow Buildings record as solo artists: Mehdi Ameziane as TwinSisterMoon and Solange Gularte as Isengrind. [Read more](https://www.last.fm/music/Natural+Snow+Buildings)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/6Y6w2HnL3GM49hOa74QhOO?autoplay=true",
+            "https://music.youtube.com/channel/UCLX06Ge6pBxgz7bGP04Nzog?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/natural-snow-buildings/277448916"
+        ],
+        "request_count": 2,
+        "likes": 3,
+        "dislikes": 0,
+        "liked_users": [
+            784774186967105547,
+            290082376300888064,
+            269251294848352256
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/jim-orourke": {
+        "artist_name": "Jim O'Rourke",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvqUpdqXJcBNiazKzNBTUGt3lJ-rKdOAr9k-OTN6CJNjtaAL3Y6-mrx34&s",
+        "founded_year": "Born in: 1969",
+        "genres": "Drone, Ambient, Electroacoustic",
+        "link": "https://rateyourmusic.com/artist/jim-orourke",
+        "artist_img_url": null,
+        "listeners": "42",
+        "similar_artists": [],
+        "summary": " [Read more](https://www.last.fm/music/+noredirect/Jim+ORourke)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/46urSPEzIrRVqKqciwOq2f?autoplay=true",
+            "https://music.youtube.com/channel/UCGAr4EIN5-MtWjjosHSX0Hw?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/jim-orourke/5662433"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            784774186967105547
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/artist/sereias": {
+        "artist_name": "Sereias",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH2_X-QLj8KS5KnVq9iCvCokh6vCOTvAyg6VJB1bIjYaJNm3XE3PXoxj9h&s",
+        "founded_year": "Unknown",
+        "genres": "Noise Rock, Post-Punk, Art Punk",
+        "link": "https://rateyourmusic.com/artist/sereias",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/e0eb64c6610f86682094a9fb8c8445fe.jpg",
+        "listeners": "1,423",
+        "similar_artists": [
+            "MAQUINA.",
+            "Vaiapraia",
+            "Maria Reis",
+            "Tiago e os Tintos",
+            "Putas B\u00eabadas"
+        ],
+        "summary": "Encontro do cin\u00e9tico com a paisagem morta numa selvajaria de jazz-punk-p\u00f3s-aqu\u00e1tico.\nOs Sereias s\u00e3o: Ant\u00f3nio Pedro Ribeiro (voz), Arianna Casellas (voz), Jo\u00e3o Pires (bateria), Julius Gabriel (saxofone), Nils Meisel (sintetizadores), S\u00e9rgio Rocha (guitarra) e Tommy Luther Hughes (baixo), Celestino Monteiro (documenta\u00e7\u00e3o) e Francisco Laranjeira (v\u00eddeo). [Read more](https://www.last.fm/music/Sereias)",
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 4,
+        "dislikes": 0,
+        "liked_users": [
+            290082376300888064,
+            408671768002297856,
+            784774186967105547,
+            623169290904010769
+        ],
         "disliked_users": []
     }
 }

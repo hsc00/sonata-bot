@@ -59,9 +59,6 @@ async def process_artist_link_or_text(message):
         likes = artist_info.get('likes', 0)
         dislikes = artist_info.get('dislikes', 0)
 
-        if founded_year == "Unknown":
-            return None
-
         embed_title = f"{artist_name}"
         embed_description = f"*{genres}*\n\nListeners: **{listeners}**\n {founded_year}\n\n {artist_summary}"
 

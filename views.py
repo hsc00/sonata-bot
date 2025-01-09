@@ -1,4 +1,6 @@
 import discord
+import unicodedata
+import re
 from API.album_cache import get_album_from_cache, update_releases_likes_dislikes
 from API.artist_cache import get_artist_from_cache ,update_artist_likes_dislikes
 from emoji_links import streaming_emojis
@@ -97,17 +99,18 @@ class LikeButton(discord.ui.Button):
         # Update the cache
         if self.action_type == "release": 
             update_releases_likes_dislikes(self.view.link, user_id, like=True)
-            album_data = album_data = get_album_from_cache(self.view.link, increment_request_count=False)
-            new_embed = interaction.message.embeds[0]
-            new_embed.clear_fields()
-            new_embed.add_field(name="\u200b", value=f"❤️ {album_data['likes']} \t 👎 {album_data['dislikes']}", inline=True)
+            album_data = get_album_from_cache(self.view.link, increment_request_count=False)
         
         if self.action_type == "artist": 
             update_artist_likes_dislikes(self.view.link, user_id, like=True)
             artist_data = artist_data = get_artist_from_cache(self.view.link, increment_request_count=False)
-            new_embed = interaction.message.embeds[0]
-            new_embed.clear_fields()
-            new_embed.add_field(name="\u200b", value=f"❤️ {artist_data['likes']} \t 👎 {artist_data['dislikes']}", inline=True)
+
+        # Clear and update embed fields 
+        new_embed = interaction.message.embeds[0] 
+        new_embed.clear_fields() 
+        likes = album_data['likes'] if self.action_type == "release" else artist_data['likes'] 
+        dislikes = album_data['dislikes'] if self.action_type == "release" else artist_data['dislikes'] 
+        new_embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
 
         await interaction.message.edit(embed=new_embed)
 
@@ -163,21 +166,21 @@ class DislikeButton(discord.ui.Button):
         message = await original_message.reply(f'{nickname} disliked **{self.data_name}**!')
         self.view.message_ids[(user_id, 'dislike')] = message.id
 
-        # Update the cache
+       # Update the cache
         if self.action_type == "release":
             update_releases_likes_dislikes(self.view.link, user_id, like=False)
             album_data = get_album_from_cache(self.view.link, increment_request_count=False)
-            new_embed = interaction.message.embeds[0]
-            new_embed.clear_fields()
-            new_embed.add_field(name="\u200b", value=f"❤️ {album_data['likes']} \t 👎 {album_data['dislikes']}", inline=True)
-
         elif self.action_type == "artist":
             update_artist_likes_dislikes(self.view.link, user_id, like=False)
             artist_data = get_artist_from_cache(self.view.link, increment_request_count=False)
-            new_embed = interaction.message.embeds[0]
-            new_embed.clear_fields()
-            new_embed.add_field(name="\u200b", value=f"❤️ {artist_data['likes']} \t 👎 {artist_data['dislikes']}", inline=True)
-        
+
+        # Clear and update embed fields
+        new_embed = interaction.message.embeds[0]
+        new_embed.clear_fields()
+        likes = album_data['likes'] if self.action_type == "release" else artist_data['likes']
+        dislikes = album_data['dislikes'] if self.action_type == "release" else artist_data['dislikes']
+        new_embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
+
         await interaction.message.edit(embed=new_embed)
 
 
@@ -203,7 +206,7 @@ class SimilarArtistsButton(discord.ui.Button):
         self.similar_artists = similar_artists
 
     async def callback(self, interaction: discord.Interaction):
-        similar_artists_text = '\n'.join([f"[{artist}](https://rateyourmusic.com/artist/{artist.lower().replace(' ', '-')})" for artist in self.similar_artists])
+        similar_artists_text = '\n'.join([f"[{artist}](https://rateyourmusic.com/artist/{normalize_link(artist)})" for artist in self.similar_artists])
         new_embed = discord.Embed(title=f"Similar Artists to {self.view.artist_name}", description=similar_artists_text)
         if interaction.message.embeds[0].thumbnail:
             new_embed.set_thumbnail(url=interaction.message.embeds[0].thumbnail.url)
@@ -227,21 +230,30 @@ class CreditsButton(discord.ui.Button):
         self.view.add_item(BackButton(self.view))
         await interaction.response.edit_message(embed=new_embed, view=self.view)
 
-
 class StreamingButton(discord.ui.Button):
     def __init__(self, streaming_links):
         super().__init__(label='Streaming', style=discord.ButtonStyle.primary, custom_id='streaming_button')
         self.streaming_links = streaming_links
+        self.buttons = [
+            discord.ui.Button(
+                label="",
+                emoji=streaming_emojis.get(link.split('.')[1].capitalize(), link.split('.')[1].capitalize()),
+                url=link
+            ) for link in self.streaming_links
+        ]
 
     async def callback(self, interaction: discord.Interaction):
         embed = interaction.message.embeds[0]
-        self.view.clear_items()
-        self.view.add_item(BackButton(self.view))
-        for link in self.streaming_links:
-            service_name = link.split('.')[1].capitalize()
-            emoji = streaming_emojis.get(service_name, service_name)
-            button = discord.ui.Button(label="", emoji=emoji, url=link)
+
+        # Clear items only if necessary
+        if self.view.children:
+            self.view.clear_items()
+            self.view.add_item(BackButton(self.view))
+
+        # Add pre-generated buttons
+        for button in self.buttons:
             self.view.add_item(button)
+
         await interaction.message.edit(embed=embed, view=self.view)
 
 
@@ -277,3 +289,10 @@ def handle_like_dislike(action_type, link, user_id, like=True):
         update_releases_likes_dislikes(link, user_id, like)
     elif action_type == "artist":
         update_artist_likes_dislikes(link, user_id, like)
+
+def normalize_link(s):
+    # Remove special characters and normalize the string
+    s = unicodedata.normalize('NFKD', s)
+    s = re.sub(r'[^\w\s-]', '', s)
+    s = s.replace(' ', '-').lower()
+    return s

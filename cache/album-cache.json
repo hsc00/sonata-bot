@@ -320,7 +320,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
-        "request_count": 3,
+        "request_count": 4,
         "likes": 4,
         "dislikes": 0,
         "liked_users": [
@@ -1175,6 +1175,78 @@
             "https://open.spotify.com/album/0ETFjACtuP2ADo6LFhL6HN?autoplay=true",
             "https://music.youtube.com/playlist?list=OLAK5uy_lj7SrLMlCLYsWHRdwAe4Qej8bRUQfppf0&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/abbey-road-remastered/1441164426"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/boris-vs-choukoku-no-niwa/more-echoes-touching-air-landscape": {
+        "artist_name": "Boris vs Choukoku no Niwa",
+        "release_name": "More Echoes, Touching Air Landscape",
+        "release_year": "1999",
+        "genres": "Drone, Psychedelic Rock, Drone Metal, Acid Rock",
+        "rating_value": "3.24",
+        "formatted_rating_count": "554",
+        "best_album_position": "#813 of 1999",
+        "all_time_album_position": null,
+        "performers": "\u6728\u6751\u5065\u592a\u90ce [Kentaro Kimura] (mastering), Enju Tanahashi (executive producer), FangsAnalSatan (design).",
+        "link": "https://rateyourmusic.com/release/album/boris-vs-choukoku-no-niwa/more-echoes-touching-air-landscape/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/6bd84a244e09f0811b30432cf57d9876.jpg",
+        "album_wiki": null,
+        "streaming_links": [],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/portishead/dummy": {
+        "artist_name": "Portishead",
+        "release_name": "Dummy",
+        "release_year": "1994",
+        "genres": "Trip Hop",
+        "rating_value": "4.17",
+        "formatted_rating_count": "49,803",
+        "best_album_position": "#2 of 1994",
+        "all_time_album_position": "#35 overall",
+        "performers": "Adrian Utley (producer), Beth Gibbons (vocals, writer), Portishead (producer), Geoff Barrow (writer), Dave McDonald (engineer).",
+        "link": "https://rateyourmusic.com/release/album/portishead/dummy/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/29f72d0333df4193981b5ff16dd37df6.png",
+        "album_wiki": "Dummy is the debut studio album by English band Portishead, released on August 22, 1994 by Go! Beat Records. The album is often credited with popularising the trip hop genre and is frequently cited in lists of the best albums of the 1990s.\n\n\"Numb\" was released on June 6, 1994 as the album's lead single, followed by \"Sour Times\" in August of the same year and \"Glory Box\" in January 1995.\n\nThe tracks \"Roads\" and \"Strangers\" were used in the soundtrack of the 1994 horror film Nadja. [Read more](https://www.last.fm/music/Portishead/Dummy). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/3539EbNgIdEDGBKkUf4wno?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_nMft1HP8iD7Wu0f0PfOKfao7r_nrBz6O8&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/dummy/1440653096"
+        ],
+        "request_count": 1,
+        "likes": 3,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856,
+            290082376300888064,
+            784774186967105547
+        ],
+        "disliked_users": []
+    },
+    "rateyourmusic.com/release/album/swans/to-be-kind": {
+        "artist_name": "Swans",
+        "release_name": "To Be Kind",
+        "release_year": "2014",
+        "genres": "Experimental Rock, Post-Rock",
+        "rating_value": "4.05",
+        "formatted_rating_count": "31,640",
+        "best_album_position": "#2 of 2014",
+        "all_time_album_position": "#113 overall",
+        "performers": "Michael Gira (vocals, electric guitar, acoustic guitar, lyrics, music, producer, art direction, design), Norman Westberg (electric guitar, acoustic guitar, vocals), Phil Puleo (drums, percussion, dulcimer, piano, keyboard, vocals, layout), Kristof Hahn (lap steel guitar, electric guitar, vocals), Thor Harris (drums, percussion, bells, wind instruments, viola, vocals), Chris Pravdica (bass guitar, acoustic guitar, vocals), Bill Rieflin (drums, percussion, piano, bass, guitar, synthesizer, keyboard), Daniel Hart (violin), Rex Emerson (mandolin), David Pierce (trombone), Evan Weiss (trumpet), Sean Kirkpatrick (piano, harpsichord, synthesizer), John Congleton (piano, recording engineer, mixing), Charles Godfrey (second engineer), Doug Henderson (mastering engineer), Bob Biggs (cover art).",
+        "link": "https://rateyourmusic.com/release/album/swans/to-be-kind/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/cfaeae64a4344c50ccfd7f4608c190e2.png",
+        "album_wiki": "To Be Kind is the thirteenth studio album by American experimental rock band Swans, released on May 12, 2014. It was released as a triple LP, a double CD, and a two-CD deluxe edition that includes a live DVD of performances from Hellfest Open Air Festival, Pitchfork Music Festival and Primavera Sound Festival, as well as a digital download. Critical reception of the album was very positive, continuing a string of well-received albums from the band. The album peaked at number 37 on US Billboard 200, and debuted at number 38 on the UK Albums Chart. Both are the highest chartings that Swans had ever achieved on a studio album and it is the first time that the band cracked the top 40 in both countries.\n\nTo Be Kind was produced by frontman Michael Gira and recorded by John Congleton at Sonic Ranch and at Congleton's studio in Dallas. Rehearsing commenced at Sonic Ranch in October 2013 and recording began soon after. Mixing was completed with Congleton in December in Dallas. Most of the music was developed while touring in 2012 and 2013. The album features special guests St. Vincent, Cold Specks, Little Annie and Bill Rieflin. O...[Read more](https://www.last.fm/music/Swans/To+Be+Kind). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/4dq7JNcHKrnozzFQg5bpmn?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_nqEDfB23AdNQTvOfzLxsPpjPqiT37aRo0&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/to-be-kind/838349816"
         ],
         "request_count": 1,
         "likes": 0,

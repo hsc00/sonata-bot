@@ -31,3 +31,9 @@ tentar dar fix as descricoes tipo a de boris pedindo só o primeiro resultado id
 
 ## tracks ##
 devolve o bocado das lyrics in real time do que se esta a ouvir - https://pypi.org/project/lyrics-transcriber/
+
+
+## users ##
+dá load dos ratings dos users em cada album
+profile proprio
+ultimos ratings

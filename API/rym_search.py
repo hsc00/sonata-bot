@@ -82,7 +82,7 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
         rym_info = extract_artist_info(results[0])
         rym_info['link'] = link
 
-    lastfm_info = search_lastfm_artist(rym_info['artist_name'], lastfm_api_key)
+    lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key)
     artist_info = {**rym_info, **lastfm_info}
     artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")  
 
@@ -118,7 +118,7 @@ def get_streaming_links(action_type, artist, album, year):
         queries = [f"{formatted_artist}-{formatted_album}-{year} streaming"]
         action = 'listen_album'
     elif action_type == "artist":
-        queries = [f"{artist} streaming", f"{artist} band streaming", f"{artist} artist streaming"]
+        queries = [f"{artist} band streaming", f"{artist} artist streaming"]
         action = 'listen_artist'
 
     streaming_links = []
@@ -200,7 +200,7 @@ def extract_artist_info(result):
     artist_name = pagemap.get('musicgroup', [{}])[0].get('name', 'Unknown Artist')
     rym_img_url = pagemap.get('cse_thumbnail', [{}])[0].get('src', '')
     og_description = metatags.get('og:description', '')
-    founded_year = extract_founded_year(og_description)
+    founded_year = extract_founded_or_born_year(og_description)
     genres = extract_genres(og_description)
 
     return {
@@ -211,7 +211,9 @@ def extract_artist_info(result):
     }
 
 
-def extract_founded_year(description):
+import re
+
+def extract_founded_or_born_year(description):
     # Try to find a pattern like "formed YEAR"
     founded_year_match = re.search(r'formed (\d{4})', description)
     if founded_year_match:
@@ -227,10 +229,15 @@ def extract_founded_year(description):
     if founded_year_match:
         return f"Formed in: {founded_year_match.group(1).split()[-1]}"
     
-    # Try to find a pattern like "born DAY MONTH YEAR" for individual artists
-    founded_year_match = re.search(r'born (\d{1,2} \w+ \d{4})', description)
-    if founded_year_match:
-        return f"Born in: {founded_year_match.group(1).split()[-1]}"
+    # Try to find a pattern like "born YEAR"
+    born_year_match = re.search(r'born (\d{4})', description)
+    if born_year_match:
+        return f"Born in: {born_year_match.group(1)}"
+    
+    # Try to find a pattern like "born DAY MONTH YEAR"
+    born_year_match = re.search(r'born (\d{1,2} \w+ \d{4})', description)
+    if born_year_match:
+        return f"Born in: {born_year_match.group(1).split()[-1]}"
     
     # Return 'Unknown' if no match is found
     return 'Unknown'
