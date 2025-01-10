@@ -1,19 +1,18 @@
 import json
 import os
+import unicodedata
+import re
 
 ARTIST_CACHE_FILE = 'cache/artist-cache.json'
-cache = {}
 
-def normalize_url(url):
-    if url.startswith('https://'):
-        url = url.split('https://')[1]
-    elif url.startswith('http://'):
-        url = url.split('http://')[1]
-    if url.startswith('www.'):
-        url = url.split('www.')[1]
-    return url.rstrip('/')
+def normalize_name(s):
+    # Remove special characters and normalize the string
+    s = unicodedata.normalize('NFKD', s)
+    s = re.sub(r'[^\w\s-]', '', s)
+    s = s.replace(' ', '-').lower()
+    return s
 
-def load_cache_artist():
+def load_cache():
     if os.path.exists(ARTIST_CACHE_FILE):
         with open(ARTIST_CACHE_FILE, 'r') as file:
             return json.load(file)
@@ -24,22 +23,21 @@ def save_cache(cache):
     with open(ARTIST_CACHE_FILE, 'w') as file:
         json.dump(cache, file, indent=4)
 
-load_cache_artist()
-
-def add_artist_to_cache(link, artist_data):
-    normalized_link = normalize_url(link)
+def add_artist_to_cache(artist_name, artist_data):
+    cache = load_cache()
+    normalized_name = normalize_name(artist_name)
     artist_data['request_count'] = 1
     artist_data['likes'] = 0
     artist_data['dislikes'] = 0
     artist_data['liked_users'] = []
     artist_data['disliked_users'] = []
-    cache[normalized_link] = artist_data
+    cache[normalized_name] = artist_data
     save_cache(cache)
-    print(f"Added {normalized_link} to cache")
+    print(f"Added {artist_name} to cache")
 
-def update_artist_in_cache(link, artist_data):
-    normalized_link = normalize_url(link)
-    
+def update_artist_in_cache(artist_name, artist_data):
+    cache = load_cache()
+    normalized_name = normalize_name(artist_name)
     if 'likes' not in artist_data:
         artist_data['likes'] = 0
     if 'dislikes' not in artist_data:
@@ -49,14 +47,15 @@ def update_artist_in_cache(link, artist_data):
     if 'disliked_users' not in artist_data:
         artist_data['disliked_users'] = []
     
-    cache[normalized_link] = artist_data
+    cache[normalized_name] = artist_data
     save_cache(cache)
 
 
-def update_artist_likes_dislikes(link, user_id, like=True):
-    normalized_link = normalize_url(link)
-    if normalized_link in cache:
-        artist_data = cache[normalized_link]
+def update_artist_likes_dislikes(artist_name, user_id, like=True):
+    cache = load_cache()
+    normalized_name = normalize_name(artist_name)
+    if normalized_name in cache:
+        artist_data = cache[normalized_name]
         artist_data.setdefault('liked_users', [])
         artist_data.setdefault('disliked_users', [])
         if like:
@@ -74,14 +73,15 @@ def update_artist_likes_dislikes(link, user_id, like=True):
                 artist_data['likes'] -= 1
                 artist_data['liked_users'].remove(user_id)
         save_cache(cache)
-        print(f"Updated cache for {normalized_link}")
+        print(f"Updated cache for {normalized_name}")
     else:
-        print(f"Link not found in artist cache: {normalized_link}")
+        print(f"Link not found in artist cache: {normalized_name}")
 
-def get_artist_from_cache(link, increment_request_count=True):
-    normalized_link = normalize_url(link)
-    if normalized_link in cache:
-        artist_data = cache[normalized_link]
+def get_artist_from_cache(artist_name, increment_request_count=True):
+    cache = load_cache()
+    normalized_name = normalize_name(artist_name)
+    if normalized_name in cache:
+        artist_data = cache[normalized_name]
         if increment_request_count:
             artist_data['request_count'] += 1
         artist_data.setdefault('likes', 0)
@@ -89,7 +89,7 @@ def get_artist_from_cache(link, increment_request_count=True):
         artist_data.setdefault('liked_users', [])
         artist_data.setdefault('disliked_users', [])
         save_cache(cache)
-        print(f"Retrieved from cache for {normalized_link}")
+        print(f"Retrieved from cache for {normalized_name}")
         return artist_data
-    print(f"Link not found in artist cache: {normalized_link}")
+    print(f"Link not found in artist cache: {normalized_name}")
     return None

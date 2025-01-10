@@ -1,5 +1,4 @@
 artistas e albuns devem aparecer mesmo que com bugs, tens de dar fix rapido a:
-- dar o nome do artista limpo sem precisar das infos que podem nao chegar no rym
 - -alterar o nome da posicao para o nome da banda e o rym-link ser outro campo
 para ao usar os comandos sem ter link nao precisar de estar sempre a pesquisar no google pelo link
 

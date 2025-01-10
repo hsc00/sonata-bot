@@ -66,7 +66,7 @@ class LikeButton(discord.ui.Button):
                     print("Interaction not found or expired.")
                 return
         elif self.action_type == "artist":
-            artist_data = get_artist_from_cache(self.view.link, increment_request_count=False)
+            artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
             if artist_data and user_id in artist_data.get('liked_users', []):
                 try:
                     await interaction.response.send_message('You have already liked this artist.', ephemeral=True)
@@ -98,12 +98,12 @@ class LikeButton(discord.ui.Button):
 
         # Update the cache
         if self.action_type == "release": 
-            update_releases_likes_dislikes(self.view.link, user_id, like=True)
-            album_data = get_album_from_cache(self.view.link, increment_request_count=False)
+            update_releases_likes_dislikes(self.view.release_name, user_id, like=True)
+            album_data = get_album_from_cache(self.view.release_name, increment_request_count=False)
         
         if self.action_type == "artist": 
-            update_artist_likes_dislikes(self.view.link, user_id, like=True)
-            artist_data = artist_data = get_artist_from_cache(self.view.link, increment_request_count=False)
+            update_artist_likes_dislikes(self.view.artist_name, user_id, like=True)
+            artist_data = artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
 
         # Clear and update embed fields 
         new_embed = interaction.message.embeds[0] 
@@ -136,7 +136,7 @@ class DislikeButton(discord.ui.Button):
                     print("Interaction not found or expired.")
                 return
         elif self.action_type == "artist":
-            artist_data = get_artist_from_cache(self.view.link, increment_request_count=False)
+            artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
             if artist_data and user_id in artist_data.get('disliked_users', []):
                 try:
                     await interaction.response.send_message('You have already disliked this artist.', ephemeral=True)
@@ -168,11 +168,11 @@ class DislikeButton(discord.ui.Button):
 
        # Update the cache
         if self.action_type == "release":
-            update_releases_likes_dislikes(self.view.link, user_id, like=False)
-            album_data = get_album_from_cache(self.view.link, increment_request_count=False)
+            update_releases_likes_dislikes(self.view.release_name, user_id, like=False)
+            album_data = get_album_from_cache(self.view.release_name, increment_request_count=False)
         elif self.action_type == "artist":
-            update_artist_likes_dislikes(self.view.link, user_id, like=False)
-            artist_data = get_artist_from_cache(self.view.link, increment_request_count=False)
+            update_artist_likes_dislikes(self.view.artist_name, user_id, like=False)
+            artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
 
         # Clear and update embed fields
         new_embed = interaction.message.embeds[0]
@@ -284,11 +284,11 @@ class BackButton(discord.ui.Button):
         await interaction.response.edit_message(embed=self._view.general_embed, view=self._view)
 
 
-def handle_like_dislike(action_type, link, user_id, like=True):
+def handle_like_dislike(action_type, artist_name, user_id, like=True):
     if action_type == "release":
-        update_releases_likes_dislikes(link, user_id, like)
+        update_releases_likes_dislikes(artist_name, user_id, like)
     elif action_type == "artist":
-        update_artist_likes_dislikes(link, user_id, like)
+        update_artist_likes_dislikes(artist_name, user_id, like)
 
 def normalize_link(s):
     # Remove special characters and normalize the string

@@ -40,7 +40,7 @@ async def process_artist_link_or_text(message):
         artist_query = match.group(0)
 
         # Check if the query is a valid RYM link
-        if artist_query.startswith('rateyourmusic.com/artist/') or artist_query.startswith('https://rateyourmusic.com/artist/') and len(artist_query.split('/')) > 3:
+        if artist_query.startswith('https://rateyourmusic.com/artist/') and len(artist_query.split('/')) > 3:
             artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
         elif artist_query.startswith('rateyourmusic.com/'):
             await message.channel.send('Invalid link. Please provide a valid RateYourMusic **artist** link.')
@@ -92,9 +92,9 @@ async def process_release_link_or_text(message):
         query = match.group(0)
 
    # Check if the query is a valid RYM link
-    if (query.startswith('rateyourmusic.com/release/') or query.startswith('https://rateyourmusic.com/release/')) and len(query.split('/')) > 5:
+    if (query.startswith('https://rateyourmusic.com/release/')) and len(query.split('/')) > 5:
         search_result = search_rym_release(query, google_tokens, cse_id, lastfm_api_key)
-    elif query.startswith('rateyourmusic.com/'):
+    elif query.startswith('https://rateyourmusic.com/'):
         await message.channel.send('Invalid link. Please provide a valid RateYourMusic **release** link.')
         return
     else:
