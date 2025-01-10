@@ -4,6 +4,8 @@ import os
 import importlib
 from dotenv import load_dotenv
 import logging
+from API.album_cache import load_cache
+from API.artist_cache import load_cache_artist
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
@@ -25,6 +27,9 @@ google_tokens = [
 ]
 cse_id = os.getenv('GOOGLE_CSE_ID')
 lastfm_api_key = os.getenv('LASTFM_API_KEY')
+
+load_cache()
+load_cache_artist()
 
 # Import and setup events
 import events

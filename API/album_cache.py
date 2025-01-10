@@ -2,6 +2,7 @@ import json
 import os
 
 CACHE_FILE = 'cache/album-cache.json'
+cache = {}
 
 def normalize_url(url):
     if url.startswith('https://'):
@@ -23,9 +24,9 @@ def save_cache(cache):
     with open(CACHE_FILE, 'w') as file:
         json.dump(cache, file, indent=4)
 
+load_cache()
 
 def add_album_to_cache(link, album_data):
-    cache = load_cache()
     normalized_link = normalize_url(link)
     album_data['request_count'] = 1
     album_data['likes'] = 0
@@ -36,7 +37,6 @@ def add_album_to_cache(link, album_data):
     save_cache(cache)
 
 def update_album_in_cache(link, album_data):
-    cache = load_cache()
     normalized_link = normalize_url(link)
     album_data.setdefault('likes', 0)
     album_data.setdefault('dislikes', 0)
@@ -47,7 +47,6 @@ def update_album_in_cache(link, album_data):
 
 
 def update_releases_likes_dislikes(link, user_id, like=True):
-    cache = load_cache()
     normalized_link = normalize_url(link)
     if normalized_link in cache:
         album_data = cache[normalized_link]
@@ -73,7 +72,6 @@ def update_releases_likes_dislikes(link, user_id, like=True):
         print(f"Link not found in release cache: {normalized_link}")
 
 def get_album_from_cache(link, increment_request_count=True):
-    cache = load_cache()
     normalized_link = normalize_url(link)
     if normalized_link in cache:
         album_data = cache[normalized_link]

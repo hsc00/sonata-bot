@@ -1,102 +1,109 @@
-import requests
 import re
+from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache, update_releases_likes_dislikes
 from .artist_cache import get_artist_from_cache, update_artist_in_cache, add_artist_to_cache, update_artist_likes_dislikes
 from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
-from .google_search import google_search
+from .google_search import google_search, fetch_streaming_links
 
 
 def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
-    if 'rateyourmusic.com/' not in query:
-        query += " site:rateyourmusic.com"
+    def fetch_google_results(query):
+        return google_search(query, google_tokens, cse_id)
 
-    results = google_search(query, google_tokens, cse_id)
-    if results:
-        link = results[0]['link']
-        cached_album = get_album_from_cache(link)
-        if cached_album:
-            if cached_album['request_count'] > 5:
-                cached_album['request_count'] = 0
-                update_album_in_cache(link, cached_album)
-            else:
-                update_album_in_cache(link, cached_album)
-                return cached_album
+    artist_name = query.split()
+    query += " site:rateyourmusic.com" if 'rateyourmusic.com/' not in query else ""
+    
+    cached_album = get_album_from_cache(query)
+    if cached_album:
+        if cached_album['request_count'] > 5:
+            cached_album['request_count'] = 0
+        update_album_in_cache(query, cached_album)
+        return cached_album
 
-        album_data = extract_album_info(results[0])
-        album_data['link'] = link
+    album_data = None
+    with ThreadPoolExecutor() as executor:
+        google_future = executor.submit(fetch_google_results, query)
+        google_results = google_future.result()
+        
+        if google_results:
+            for result in google_results:
+                link = result['link']
+                print(link)
+                if link.startswith('https://rateyourmusic.com/release/') and all(term.lower() in link.lower() for term in artist_name):
+                    cached_album = get_album_from_cache(link)
+                    if cached_album:
+                        if cached_album['request_count'] > 5:
+                            cached_album['request_count'] = 0
+                            update_album_in_cache(link, cached_album)
+                        else:
+                            update_album_in_cache(link, cached_album)
+                            return cached_album
+                    album_data = extract_album_info(result)
+                    album_data['link'] = link
+                    break
 
-        if album_data['release_name'] == 'Unknown Album': 
-            return None
-
+    if album_data:
         album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
         album_data['album_cover_url'] = album_cover_url
         album_data['album_wiki'] = album_wiki
-
         album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'])
 
-        cached_album = get_album_from_cache(link)
+        cached_album = get_album_from_cache(album_data['link'])
         if cached_album:
-            update_album_in_cache(link, cached_album)
+            update_album_in_cache(album_data['link'], cached_album)
             print(f"Updated cached album: {album_data['release_name']}")
         else:
             album_data['request_count'] = 1
-            add_album_to_cache(link, album_data)
+            add_album_to_cache(album_data['link'], album_data)
             print(f"Added new album to cache: {album_data['release_name']}")
 
         return album_data
 
+    return None
+    
 
 def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
-    if 'rateyourmusic.com/' not in artist_query:
-        artist_name = artist_query
-        artist_query += " site:rateyourmusic.com"
-        results = google_search(artist_query, google_tokens, cse_id)
-        if results:
-            link = results[0]['link']
-            cached_artist = get_artist_from_cache(link)
-            if cached_artist:
-                if cached_artist['request_count'] > 5:
-                    cached_artist['request_count'] = 0
-                    update_artist_in_cache(link, cached_artist)
-                else:
-                    update_artist_in_cache(link, cached_artist)
-                    return cached_artist
+    def fetch_google_results(query):
+        return google_search(query, google_tokens, cse_id)
 
-            rym_info = extract_artist_info(results[0])
-            rym_info['link'] = link
-    else:
-        link = artist_query
-        artist_name = re.sub(r'\W+', ' ', artist_query.split('/')[-1])
-        cached_artist = get_artist_from_cache(artist_query)
-        if cached_artist:
-            if cached_artist['request_count'] > 5:
-                cached_artist['request_count'] = 0
-                update_artist_in_cache(link, cached_artist)
-            else:
-                update_artist_in_cache(link, cached_artist)
-                return cached_artist
-
-        results = google_search(artist_query, google_tokens, cse_id)
-        rym_info = extract_artist_info(results[0])
-        rym_info['link'] = link
-
-    lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key)
-    artist_info = {**rym_info, **lastfm_info}
-    artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")  
-
-    cached_artist = get_artist_from_cache(link)
-    if cached_artist:
-        update_artist_in_cache(link, cached_artist)
-        print(f"Updated cached artist: {artist_info['artist_name']}")
-    else:
-        artist_info['request_count'] = 1
-        add_artist_to_cache(link, artist_info)
-        print(f"Added new artist to cache: {artist_info['artist_name']}")
-
-    return artist_info
+    artist_name = artist_query if 'rateyourmusic.com/' not in artist_query else re.sub(r'\W+', ' ', artist_query.split('/')[-1])
+    artist_query += " site:rateyourmusic.com" if 'rateyourmusic.com/' not in artist_query else ""
     
+    cached_artist = get_artist_from_cache(artist_query)
+    if cached_artist:
+        if cached_artist['request_count'] > 5:
+            cached_artist['request_count'] = 0
+        update_artist_in_cache(artist_query, cached_artist)
+        return cached_artist
+
+    with ThreadPoolExecutor() as executor:
+        google_future = executor.submit(fetch_google_results, artist_query)
+        google_results = google_future.result()
+        
+        if google_results:
+            for result in google_results:
+                link = result['link']
+                if link.startswith('https://rateyourmusic.com/artist/') and all(term.lower() in link.lower().replace('-', ' ') for term in artist_name):
+                    rym_info = extract_artist_info(result) or {}
+                    rym_info['link'] = link
+                    lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key) or {}
+                    artist_info = {**rym_info, **lastfm_info}
+                    artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
+
+                    cached_artist = get_artist_from_cache(link)
+                    if cached_artist:
+                        update_artist_in_cache(link, cached_artist)
+                    else:
+                        artist_info['request_count'] = 1
+                        add_artist_to_cache(link, artist_info)
+                        print(f"Added artist to cache: {artist_info['artist_name']}")
+                    
+                    return artist_info
+
+    return None
+
 
 def get_streaming_links(action_type, artist, album, year):
     # Remove all - from the original names and then replace spaces with - for the url
@@ -140,23 +147,6 @@ def get_streaming_links(action_type, artist, album, year):
                 cached_artist['streaming_links'] = streaming_links
                 update_artist_in_cache(f"rateyourmusic.com/artist/{formatted_artist}", cached_artist)
 
-    return streaming_links
-
-
-def fetch_streaming_links(query, action):
-    url = f"https://www.google.com/search?q={query}"
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-    }
-    response = requests.get(url, headers=headers)
-    soup = BeautifulSoup(response.text, 'html.parser')
-
-    streaming_links = []
-    for div in soup.find_all('div', {'data-attrid': 'action:' + action}):
-        for a in div.find_all('a', href=True):
-            href = a['href']
-            if any(service in href for service in ['spotify', 'apple', 'music.youtube', 'soundcloud', 'bandcamp']):
-                streaming_links.append(href)
     return streaming_links
 
 
@@ -214,30 +204,17 @@ def extract_artist_info(result):
 import re
 
 def extract_founded_or_born_year(description):
-    # Try to find a pattern like "formed YEAR"
-    founded_year_match = re.search(r'formed (\d{4})', description)
-    if founded_year_match:
-        return f"Formed in: {founded_year_match.group(1)}"
+    # Try to find a pattern for "formed" or "born"
+    patterns = [
+        r'(formed|born) (\d{1,2} \w+ \d{4})',  # formed/born DAY MONTH YEAR
+        r'(formed|born) (\w+ \d{4})',          # formed/born MONTH YEAR
+        r'(formed|born) (\d{4})'               # formed/born YEAR
+    ]
     
-    # Try to find a pattern like "formed MONTH YEAR"
-    founded_year_match = re.search(r'formed (\w+ \d{4})', description)
-    if founded_year_match:
-        return f"Formed in: {founded_year_match.group(1).split()[-1]}"
-    
-    # Try to find a pattern like "formed DAY MONTH YEAR"
-    founded_year_match = re.search(r'formed (\d{1,2} \w+ \d{4})', description)
-    if founded_year_match:
-        return f"Formed in: {founded_year_match.group(1).split()[-1]}"
-    
-    # Try to find a pattern like "born YEAR"
-    born_year_match = re.search(r'born (\d{4})', description)
-    if born_year_match:
-        return f"Born in: {born_year_match.group(1)}"
-    
-    # Try to find a pattern like "born DAY MONTH YEAR"
-    born_year_match = re.search(r'born (\d{1,2} \w+ \d{4})', description)
-    if born_year_match:
-        return f"Born in: {born_year_match.group(1).split()[-1]}"
+    for pattern in patterns:
+        match = re.search(pattern, description)
+        if match:
+            return f"{match.group(1).capitalize()} in: {match.group(2).split()[-1]}"
     
     # Return 'Unknown' if no match is found
     return 'Unknown'
