@@ -74,6 +74,7 @@ class LikeButton(discord.ui.Button):
                     print("Interaction not found or expired.")
                 return
             handle_like_dislike(self.action_type, self.artist_name +"-"+ self.release_name, user_id, like=True)
+            refresh_likes = album_data
         elif self.action_type == "artist":
             artist_data = get_artist_from_cache(self.artist_name, increment_request_count=False)
             if artist_data and user_id in artist_data.get('liked_users', []):
@@ -83,6 +84,14 @@ class LikeButton(discord.ui.Button):
                     print("Interaction not found or expired.")
                 return
             handle_like_dislike(self.action_type, self.artist_name, user_id, like=True)
+            refresh_likes = artist_data
+
+        # refresh like/dislike button numbers  
+        if user_id in refresh_likes.get('disliked_users', []):
+            for button in self.view.children:
+                if button.custom_id == 'dislike_button': button.label = str(refresh_likes['dislikes'] - 1 ) + ' 👎'
+        for button in self.view.children:
+            if button.custom_id == 'like_button': button.label = str(refresh_likes['likes'] + 1) + ' ❤️'
 
         # Delete the previous dislike message if it exists
         previous_dislike_message_id = self.view.message_ids.get((user_id, 'dislike'))
@@ -110,11 +119,6 @@ class LikeButton(discord.ui.Button):
         # Clear and update embed fields 
         new_embed = interaction.message.embeds[0] 
         new_embed.clear_fields() 
-        likes = album_data['likes'] if self.action_type == "release" else artist_data['likes']
-        dislikes = album_data['dislikes'] if self.action_type == "release" else artist_data['dislikes']
-        for button in self.view.children:
-            if button.custom_id == 'like_button': button.label = str(likes + 1) + ' ❤️'
-            elif button.custom_id == 'dislike_button': button.label = str(dislikes - 1) + ' 👎'
 
         await interaction.message.edit(embed=new_embed, view=self.view)
 
@@ -142,6 +146,8 @@ class DislikeButton(discord.ui.Button):
                     print("Interaction not found or expired.")
                 return
             handle_like_dislike(self.action_type, self.artist_name +"-"+ self.release_name, user_id, like=False)
+            refresh_dislikes = album_data
+
         elif self.action_type == "artist":
             artist_data = get_artist_from_cache(self.artist_name, increment_request_count=False)
             if artist_data and user_id in artist_data.get('disliked_users', []):
@@ -151,6 +157,14 @@ class DislikeButton(discord.ui.Button):
                     print("Interaction not found or expired.")
                 return
             handle_like_dislike(self.action_type, self.artist_name, user_id, like=False)
+            refresh_dislikes = artist_data
+
+        # refresh like/dislike button numbers  
+        if user_id in refresh_dislikes.get('liked_users', []):
+            for button in self.view.children:
+                if button.custom_id == 'like_button': button.label = str(refresh_dislikes['likes'] - 1) + ' ❤️'
+        for button in self.view.children:
+            if button.custom_id == 'dislike_button': button.label = str(refresh_dislikes['dislikes'] + 1 ) + ' 👎'
 
         # Delete the previous like message if it exists
         previous_like_message_id = self.view.message_ids.get((user_id, 'like'))
@@ -179,12 +193,7 @@ class DislikeButton(discord.ui.Button):
         # Clear and update embed fields
         new_embed = interaction.message.embeds[0]
         new_embed.clear_fields()
-        likes = album_data['likes'] if self.action_type == "release" else artist_data['likes']
-        dislikes = album_data['dislikes']if self.action_type == "release" else artist_data['dislikes']
-        for button in self.view.children:
-            if button.custom_id == 'like_button': button.label = str(likes - 1) + ' ❤️'
-            elif button.custom_id == 'dislike_button': button.label = str(dislikes + 1) + ' 👎'
-
+            
         await interaction.message.edit(embed=new_embed, view=self.view)
 
 

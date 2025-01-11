@@ -85,9 +85,9 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
                             if cached_artist['request_count'] > 5:
                                 cached_artist['request_count'] = 0
                                 update_artist_in_cache(rym_info['artist_name'], cached_artist)
-                            return cached_artist
-                        else:
-                            cached_artist['request_count'] = 1
+                                return cached_artist
+                            else:
+                                cached_artist['request_count'] = 1
                             add_artist_to_cache(rym_info['artist_name'], cached_artist)
 
                         artist_info = {**rym_info, **lastfm_info}

@@ -113,6 +113,30 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
+        "request_count": 3,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "joy-division-unknown-pleasures": {
+        "artist_name": "Joy Division",
+        "release_name": "Unknown Pleasures",
+        "release_year": "1979",
+        "genres": "Post-Punk",
+        "rating_value": "4.10",
+        "formatted_rating_count": "59,047",
+        "best_album_position": "#1 of 1979",
+        "all_time_album_position": "#45 overall",
+        "performers": "Ian Curtis (lead vocals), Bernard Sumner (guitar, keyboards), Peter Hook (bass guitar, backing vocals), Stephen Morris (drums, percussion), Joy Division (songwriter, design), Martin Hannett (producer), Chris Nagle (engineer), Porky (mastering engineer), Peter Saville (design), Christiane Mathan (design), Ralph Gibson (photography).",
+        "link": "https://rateyourmusic.com/release/album/joy-division/unknown-pleasures/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/0c6c868b77a4417f937cf09506099081.png",
+        "album_wiki": "Unknown Pleasures is the debut studio album by English rock band Joy Division, released on 15 June 1979 on Tony Wilson's Factory Records. It followed an abandoned session for RCA Records, and was recorded and mixed over three weekends at Strawberry Studios, Stockport in April 1979 with record producer Martin Hannett. The cover artwork was designed by artist Peter Saville.\n\nFactory did not release any singles from the album, and it did not chart despite the relative success of the group's non-album debut single \"Transmission\". Unknown Pleasures has gone on to receive sustained critical acclaim as a pioneering and influential post-punk album. It has been named as one of the best albums ever by publications such as NME, AllMusic, and Select.\n\nUnknown Pleasures was recorded at Strawberry Studios in Stockport over three weekends between 1 and 17 April 1979, with Martin Hannett producing. Describing Hannett's production techniques, Hook said, \" didn't think straight, he thought sideways. He confused you and made you do something you didn't expect.\" Hook went on to say, \"Derek Bramwood of Strawberry Studios said tha...[Read more](https://www.last.fm/music/Joy+Division/Unknown+Pleasures). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/5Dgqy4bBg09Rdw7CQM545s?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_myQ7YUmLVjQ1RW9J5j4TkayX4shR3ay7I&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/unknown-pleasures-collectors-edition/266603040"
+        ],
         "request_count": 2,
         "likes": 0,
         "dislikes": 1,
@@ -120,5 +144,129 @@
         "disliked_users": [
             408671768002297856
         ]
+    },
+    "joy-division-substance": {
+        "artist_name": "Joy Division",
+        "release_name": "Substance",
+        "release_year": "1988",
+        "genres": "Post-Punk",
+        "rating_value": "4.10",
+        "formatted_rating_count": "7,668",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Joy Division (writer, producer), Martin Hannett (producer), Jan van Munster (artwork), Peter Saville (art direction, design), Trevor Key (photography), Brett Wickens (design).",
+        "link": "https://rateyourmusic.com/release/comp/joy-division/substance-9/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/f59760c7b46246c473fc2e81f2ac3e33.jpg",
+        "album_wiki": "After the major studio releases of two Joy Division albums and the sad, tragic suicide of lead singer Ian Curtis, fans and record labels everywhere began honoring everything that made Ian Curtis, well... Ian Curtis. From his seductive baritone voice to his songwriting style. Even though there were only two studio releases from Joy Division, there were still many compilation albums released, this being one of the bestselling for the song selection. \n\nIt was released as a companion to the New Order compilation of the same name, released a year earlier, and much like it is a compilation of non-album singles, as well as some tracks from EPs or Samplers that were never released on studio albums. [Read more](https://www.last.fm/music/Joy+Division/Substance). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/2KPhpTUihx9KRWRwBtpTeJ?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_m3IUJCY--gk0mjNmsdwrTF2TYJlfotNzM&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/substance-1977-1980/996111401"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "joy-division-still": {
+        "artist_name": "Joy Division",
+        "release_name": "Still",
+        "release_year": "1981",
+        "genres": "Post-Punk",
+        "rating_value": "3.70",
+        "formatted_rating_count": "5,519",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Martin Hannett (producer), Chris Nagle (engineer), Joy Division (arranger).",
+        "link": "https://rateyourmusic.com/release/album/joy-division/still/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/83a57cb3e4c95138830396443809663a.jpg",
+        "album_wiki": "Still is a posthumous compilation album by Joy Division, consisting of previously unused studio material and a live recording of Joy Division's last concert. Originally planned for release in August, it was eventually released on 8 October 1981. The CD version was released in March 1990. A number of the studio recordings have \"added post production\", including over-dubs by the surviving members of the band.\n\nThe performance includes the only time the group ever performed the song Ceremony live, which later became a New Order single. Another song featured is a cover of The Velvet Underground's, Sister Ray recorded at The Moonlight Club in London on 2 April 1980.\n\nStill is a point of contention among some of the group's fans, because of the undeniably poor quality recording of the High Hall performance. This is not aided by the fact that the engineer that night mixed the vocals far too low for the first half of  Ceremony, making \nIan Curtis inaudible and thus ruining one of only two recordings the band made of the song. Recent CD reissues of the album on London Records have replaced this live version with the other known r...[Read more](https://www.last.fm/music/Joy+Division/Still). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/0Jz9CmyRybv3lSkk8XKW4c?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_kKnUM-bZX6J_PZ2CckDXd0iqIS39HrOfw&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/still-collectors-edition/275968300"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "the-beatles-rubber-soul": {
+        "artist_name": "The Beatles",
+        "release_name": "Rubber Soul",
+        "release_year": "1965",
+        "genres": "Pop Rock",
+        "rating_value": "4.01",
+        "formatted_rating_count": "51,337",
+        "best_album_position": "#3 of 1965",
+        "all_time_album_position": "#116 overall",
+        "performers": "George Martin (mixing, producer), Hurricane Smith (mixing), Robert Freeman (photography).",
+        "link": "https://rateyourmusic.com/release/album/the-beatles/rubber-soul/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/29490302d152888afc06a03b49f444fb.png",
+        "album_wiki": "Rubber Soul is the sixth studio album by the English rock band The Beatles. Released in December 1965, and produced by George Martin, Rubber Soul was recorded in just over four weeks to make the Christmas market. Showcasing a sound influenced by the folk rock of The Byrds and Bob Dylan, the album was seen as a major artistic achievement for the band, attaining widespread critical and commercial success, with reviewers taking note of The Beatles' developing musical vision. In 2003, the album was ranked number 5 on Rolling Stone magazine's list of the 500 greatest albums of all time.\n\nUK Tracklist\n\nSide One\n\n   1. \"Drive My Car\" \u2013 2:30\n   2. \"Norwegian Wood (This Bird Has Flown)\" \u2013 2:05\n   3. \"You Won't See Me\" \u2013 3:22\n   4. \"Nowhere Man\" \u2013 2:44\n   5. \"Think for Yourself\"  \u2013 2:19\n   6. \"The Word\" \u2013 2:43\n   7. \"Michelle\" \u2013 2:42\n\nSide two\n\n   1. \"What Goes On\" \u2013 2:50\n   2. \"Girl\" \u2013 2:33\n   3. \"I'm Looking Through You\" \u2013 2:27\n   4. \"In My Life\" \u2013 2:27\n   5. \"Wait\" \u2013 2:16\n   6. \"If I Needed Someone\"  \u2013 2:23\n   7. \"Run for Your Life\" \u2013 2:18\n\n\n\nHistory\n\nMusically, the Beatles broadened their sound, most notably with influenc...[Read more](https://www.last.fm/music/The+Beatles/Rubber+Soul). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/50o7kf2wLwVmOTVYJOTplm?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lvTG69VbZm3r3r9crRBvT1Tj305YEbuaM&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/rubber-soul/1441164359"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "the-beatles-revolver": {
+        "artist_name": "The Beatles",
+        "release_name": "Revolver",
+        "release_year": "1966",
+        "genres": "Pop Rock, Psychedelic Pop",
+        "rating_value": "4.23",
+        "formatted_rating_count": "67,508",
+        "best_album_position": "#1 of 1966",
+        "all_time_album_position": "#17 overall",
+        "performers": "George Martin (mixing, producer), Ken Townsend (engineer), Geoff Emerick (recording engineer, mixing), Klaus Voormann (cover design), Robert Whitaker (photography).",
+        "link": "https://rateyourmusic.com/release/album/the-beatles/revolver/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/21394faeb4c2e3696ac5c2bfb6e93672.png",
+        "album_wiki": "Revolver is the seventh studio album by English rock band the Beatles, released on 5 August 1966 on the Parlophone label and produced by George Martin. Many of the tracks on Revolver feature an electric guitar-rock sound that contrasts with their previous LP, the folk rock inspired Rubber Soul (1965). In Britain, the fourteen tracks from Revolver were released to radio stations throughout July 1966, \"building anticipation for what would clearly be a radical new phase in the group's recording career\".\n\nIt reached number one on both the British chart and American chart and stayed at the top spot for seven weeks and six weeks, respectively. The album was remastered 9 September 2009 for the first time since its 1987 digital compact disc release. Placed at number 1 in the All-Time Top 1000 Albums and number 3 in the Rolling Stone magazine's list of the 500 greatest albums of all time, the album is often regarded as one of the greatest achievements in music history and one of the Beatles' greatest studio achievements. [Read more](https://www.last.fm/music/The+Beatles/Revolver). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/3PRoXYsngSwjEQWR5PsHWR?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_n9q-ezB2RZF1WS7PR3h3drrTgNCf-DRSk&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/revolver/1441164670"
+        ],
+        "request_count": 1,
+        "likes": 0,
+        "dislikes": 0,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "the-beatles-abbey-road": {
+        "artist_name": "The Beatles",
+        "release_name": "Abbey Road",
+        "release_year": "1969",
+        "genres": "Pop Rock",
+        "rating_value": "4.28",
+        "formatted_rating_count": "71,401",
+        "best_album_position": "#2 of 1969",
+        "all_time_album_position": "#11 overall",
+        "performers": "John Lennon (electric guitar, 12 string electric guitar, acoustic guitar, 12 string acoustic guitar), Paul McCartney (bass guitar), George Harrison (electric guitar, acoustic guitar, bass guitar), Ringo Starr (drums), George Martin (producer, mixing engineer), Mike Vickers (Moog), Geoff Emerick (recording engineer, mixing engineer), Phil McDonald (recording engineer, mixing engineer), Alan Parsons (assistant engineer), Iain MacMillan (photography).",
+        "link": "https://rateyourmusic.com/release/album/the-beatles/abbey-road/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/f304ba0296794c6fc9d0e1cccd194ed0.jpg",
+        "album_wiki": "Abbey Road is the 11th studio album released by the English rock band The Beatles. It is their last recorded album, although Let It Be was the last album released before the band's dissolution in 1970. Work on Abbey Road began in April 1969, and the album was released on 26 September 1969 in the United Kingdom, and 1 October 1969 in the United States.\n\nAbbey Road is widely regarded as one of The Beatles' most tightly constructed albums, although the band was barely operating as a functioning unit at the time. Despite the tensions within the band, Abbey Road was released to near universal acclaim and is considered to be one of the greatest albums of all time. In 2012, Abbey Road was voted 14th on Rolling Stone magazine's list of the \"500 Greatest Albums of All Time\". In 2009, readers of the magazine also named Abbey Road the greatest Beatles album. [Read more](https://www.last.fm/music/The+Beatles/Abbey+Road). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/0ETFjACtuP2ADo6LFhL6HN?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lj7SrLMlCLYsWHRdwAe4Qej8bRUQfppf0&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/abbey-road-remastered/1441164426"
+        ],
+        "request_count": 1,
+        "likes": 1,
+        "dislikes": 0,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
     }
 }
