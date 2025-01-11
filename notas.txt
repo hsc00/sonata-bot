@@ -1,21 +1,14 @@
-artistas e albuns devem aparecer mesmo que com bugs, tens de dar fix rapido a:
-- -alterar o nome da posicao para o nome da banda e o rym-link ser outro campo
-para ao usar os comandos sem ter link nao precisar de estar sempre a pesquisar no google pelo link
-
 proximo feature: 
+- tenta passar os likes/dislikes para os botoes
 - faz o average rating de todas as releases de um artista que estejam na cache
 e apresenta essas releases com link para elas num botao novo
-- tenta passar os likes/dislikes para os botoes
 
 
 ## albums ##
 streaming links - fazer pesquisa extra pelo link do bandcamp (futuro)
 guardar mudanças de rating
 links para os charts como no site
-dar fix à pesquisa pela cache de artistas (neste momento vais direto à pesquisa google antes de veres a cache
-só estas a pesquisar a cache para saberes se guardas ou nao um registo novo)
 adicionar critic score do aoty
-pesquisar se os artistas ja estao em cache sem link do rym com o artist_name
 o bug dos albuns aparecerem sem likes acontece quando a cache é reposta, provavelmente nao passa pelo check de likes ai
 
 ## setlist.fm ##
@@ -25,7 +18,7 @@ adicionar setlists do setlist.fm
 quando se pesquisa um artista pesquisar as releases que o rym manda e adicionar à cache de albuns
 (é so usares o metodo search_rym_release e passares cada uma das releases dos og:descriptors lá)
 procurar albuns do artista em cache para apresentar na parte de Popular albuns e o seu rating
-tentar dar fix as descricoes tipo a de boris pedindo só o primeiro resultado idk
+
 
 
 ## tracks ##

@@ -45,7 +45,8 @@ def search_lastfm_artist(artist_name, lastfm_api_key):
             print("Image not found for artist: "+ artist_name)
 
         listeners = lastfm_data['artist']['stats']['listeners'] if 'artist' in lastfm_data and 'stats' in lastfm_data['artist'] else None
-        formatted_listeners = f"{int(listeners):,}" if listeners.isdigit() else listeners
+        if listeners:
+            formatted_listeners = f"{int(listeners):,}" if listeners.isdigit() else listeners
         summary = clean_wiki_text(lastfm_data['artist']['bio']['summary']) if 'artist' in lastfm_data and 'bio' in lastfm_data['artist'] else None
 
         # Extract and clean the first artist's summary if there are more than one

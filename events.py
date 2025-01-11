@@ -48,11 +48,21 @@ async def process_artist_link_or_text(message):
         
     if artist_info:
         artist_name = artist_info['artist_name']
-        founded_year = artist_info['founded_year']
+
+        if artist_info['founded_year'] == "Unknown":
+            founded_year = ""
+        else:
+            founded_year = artist_info['founded_year']
+
         genres = artist_info['genres']
         listeners = artist_info['listeners']
         similar_artists = artist_info['similar_artists']
-        artist_img_url = artist_info['artist_img_url']
+
+        if artist_info['artist_img_url']:
+            artist_img_url = artist_info['artist_img_url']
+        else:
+            artist_img_url = artist_info['rym_img_url']
+            
         artist_summary = artist_info['summary']
         streaming_links = artist_info['streaming_links']
         link = artist_info['link']

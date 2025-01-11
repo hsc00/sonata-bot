@@ -13,8 +13,9 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
         return google_search(query, google_tokens, cse_id)
 
     release_name = re.sub(r'https://rateyourmusic.com/release/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)/', '', query).replace('/', ' ').replace('-', ' ').strip()
-    cached_album = get_album_from_cache(release_name)
     query = release_name + " site:rateyourmusic.com"
+    cached_album = get_album_from_cache(release_name)
+
     if cached_album:
         if cached_album['request_count'] > 5:
             cached_album['request_count'] = 0
@@ -30,17 +31,9 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
             for result in google_results:
                 link = result['link']
                 if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in link.lower() for word in release_name.split()):
-                    cached_album = get_album_from_cache(release_name)
-                    if cached_album:
-                        if cached_album['request_count'] > 5:
-                            cached_album['request_count'] = 0
-                            update_album_in_cache(release_name, cached_album)
-                        else:
-                            update_album_in_cache(release_name, cached_album)
-                            return cached_album
                     album_data = extract_album_info(result)
                     album_data['link'] = link
-                break
+                break   
 
     if album_data:
         album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
@@ -50,12 +43,13 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
 
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
         if cached_album:
-            update_album_in_cache(release_name, cached_album)
+            update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
         else:
             album_data['request_count'] = 1
             add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
-            
-    print("Album not found.")
+    else:        
+        print("Album not found.")
+
     return album_data
     
 
@@ -73,6 +67,7 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
         update_artist_in_cache(artist_name, cached_artist)
         return cached_artist
 
+    artist_info = None
     with ThreadPoolExecutor() as executor:
         google_future = executor.submit(fetch_google_results, artist_query)
         google_results = google_future.result()
@@ -87,16 +82,10 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
                     artist_info = {**rym_info, **lastfm_info}
                     artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
 
-                    cached_artist = get_artist_from_cache(artist_name)
-                    if cached_artist:
-                        update_artist_in_cache(artist_name, cached_artist)
-                    else:
-                        artist_info['request_count'] = 1
-                        add_artist_to_cache(artist_name, artist_info)
-                    
-                    return artist_info
-
-    return None
+        else:        
+            print("Artist not found.")
+        
+    return artist_info
 
 
 def get_streaming_links(action_type, artist, album, year):
