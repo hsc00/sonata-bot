@@ -18,8 +18,6 @@
             "https://music.apple.com/pt/album/to-be-kind/838349816"
         ],
         "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -42,8 +40,6 @@
             "https://music.apple.com/pt/album/dummy/1440653096"
         ],
         "request_count": 1,
-        "likes": 3,
-        "dislikes": 0,
         "liked_users": [
             408671768002297856,
             290082376300888064,
@@ -66,8 +62,6 @@
         "album_wiki": null,
         "streaming_links": null,
         "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -90,8 +84,6 @@
             "https://music.apple.com/pt/album/the-glowing-man/1099810877"
         ],
         "request_count": 0,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -114,8 +106,6 @@
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
         "request_count": 3,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -138,8 +128,6 @@
             "https://music.apple.com/pt/album/unknown-pleasures-collectors-edition/266603040"
         ],
         "request_count": 2,
-        "likes": 0,
-        "dislikes": 1,
         "liked_users": [],
         "disliked_users": [
             408671768002297856
@@ -164,8 +152,6 @@
             "https://music.apple.com/pt/album/substance-1977-1980/996111401"
         ],
         "request_count": 1,
-        "likes": 1,
-        "dislikes": 0,
         "liked_users": [
             408671768002297856
         ],
@@ -190,8 +176,6 @@
             "https://music.apple.com/pt/album/still-collectors-edition/275968300"
         ],
         "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -214,8 +198,6 @@
             "https://music.apple.com/pt/album/rubber-soul/1441164359"
         ],
         "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -238,8 +220,6 @@
             "https://music.apple.com/pt/album/revolver/1441164670"
         ],
         "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -262,11 +242,55 @@
             "https://music.apple.com/pt/album/abbey-road-remastered/1441164426"
         ],
         "request_count": 1,
-        "likes": 1,
-        "dislikes": 0,
         "liked_users": [
             408671768002297856
         ],
+        "disliked_users": []
+    },
+    "the-avalanches-since-i-left-you": {
+        "artist_name": "The Avalanches",
+        "release_name": "Since I Left You",
+        "release_year": "2000",
+        "genres": "Plunderphonics, Dance, Nu-Disco",
+        "rating_value": "4.07",
+        "formatted_rating_count": "35,035",
+        "best_album_position": "#3 of 2000",
+        "all_time_album_position": "#99 overall",
+        "performers": "Robbie Chater (arranger, producer, mixing, sampler, guitar), Darren Seltmann (arranger, producer, mixing, sampler), The Avalanches (performer, recording engineer), Bobbydazzler (mixing, design), Richie Robinson (live producer), Dexter Fabay (performer), Gordon McQuilten (piano, percussion), Tony Di Blasi (performer), Dave Davies (assistant engineer), Jimi Maroudas (assistant engineer), Matt Maddock (assistant engineer), Chris Corby (assistant engineer), Mike Marsh (mastering engineer).",
+        "link": "https://rateyourmusic.com/release/album/the-avalanches/since-i-left-you/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/83f16d352da8e6e4fd0cb32c49bf9cfc.jpg",
+        "album_wiki": "Since I Left You is the debut studio album by Australian electronic dance music group The Avalanches, which was released on 27 November 2000. Produced by The Avalanches' members Robbie Chater and Darren Seltmann (under the pseudonym Bobbydazzler), it was issued on Modular Recordings. The album was created in two separate near-identical studios by Chater and Seltmann, passing audio mixes of records they sampled. The album contains about 3500 vinyl samples of various genres of music. As it was not originally intended for international release, the duo did not worry about copyright restrictions nor attempt to keep track of which samples they would need to clear.\n\nAfter the album's positive reception in Australia, the duo considered an international release \u2013 its date was held back until 2001 in both the United Kingdom and North America and appeared in slightly altered forms. The delay and changes occurred so that the group could obtain permission to use the samples or use replacements. Five singles were spawned by the album, \"Electricity\", \"Frontier Psychiatrist\", \"Since I Left You\", \"Radio\" and \"A Different Fe...[Read more](https://www.last.fm/music/The+Avalanches/Since+I+Left+You). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/0YtYaaO0aipyeQl0xhAWTO?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mRxaFGCmd_wAI5tj5PJYFVONZkcjBx0ik&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/since-i-left-you-single/1540686925"
+        ],
+        "request_count": 2,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "danny-brown-atrocity-exhibition": {
+        "artist_name": "Danny Brown",
+        "release_name": "Atrocity Exhibition",
+        "release_year": "2016",
+        "genres": "Experimental Hip Hop, Hardcore Hip Hop",
+        "rating_value": "4.15",
+        "formatted_rating_count": "44,814",
+        "best_album_position": "#1 of 2016",
+        "all_time_album_position": "#43 overall",
+        "performers": "Danny Brown (rap, writer), Derek Ali (mixing engineer), Tatsuya Sato (mastering engineer), Brain Dead (design), Timothy Saccenti (cover art, photography), Paul Rosenberg (manager), Dart Parker (manager), Theo Sedlmayr, Esq. (legal affairs), Charlie Scott, Esq. (legal affairs), Alien Music (sample clearance).",
+        "link": "https://rateyourmusic.com/release/album/danny-brown/atrocity-exhibition-1/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/7288ec5442a34c3583f9cb38d38595ee.jpg",
+        "album_wiki": "Atrocity Exhibition is the fourth studio album by American rapper Danny Brown. It was released on September 27, 2016, by Warp Records. It is primarily produced by British producer Paul White. The album features guest appearances from Kendrick Lamar, Ab-Soul, Earl Sweatshirt, B-Real, Kelela and Petite Noir. Atrocity Exhibition received widespread acclaim from critics, appearing on the year-end lists of many publications and is considered to be one of the best albums of the 2010s. The album was supported by four singles: \"When It Rain\", \"Pneumonia\", \"Really Doe\", and \"Ain't It Funny\". [Read more](https://www.last.fm/music/Danny+Brown/Atrocity+Exhibition). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/3A1vnUJDPz0xYMful9pO4I?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mJxGD12f9XvKOgaMoAAbZmiwpPn-9Fq1A&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/atrocity-exhibition/1142690534"
+        ],
+        "request_count": 1,
+        "liked_users": [],
         "disliked_users": []
     }
 }

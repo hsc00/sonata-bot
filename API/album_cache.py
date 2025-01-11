@@ -23,13 +23,10 @@ def save_cache(cache):
     with open(CACHE_FILE, 'w') as file:
         json.dump(cache, file, indent=4)
 
-
 def add_album_to_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
     album_data['request_count'] = 1
-    album_data['likes'] = 0
-    album_data['dislikes'] = 0
     album_data['liked_users'] = []
     album_data['disliked_users'] = []
     cache[normalized_name] = album_data
@@ -39,8 +36,6 @@ def add_album_to_cache(release_name, album_data):
 def update_album_in_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
-    album_data.setdefault('likes', 0)
-    album_data.setdefault('dislikes', 0)
     album_data.setdefault('liked_users', [])
     album_data.setdefault('disliked_users', [])
     cache[normalized_name] = album_data
@@ -57,17 +52,13 @@ def update_releases_likes_dislikes(release_name, user_id, like=True):
         album_data.setdefault('disliked_users', [])
         if like:
             if user_id not in album_data['liked_users']:
-                album_data['likes'] += 1
                 album_data['liked_users'].append(user_id)
             if user_id in album_data['disliked_users']:
-                album_data['dislikes'] -= 1
                 album_data['disliked_users'].remove(user_id)
         else:
             if user_id not in album_data['disliked_users']:
-                album_data['dislikes'] += 1
                 album_data['disliked_users'].append(user_id)
             if user_id in album_data['liked_users']:
-                album_data['likes'] -= 1
                 album_data['liked_users'].remove(user_id)
         save_cache(cache)
         print(f"Updated cache for {normalized_name}")
@@ -81,8 +72,6 @@ def get_album_from_cache(release_name, increment_request_count=True):
         album_data = cache[normalized_name]
         if increment_request_count:
             album_data['request_count'] += 1
-        album_data.setdefault('likes', 0)
-        album_data.setdefault('dislikes', 0)
         album_data.setdefault('liked_users', [])
         album_data.setdefault('disliked_users', [])
         save_cache(cache)

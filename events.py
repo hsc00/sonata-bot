@@ -48,7 +48,6 @@ async def process_artist_link_or_text(message):
         
     if artist_info:
         artist_name = artist_info['artist_name']
-
         if artist_info['founded_year'] == "Unknown":
             founded_year = ""
         else:
@@ -57,7 +56,6 @@ async def process_artist_link_or_text(message):
         genres = artist_info['genres']
         listeners = artist_info['listeners']
         similar_artists = artist_info['similar_artists']
-
         if artist_info['artist_img_url']:
             artist_img_url = artist_info['artist_img_url']
         else:
@@ -66,8 +64,9 @@ async def process_artist_link_or_text(message):
         artist_summary = artist_info['summary']
         streaming_links = artist_info['streaming_links']
         link = artist_info['link']
-        likes = artist_info.get('likes', 0)
-        dislikes = artist_info.get('dislikes', 0)
+        likes = len(artist_info.get('liked_users', []))
+        dislikes = len(artist_info.get('disliked_users', []))
+
 
         embed_title = f"{artist_name}"
         embed_description = f"*{genres}*\n\nListeners: **{listeners}**\n {founded_year}\n\n {artist_summary}"
@@ -126,8 +125,9 @@ async def process_release_link_or_text(message):
         album_wiki = search_result['album_wiki']
         streaming_links = search_result['streaming_links']
         link = search_result['link']
-        likes = search_result.get('likes', 0)
-        dislikes = search_result.get('dislikes', 0)
+        likes = len(search_result.get('liked_users', []))
+        dislikes = len(search_result.get('disliked_users', []))
+
 
         embed_title = f"{artist_name} - {release_name} ({release_year})"
         embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"

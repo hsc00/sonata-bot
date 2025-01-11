@@ -1,5 +1,4 @@
 proximo feature: 
-- tenta passar os likes/dislikes para os botoes
 - faz o average rating de todas as releases de um artista que estejam na cache
 e apresenta essas releases com link para elas num botao novo
 

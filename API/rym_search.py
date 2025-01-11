@@ -88,10 +88,10 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
                                 return cached_artist
                             else:
                                 cached_artist['request_count'] = 1
-                            add_artist_to_cache(rym_info['artist_name'], cached_artist)
 
                         artist_info = {**rym_info, **lastfm_info}
                         artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
+                        add_artist_to_cache(rym_info['artist_name'], artist_info)
                     else:        
                         print("Artist not found.")
         

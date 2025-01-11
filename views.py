@@ -89,9 +89,9 @@ class LikeButton(discord.ui.Button):
         # refresh like/dislike button numbers  
         if user_id in refresh_likes.get('disliked_users', []):
             for button in self.view.children:
-                if button.custom_id == 'dislike_button': button.label = str(refresh_likes['dislikes'] - 1 ) + ' 👎'
+                if button.custom_id == 'dislike_button': button.label = str(len(refresh_likes['disliked_users']) - 1 ) + ' 👎'
         for button in self.view.children:
-            if button.custom_id == 'like_button': button.label = str(refresh_likes['likes'] + 1) + ' ❤️'
+            if button.custom_id == 'like_button': button.label = str(len(refresh_likes['liked_users']) + 1) + ' ❤️'
 
         # Delete the previous dislike message if it exists
         previous_dislike_message_id = self.view.message_ids.get((user_id, 'dislike'))
@@ -162,9 +162,9 @@ class DislikeButton(discord.ui.Button):
         # refresh like/dislike button numbers  
         if user_id in refresh_dislikes.get('liked_users', []):
             for button in self.view.children:
-                if button.custom_id == 'like_button': button.label = str(refresh_dislikes['likes'] - 1) + ' ❤️'
+                if button.custom_id == 'like_button': button.label = str(len(refresh_dislikes['liked_users']) - 1) + ' ❤️'
         for button in self.view.children:
-            if button.custom_id == 'dislike_button': button.label = str(refresh_dislikes['dislikes'] + 1 ) + ' 👎'
+            if button.custom_id == 'dislike_button': button.label = str(len(refresh_dislikes['disliked_users']) + 1 ) + ' 👎'
 
         # Delete the previous like message if it exists
         previous_like_message_id = self.view.message_ids.get((user_id, 'like'))

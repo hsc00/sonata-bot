@@ -27,8 +27,6 @@ def add_artist_to_cache(artist_name, artist_data):
     cache = load_cache()
     normalized_name = normalize_name(artist_name)
     artist_data['request_count'] = 1
-    artist_data['likes'] = 0
-    artist_data['dislikes'] = 0
     artist_data['liked_users'] = []
     artist_data['disliked_users'] = []
     cache[normalized_name] = artist_data
@@ -38,10 +36,6 @@ def add_artist_to_cache(artist_name, artist_data):
 def update_artist_in_cache(artist_name, artist_data):
     cache = load_cache()
     normalized_name = normalize_name(artist_name)
-    if 'likes' not in artist_data:
-        artist_data['likes'] = 0
-    if 'dislikes' not in artist_data:
-        artist_data['dislikes'] = 0
     if 'liked_users' not in artist_data:
         artist_data['liked_users'] = []
     if 'disliked_users' not in artist_data:
@@ -60,17 +54,13 @@ def update_artist_likes_dislikes(artist_name, user_id, like=True):
         artist_data.setdefault('disliked_users', [])
         if like:
             if user_id not in artist_data['liked_users']:
-                artist_data['likes'] += 1
                 artist_data['liked_users'].append(user_id)
             if user_id in artist_data['disliked_users']:
-                artist_data['dislikes'] -= 1
                 artist_data['disliked_users'].remove(user_id)
         else:
             if user_id not in artist_data['disliked_users']:
-                artist_data['dislikes'] += 1
                 artist_data['disliked_users'].append(user_id)
             if user_id in artist_data['liked_users']:
-                artist_data['likes'] -= 1
                 artist_data['liked_users'].remove(user_id)
         save_cache(cache)
         print(f"Updated cache for {normalized_name}")
@@ -84,8 +74,6 @@ def get_artist_from_cache(artist_name, increment_request_count=True):
         artist_data = cache[normalized_name]
         if increment_request_count:
             artist_data['request_count'] += 1
-        artist_data.setdefault('likes', 0)
-        artist_data.setdefault('dislikes', 0)
         artist_data.setdefault('liked_users', [])
         artist_data.setdefault('disliked_users', [])
         save_cache(cache)

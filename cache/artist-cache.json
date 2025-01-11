@@ -21,8 +21,6 @@
             "https://music.youtube.com/channel/UC2XdaAVUannpujzv32jcouQ?feature=gws_kp_artist&feature=gws_kp_artist"
         ],
         "request_count": 2,
-        "likes": 1,
-        "dislikes": 0,
         "liked_users": [
             408671768002297856
         ],
@@ -50,8 +48,6 @@
             "https://music.apple.com/pt/artist/yndi-halda/212825661"
         ],
         "request_count": 1,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -71,8 +67,6 @@
             "https://music.youtube.com/channel/UCI4YNnmHjXFaaKvfdmpWvJQ?feature=gws_kp_artist&feature=gws_kp_artist"
         ],
         "request_count": 5,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
     },
@@ -94,8 +88,6 @@
         "summary": " [Read more](https://www.last.fm/music/Ekcetera)",
         "streaming_links": null,
         "request_count": 1,
-        "likes": 1,
-        "dislikes": 0,
         "liked_users": [
             601054815417532462
         ],
@@ -121,8 +113,6 @@
             "https://open.spotify.com/artist/0U1D3GEq0HYA82J6WWw3DT?si=XQrEIckjSgqYgA8Ub3jweg"
         ],
         "request_count": -5000,
-        "likes": 1,
-        "dislikes": 0,
         "liked_users": [
             442438894714224653
         ],
@@ -146,9 +136,34 @@
         "summary": "Encontro do cin\u00e9tico com a paisagem morta numa selvajaria de jazz-punk-p\u00f3s-aqu\u00e1tico.\nOs Sereias s\u00e3o: Ant\u00f3nio Pedro Ribeiro (voz), Arianna Casellas (voz), Jo\u00e3o Pires (bateria), Julius Gabriel (saxofone), Nils Meisel (sintetizadores), S\u00e9rgio Rocha (guitarra) e Tommy Luther Hughes (baixo), Celestino Monteiro (documenta\u00e7\u00e3o) e Francisco Laranjeira (v\u00eddeo). [Read more](https://www.last.fm/music/Sereias)",
         "streaming_links": null,
         "request_count": 2,
-        "likes": 0,
-        "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
+    },
+    "new-order": {
+        "artist_name": "New Order",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVF3MuR_D0RR5dqvHhiFGhLAjKgOseoA4KBiGRZfukQ7ypUUDpg2zZ_1o&s",
+        "founded_year": "Formed in: 1980",
+        "genres": "Alternative Dance, Synthpop, Post-Punk",
+        "link": "https://rateyourmusic.com/artist/new-order",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/e95d741efead74498821089b772ab7de.jpg",
+        "listeners": "2,730,270",
+        "similar_artists": [
+            "Electronic",
+            "Joy Division",
+            "The Other Two",
+            "Orchestral Manoeuvres in the Dark",
+            "Monaco"
+        ],
+        "summary": "New Order are a new wave/synthpop band which formed in 1980 in Salford, England, United Kingdom by the three remaining members of Joy Division. The band's classic lineup consists of Bernard Sumner (vocals, guitar, keyboards), Peter Hook (bass, electronic percussion), Gillian Gilbert (keyboards, guitar) and Stephen Morris (drums, keyboards). The group effectively disbanded in 1993 but reformed in 1998. Gilbert left in 2001 to look after her and Morris' children and was replaced by guitarist/keyboardist Phil Cunningham. [Read more](https://www.last.fm/music/New+Order)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/0yNLKJebCb8Aueb54LYya3?autoplay=true",
+            "https://music.youtube.com/channel/UCXExK7We8VKsIzFFQYNEgBg?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/new-order/176722"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": [
+            408671768002297856
+        ]
     }
 }
