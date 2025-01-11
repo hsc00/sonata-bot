@@ -18,11 +18,11 @@ async def on_message(message):
     if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
         async with message.channel.typing():
             await process_release_link_or_text(message)
-            time.sleep(5)
+        time.sleep(5)
     elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'):
         async with message.channel.typing():
             await process_artist_link_or_text(message)
-            time.sleep(5)
+        time.sleep(5)
 
 async def process_artist_link_or_text(message):
     artist_query = message.content

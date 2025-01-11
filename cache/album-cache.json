@@ -105,7 +105,7 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
         ],
-        "request_count": 3,
+        "request_count": 5,
         "liked_users": [],
         "disliked_users": []
     },
@@ -288,6 +288,181 @@
             "https://open.spotify.com/album/3A1vnUJDPz0xYMful9pO4I?autoplay=true",
             "https://music.youtube.com/playlist?list=OLAK5uy_mJxGD12f9XvKOgaMoAAbZmiwpPn-9Fq1A&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/atrocity-exhibition/1142690534"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "mariah-carey-daydream": {
+        "artist_name": "Mariah Carey",
+        "release_name": "Daydream",
+        "release_year": "1995",
+        "genres": "Contemporary R&B, Adult Contemporary",
+        "rating_value": "3.50",
+        "formatted_rating_count": "2,519",
+        "best_album_position": "#398 of 1995",
+        "all_time_album_position": null,
+        "performers": "Mariah Carey (producer, arranger, lead vocals), Jay Healy (recording engineer), Bob Ludwig (mastering engineer), Christopher Austopchuk (art direction), Aim\u00e9e Macauley (design), Steven Meisel (photography).",
+        "link": "https://rateyourmusic.com/release/album/mariah-carey/daydream/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/b47809ed02101cee0cf82f48797a035a.png",
+        "album_wiki": "Daydream is the fifth studio album by American singer and songwriter Mariah Carey, released on October 3, 1995, by Columbia Records. The follow-up to her internationally successful album Music Box (1993) and holiday album Merry Christmas (1994), Daydream differed from the two by leaning increasingly towards hip hop and urban music. Throughout the project, Carey collaborated with Walter Afanasieff, with whom she wrote and produced most of her two previous albums. With Daydream, Carey took more control over the musical direction as well as the album's composition. Carey said she considered Daydream the beginning of her musical and vocal transformation, a change that became more apparent in her sixth album Butterfly (1997). During the album's production, Carey endured many creative differences with her label and husband Tommy Mottola.\n\nOn Daydream, Carey collaborated with Jermaine Dupri for the first time, and co-wrote and produced a song with Kenneth \"Babyface\" Edmonds, with whom she had collaborated on Music Box. It was also the first time she had worked with Boyz II Men, an R&B group consisting of four male vocalists....[Read more](https://www.last.fm/music/Mariah+Carey/Daydream). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/1ibYM4abQtSVQFQWvDSo4J?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_l6jzbJFIiMbszRBTgyAwp94RzaGALEAxA&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/daydream/169962059"
+        ],
+        "request_count": 2,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "de-la-soul-buhloone-mindstate": {
+        "artist_name": "De La Soul",
+        "release_name": "Buhloone Mindstate",
+        "release_year": "1993",
+        "genres": "East Coast Hip Hop, Jazz Rap, Conscious Hip Hop",
+        "rating_value": "3.91",
+        "formatted_rating_count": "5,175",
+        "best_album_position": "#11 of 1993",
+        "all_time_album_position": "#802 overall",
+        "performers": "Posdnuos (writer), Trugoy (writer), Maseo (writer), Prince Paul (writer), De La Soul (producer, mixing, art direction), Prince Paul (producer, mixing), Bob Power (mixing, recording engineer, additional producer), Tim Latham (additional engineer), Patrick Derivaz (additional engineer), Gerard Julien (assistant engineer), Brad Schmidt (assistant engineer), FLAM (assistant engineer), Ken Quartarone (assistant engineer), Mikael Ifversen (assistant engineer), Brian Sperber (assistant engineer), Eric Gast (assistant engineer), Joe Warda (assistant engineer), Hoover Le (assistant engineer), Paul Goodridge (sequencing), Posdnuos (sequencing), Tom Coyne (digital mastering), Howard Kessler (digital mastering), Rush Management (management), Erwin Gorostiza (art dire",
+        "link": "https://rateyourmusic.com/release/album/de-la-soul/buhloone-mindstate-6/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/5b23f694bc7f2f1f525169d1112b587d.png",
+        "album_wiki": "Buhloone Mindstate is the third studio album by De La Soul. It was released on September 21, 1993, and was the group's last record to be produced with Prince Paul. [Read more](https://www.last.fm/music/De+La+Soul/Buhloone+Mindstate). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/4ajtfXfaqumfNlJDTVjhOd?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_lFnfJeetlwghK4xdYDR2uhUy9yQR4xtKA&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/buhloone-mindstate/1664590204"
+        ],
+        "request_count": 2,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "my-bloody-valentine-loveless": {
+        "artist_name": "my bloody valentine",
+        "release_name": "Loveless",
+        "release_year": "1991",
+        "genres": "Shoegaze, Noise Pop",
+        "rating_value": "4.25",
+        "formatted_rating_count": "81,161",
+        "best_album_position": "#1 of 1991",
+        "all_time_album_position": "#9 overall",
+        "performers": "Kevin Shields (guitar, vocals, sampler, bass, engineer, mastering engineer), Colm O'Ciosoig (drums, sampler, engineer), Bilinda Butcher (vocals), Alan Moulder (engineer), Dick Meaney (engineer), Anjali Dutt (engineer), Guy Fixsen (engineer), Harold Burgon (engineer), Nick Robbins (engineer), Ingo Vauk (engineer), Andy Wilkinson (engineer), Darren Allison (engineer), Nick Addison (engineer), Charles Steel (engineer), Tony Falter (engineer), Hugh Price (engineer), Adrian Bushby (engineer), Pascale Giovetto (engineer), Nick Savage (engineer), Angus Cameron (photography), my bloody valentine (cover concept), Designland (sleeve), Ann Marie Shields (music coordinator).",
+        "link": "https://rateyourmusic.com/release/album/my-bloody-valentine/loveless/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/510546e3b6df7504392274c528c77780.jpg",
+        "album_wiki": "loveless is the second studio album by Irish shoegaze band my bloody valentine, released on 4 November 1991 by Creation Records. The album was recorded over a two-year period between 1989 and 1991. Vocalist and guitarist Kevin Shields dominated the arduous recording process; intent on achieving a particular sound, he experimented with guitar tremolo techniques and tuning systems, unorthodox production methods, obscured vocals, and sampled percussion and feedback. The group cycled through nineteen studios and a larger number of engineers during the album's two-year creation, with total recording costs rumoured to have reached \u00a3250,000.\n\nWhile loveless did not achieve great commercial success upon its release, it received enthusiastic reviews from critics, who praised its sonic innovations and Shields' \"virtual reinvention of the guitar.\" Following the record's release, my bloody valentine were removed from their record label Creation Records due to the difficulty and expense of working with Shields, a factor that was alleged to have contributed to the bankruptcy of the label. In the subsequent years, the group s...[Read more](https://www.last.fm/music/my+bloody+valentine/Loveless). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/3GH4IiI6jQAIvnHVdb5FB6?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mdVxWs91qMNd9e-hT2bYOiLNBG7iAIv1g&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/loveless/1556921230"
+        ],
+        "request_count": 1,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "dj-snake-turn-down-for-what": {
+        "artist_name": "DJ Snake",
+        "release_name": "Turn Down for What",
+        "release_year": "2013",
+        "genres": "Twerk",
+        "rating_value": "2.42",
+        "formatted_rating_count": "985",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "DJ Snake (producer), Lil Jon (producer).",
+        "link": "https://rateyourmusic.com/release/single/dj-snake-lil-jon/turn-down-for-what/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/0c4bfe86fb46523ee8dcab6b75d2737d.png",
+        "album_wiki": "\"Turn Down for What\" is a song by French DJ and record producer DJ Snake and American rapper Lil Jon released on December 18, 2013. The song and its viral music video popularized the use of the phrase. The song's success climaxed in North America where it has earned six platinum certifications in both the United States and Canada. [Read more](https://www.last.fm/music/DJ+Snake/Turn+Down+For+What). ",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [
+            442438894714224653,
+            623169290904010769
+        ],
+        "disliked_users": []
+    },
+    "salem-ilese-ps5-fortnite-battle-pass-gamer-remix": {
+        "artist_name": "Salem Ilese",
+        "release_name": "PS5 (Fortnite Battle Pass Gamer Remix)",
+        "release_year": "2022",
+        "genres": "Novelty, Future Bass, Electropop, Dance-Pop",
+        "rating_value": "2.92",
+        "formatted_rating_count": "24",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": null,
+        "link": "https://rateyourmusic.com/release/single/salem-ilese-alan-walker-abdul-cisse/ps5-fortnite-battle-pass-gamer-remix/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/f40520a60778dfafc58aad82084415dc.jpg",
+        "album_wiki": null,
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "george-clanton-ooh-rap-i-ya": {
+        "artist_name": "George Clanton",
+        "release_name": "Ooh Rap I Ya",
+        "release_year": "2023",
+        "genres": "Chillwave, Neo-Psychedelia, Baggy",
+        "rating_value": "3.73",
+        "formatted_rating_count": "14,269",
+        "best_album_position": "#12 of 2023",
+        "all_time_album_position": "#2549 overall",
+        "performers": "George Clanton (performer, writer, producer, recording engineer, mixing engineer), Howie Weinberg (mastering engineer), Extra Vitamins (cover art, layout).",
+        "link": "https://rateyourmusic.com/release/album/george-clanton/ooh-rap-i-ya/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/e78ec66203caca44d4549799a5b868ab.jpg",
+        "album_wiki": null,
+        "streaming_links": [
+            "https://open.spotify.com/album/2kvz9frUn3LUK83imD2BQS?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mKKYO9M_w-GQl9uv8bdiHCz_HurZCAfsc&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/ooh-rap-i-ya/1698350329"
+        ],
+        "request_count": 1,
+        "liked_users": [
+            358371418003472385,
+            907362326011854858
+        ],
+        "disliked_users": []
+    },
+    "ethel-cain-perverts": {
+        "artist_name": "Ethel Cain",
+        "release_name": "Perverts",
+        "release_year": "2025",
+        "genres": "Drone, Dark Ambient",
+        "rating_value": "3.80",
+        "formatted_rating_count": "3,226",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Ethel Cain (songwriter, vocals, producer, mixing engineer), Dale Becker (mastering engineer).",
+        "link": "https://rateyourmusic.com/release/ep/ethel-cain/perverts/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/afbc65763138c684617ac5c030d8c5fb.jpg",
+        "album_wiki": "Perverts is Hayden Anhed\u00f6nia\u2019s 90-minute-long fourth extended play under the alias Ethel Cain, released on January 8, 2025. The record was fully produced and mixed by Hayden. The lead single, \"Punish\", was released on November 1, 2024. It is not related to the actual character of Ethel Cain that we learned about in 2022\u2019s \u201cPreacher\u2019s Daughter\u201d.\n\nEthel Cain released her debut studio album, Preacher's Daughter, in 2022, to critical acclaim. It centered on the fictional character of the same name, and contained Southern Gothic imagery and themes including religious indoctrination, sexual violence, isolation, and family trauma. Following its release, the album was included in several year-end lists of best music and she garnered a cult following online.\n\nSpeaking with Kiernan Shipka for Interview in June 2023, Cain expressed her excitement to \"push it farther into the direction that  always wanted to go\" on her next full-length release, which is \"10- to 20-minute songs just drenched in reverb, so slow, and super repetitive.\" She continued: \"I have a huge affinity for slowcore and ambient music  I feel a bit more confident d...[Read more](https://www.last.fm/music/Ethel+Cain/Perverts). ",
+        "streaming_links": null,
+        "request_count": 2,
+        "liked_users": [
+            623169290904010769,
+            442438894714224653
+        ],
+        "disliked_users": []
+    },
+    "marta-when-its-going-wrong": {
+        "artist_name": "Marta",
+        "release_name": "When It's Going Wrong",
+        "release_year": "2023",
+        "genres": "Trip Hop, Downtempo",
+        "rating_value": "3.00",
+        "formatted_rating_count": "272",
+        "best_album_position": "#1996 of 2023",
+        "all_time_album_position": null,
+        "performers": "Tricky (producer).",
+        "link": "https://rateyourmusic.com/release/album/marta-tricky/when-its-going-wrong/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/388385cc058ba23af30f0da333864f2a.png",
+        "album_wiki": null,
+        "streaming_links": [
+            "https://open.spotify.com/album/1y9pZMiGd5JbIi4rimq0Ja?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mRXyxT91qEbrJNoGDNNvhw_QV95iUkCOY&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/when-its-going-wrong/1664835937"
         ],
         "request_count": 1,
         "liked_users": [],

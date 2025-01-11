@@ -66,8 +66,11 @@
             "https://open.spotify.com/artist/25uiPmTg16RbhZWAqwLBy5?autoplay=true",
             "https://music.youtube.com/channel/UCI4YNnmHjXFaaKvfdmpWvJQ?feature=gws_kp_artist&feature=gws_kp_artist"
         ],
-        "request_count": 5,
-        "liked_users": [],
+        "request_count": 4,
+        "liked_users": [
+            408671768002297856,
+            623169290904010769
+        ],
         "disliked_users": []
     },
     "ekcetera": {
@@ -165,5 +168,299 @@
         "disliked_users": [
             408671768002297856
         ]
+    },
+    "mariah-carey": {
+        "artist_name": "Mariah Carey",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS98WFbZjQHl4ZU4k_nmGJMwJi_8RCA-E9l3q0UKvSIg0hwpG6r-mcGZG4&s",
+        "founded_year": "Unknown",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/mariah-carey/credits/",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/6ab4ff27fc98605b69d7a6e624eef3e3.jpg",
+        "listeners": "4,277,557",
+        "similar_artists": [
+            "Janet Jackson",
+            "Whitney Houston",
+            "Toni Braxton",
+            "Brandy",
+            "Destiny's Child"
+        ],
+        "summary": "Mariah Carey (born March 27, 1970) is an American singer, songwriter, actress, record producer, and #1 New York Times bestselling author.  Carey holds the record for the most Billboard Hot 100 number-one singles by a solo artist (19), a female songwriter (18), and a female producer (15), and is one of the best-selling music artists of all time, with over 220 million records sold worldwide. Referred to as the \"Songbird Supreme\", she is noted for her five-octave vocal range, melismatic singing style and signature use of the whistle register. [Read more](https://www.last.fm/music/Mariah+Carey)",
+        "streaming_links": [
+            "https://music.apple.com/pt/artist/mariah-carey/91853",
+            "https://open.spotify.com/artist/4iHNK0tOyZPYnBU7nGAgpQ?autoplay=true",
+            "https://music.youtube.com/channel/UCKRnq8aBOCanYlffje7HyvA?feature=gws_kp_artist&feature=gws_kp_artist"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-salogni": {
+        "artist_name": "Marta Salogni",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfDJxLtCoOFN1KnjYNfw-lVt8myLfQFeVwYmbgZ1hI8ftXw2nm5pNhmmvj&s",
+        "founded_year": "Born in: 1990",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/marta-salogni",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-del-grandi": {
+        "artist_name": "Marta Del Grandi",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnjt2hwpJ04VKORK0aBEMgcv48vDhfcrJmXZvGk3zKZ-SLrTkJPEehzD0&s",
+        "founded_year": "Born in: 1988",
+        "genres": "Art Pop, Singer-Songwriter",
+        "link": "https://rateyourmusic.com/artist/marta-del-grandi",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta": {
+        "artist_name": "Marta",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShviyosL4zrdmuahYhtHZRGI64FFeBSqBepPLX9kSwK42RnMHvMH5GD-E&s",
+        "founded_year": "Unknown",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/marta-1",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-forsberg": {
+        "artist_name": "Marta Forsberg",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQkpdABqexm5ACB8lNDGFMIpK7_H6Vf_a_-8mv8l_F2dPMKwcSLGRTLYTk&s",
+        "founded_year": "Born in: 1989",
+        "genres": "Electroacoustic, Ambient, Drone",
+        "link": "https://rateyourmusic.com/artist/marta-forsberg",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/1Z8t9S49kXX4ymsXfHcltS?autoplay=true",
+            "https://music.youtube.com/channel/UCZGuOQvBpF7H5CBzokBWi7w?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/marta-forsberg/1299894503"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-acuna": {
+        "artist_name": "Marta Acuna",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTX0cr1G592_myKzuOjKccv2ei_BTEMYNCqUqaqjzOqmDklKcodqlgIKkY&s",
+        "founded_year": "Unknown",
+        "genres": "Disco",
+        "link": "https://rateyourmusic.com/artist/marta-acuna",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-warelis": {
+        "artist_name": "Marta Warelis",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSiXoYcThoIjgP1KZy6eFGbyxPH2k0vvVNqBjaGqV1CEbCocreJ1KqWSNoi&s",
+        "founded_year": "Born in: 1986",
+        "genres": "Free Improvisation",
+        "link": "https://rateyourmusic.com/artist/marta-warelis",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/1tUbXm3A0sdL77hIL1LPy5?autoplay=true",
+            "https://music.youtube.com/channel/UCL_nmAk41y-t_LeGvr6n31w?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/marta-warelis/1470156864"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-sui-tubi": {
+        "artist_name": "Marta sui Tubi",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT78AGHmozt03sMvTjy_iaChBxdUx1RzOHc5b6mvT4DOXXFd6HXbnbE0Jvt&s",
+        "founded_year": "Formed in: 2002",
+        "genres": "Acoustic Rock, Anti-Folk",
+        "link": "https://rateyourmusic.com/artist/marta-sui-tubi",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-sanchez": {
+        "artist_name": "Marta S\u00e1nchez",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl1ReoFd2t3sDWqfhMvxtRKJhNsTuknT9Y4cnE3d2XecYfnuSIFakCkck&s",
+        "founded_year": "Unknown",
+        "genres": "Post-Bop",
+        "link": "https://rateyourmusic.com/artist/marta_sanchez_f1",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/368rTiMKMrz3b03az6B14w?autoplay=true",
+            "https://music.youtube.com/channel/UCaDilTTIAbUY10Puh0Wn6gQ?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/marta-s%C3%A1nchez/403243"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-knight": {
+        "artist_name": "Marta Knight",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQxfhRFs7S2WX_seDIvP8Jv_YjZiDgsYo7CoDmn8GSvSDMEdi7baJ8j2sgi&s",
+        "founded_year": "Born in: 1998",
+        "genres": "Indie Folk",
+        "link": "https://rateyourmusic.com/artist/marta-knight",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "marta-romero": {
+        "artist_name": "Marta Romero",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ6ZvCH3_K-u53eO1aPhOKeTwzndi9geQldAt6YlzngNS_EEGYozsCf7VVf&s",
+        "founded_year": "Born in: 1927",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/marta-romero",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/987e97116f47e79f4cc7dde42c846243.jpg",
+        "listeners": "60,418",
+        "similar_artists": [
+            "Lonely Guest",
+            "Tricky",
+            "Goldishack",
+            "She Keeps Bees",
+            "Rhea Robertson"
+        ],
+        "summary": "Marta Z\u0142akowska is a Polish singer who started her career in 2017 after meeting Tricky and becoming a part of his band.\n\nIn 2023, she released her debut album When It's Going Wrong. [Read more](https://www.last.fm/music/Marta)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "my-bloody-valentine": {
+        "artist_name": "my bloody valentine",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRePtcQqWQ37J46FAc2_HkzL-XNDsCfPBDCTpmMiw3GOQ61-0yYObYnYsgQ&s",
+        "founded_year": "Formed in: 1983",
+        "genres": "Noise Pop, Shoegaze, Dream Pop",
+        "link": "https://rateyourmusic.com/artist/my-bloody-valentine",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/c8980ed226567be02c78ec40dcda8e71.jpg",
+        "listeners": "1,733,460",
+        "similar_artists": [],
+        "summary": "my bloody valentine are an Irish-English shoegaze band formed in 1983 in Dublin, Ireland. The band\u2019s best known lineup is Kevin Shields (vocals, guitar), Bilinda Butcher (vocals, guitar), Debbie Googe (bass) and Colm \u00d3 C\u00edos\u00f3ig (drums). Their 1988 album Isn't Anything is generally regarded as one of the most influential records of the period, acting as an important precursor to the early '90s \"shoegazing\" scene. In 1991, the band released their second full length album Loveless, later declared one of the finest albums of the 1990s. [Read more](https://www.last.fm/music/My+Bloody+Valentine)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/3G3Gdm0ZRAOxLrbyjfhii5?autoplay=true",
+            "https://music.youtube.com/channel/UCuoGeza7Dl9Ni_hmeLTPdkg?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/my-bloody-valentine/206711"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "joy-division": {
+        "artist_name": "Joy Division",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxkhhjD4AS9ZjWgJxpQ2u02fL9cfT0Lb4RClBDV-TUbjNrIoCTbRDPKYY&s",
+        "founded_year": "Formed in: 1977",
+        "genres": "Post-Punk, Punk Rock, Gothic Rock",
+        "link": "https://rateyourmusic.com/artist/joy-division",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/1529a18e3a8e5005c71a02f7279c9a74.jpg",
+        "listeners": "2,945,511",
+        "similar_artists": [
+            "New Order",
+            "The Cure",
+            "Bauhaus",
+            "The Smiths",
+            "Siouxsie and the Banshees"
+        ],
+        "summary": "Joy Division were a post-punk band formed in 1976 in Salford, Greater Manchester, United Kingdom. Originally named Warsaw, the band consisted of Ian Curtis (vocals and occasional guitar), Bernard Sumner (guitar and keyboards), Peter Hook (bass guitar and backing vocals) and Stephen Morris (drums and percussion). The band dissolved in May 1980 after the suicide of its lead singer, Ian Curtis. Much of their popularity/reputation arguably resulted from frequent playings on air by iconic DJ John Peel [Read more](https://www.last.fm/music/Joy+Division)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/432R46LaYsJZV2Gmc4jUV5?autoplay=true",
+            "https://music.youtube.com/channel/UCj9bYSgqVuUxqd3x9myLWKA?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/joy-division/722383"
+        ],
+        "request_count": 1,
+        "liked_users": [
+            677998132549648395,
+            408671768002297856
+        ],
+        "disliked_users": []
     }
 }
