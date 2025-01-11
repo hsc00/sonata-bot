@@ -62,7 +62,7 @@ async def process_artist_link_or_text(message):
             artist_img_url = artist_info['artist_img_url']
         else:
             artist_img_url = artist_info['rym_img_url']
-            
+
         artist_summary = artist_info['summary']
         streaming_links = artist_info['streaming_links']
         link = artist_info['link']
@@ -76,12 +76,10 @@ async def process_artist_link_or_text(message):
         if artist_img_url:
             embed.set_thumbnail(url=artist_img_url)
 
-        embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
-
         embed.set_footer(text=f"Requested by {message.author.display_name}")
         sent_message = await message.channel.send(embed=embed)
 
-        view = RYMViewArtists(artist_name, similar_artists, embed, original_message_id=sent_message.id, streaming_links=streaming_links)
+        view = RYMViewArtists(artist_name, similar_artists, embed, likes=likes, dislikes=dislikes, original_message_id=sent_message.id, streaming_links=streaming_links, release_name=None)
         view.link = link
 
         await sent_message.edit(view=view)
@@ -158,12 +156,10 @@ async def process_release_link_or_text(message):
         if album_cover_url:
             embed.set_thumbnail(url=album_cover_url)
 
-        embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
-
         embed.set_footer(text=f"Requested by {message.author.display_name}")
         sent_message = await message.channel.send(embed=embed)
-
-        view = RYMViewReleases(album_wiki, embed, original_message_id=sent_message.id, release_name=release_name, streaming_links=streaming_links, performers=performers)
+ 
+        view = RYMViewReleases(album_wiki, embed, likes=likes, dislikes=dislikes, original_message_id=sent_message.id, artist_name=artist_name, release_name=release_name, streaming_links=streaming_links, performers=performers)
         view.link = link
 
         await sent_message.edit(view=view)

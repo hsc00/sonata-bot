@@ -21,9 +21,11 @@
             "https://music.youtube.com/channel/UC2XdaAVUannpujzv32jcouQ?feature=gws_kp_artist&feature=gws_kp_artist"
         ],
         "request_count": 2,
-        "likes": 0,
+        "likes": 1,
         "dislikes": 0,
-        "liked_users": [],
+        "liked_users": [
+            408671768002297856
+        ],
         "disliked_users": []
     },
     "yndi-halda": {

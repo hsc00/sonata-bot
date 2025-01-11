@@ -17,10 +17,8 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
     cached_album = get_album_from_cache(release_name)
 
     if cached_album:
-        if cached_album['request_count'] > 5:
-            cached_album['request_count'] = 0
-        update_album_in_cache(release_name, cached_album)
-        return cached_album
+        if cached_album['request_count'] <= 5:
+            return cached_album
 
     album_data = None
     with ThreadPoolExecutor() as executor:
@@ -43,7 +41,10 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
 
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
         if cached_album:
-            update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
+            if cached_album['request_count'] > 5:
+                cached_album['request_count'] = 0
+                update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
+            return cached_album
         else:
             album_data['request_count'] = 1
             add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
@@ -62,10 +63,8 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
     
     cached_artist = get_artist_from_cache(artist_name)
     if cached_artist:
-        if cached_artist['request_count'] > 5:
-            cached_artist['request_count'] = 0
-        update_artist_in_cache(artist_name, cached_artist)
-        return cached_artist
+        if cached_artist['request_count'] <= 5:
+            return cached_artist
 
     artist_info = None
     with ThreadPoolExecutor() as executor:
@@ -79,11 +78,22 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
                     rym_info = extract_artist_info(result) or {}
                     rym_info['link'] = link
                     lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key) or {}
-                    artist_info = {**rym_info, **lastfm_info}
-                    artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
 
-        else:        
-            print("Artist not found.")
+                    if rym_info and lastfm_info:
+                        cached_artist = get_artist_from_cache(rym_info['artist_name'])
+                        if cached_artist:
+                            if cached_artist['request_count'] > 5:
+                                cached_artist['request_count'] = 0
+                                update_artist_in_cache(rym_info['artist_name'], cached_artist)
+                            return cached_artist
+                        else:
+                            cached_artist['request_count'] = 1
+                            add_artist_to_cache(rym_info['artist_name'], cached_artist)
+
+                        artist_info = {**rym_info, **lastfm_info}
+                        artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
+                    else:        
+                        print("Artist not found.")
         
     return artist_info
 

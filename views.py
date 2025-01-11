@@ -7,18 +7,21 @@ from emoji_links import streaming_emojis
 
 
 class RYMViewReleases(discord.ui.View):
-    def __init__(self, album_wiki=None, general_embed=None, original_message_id=None, release_name=None, streaming_links=None, performers=None):
+    def __init__(self, album_wiki=None, general_embed=None, likes=None, dislikes=None, original_message_id=None, artist_name=None, release_name=None, streaming_links=None, performers=None):
         super().__init__()
         self.action_type = "release"
         self.album_wiki = album_wiki
+        self.likes = likes
+        self.dislikes = dislikes
         self.general_embed = general_embed
         self.original_message_id = original_message_id
+        self.artist_name = artist_name
         self.release_name = release_name
         self.streaming_links = streaming_links or []
         self.performers = performers
         self.message_ids = {}
-        self.add_item(LikeButton(self.action_type, self.original_message_id, self.release_name))
-        self.add_item(DislikeButton(self.action_type, self.original_message_id, self.release_name))
+        self.add_item(LikeButton(self.action_type, self.likes, self.original_message_id, self.artist_name, self.release_name))
+        self.add_item(DislikeButton(self.action_type, self.dislikes, self.original_message_id, self.artist_name, self.release_name))
         if album_wiki:
             self.add_item(AlbumInfoButton(album_wiki))
         if performers:
@@ -27,17 +30,20 @@ class RYMViewReleases(discord.ui.View):
             self.add_item(StreamingButton(self.streaming_links))
 
 class RYMViewArtists(discord.ui.View):
-    def __init__(self, artist_name=None, similar_artists=None, general_embed=None, original_message_id=None, streaming_links=None):
+    def __init__(self, artist_name=None, similar_artists=None, general_embed=None, likes=None, dislikes=None, original_message_id=None, streaming_links=None, release_name=None):
         super().__init__()
         self.action_type = "artist"
         self.artist_name = artist_name
         self.similar_artists = similar_artists or []
         self.general_embed = general_embed
+        self.likes = likes
+        self.dislikes = dislikes
         self.original_message_id = original_message_id
         self.streaming_links = streaming_links or []
+        self.release_name = release_name
         self.message_ids = {}
-        self.add_item(LikeButton(self.action_type, self.original_message_id, self.artist_name))
-        self.add_item(DislikeButton(self.action_type, self.original_message_id, self.artist_name))
+        self.add_item(LikeButton(self.action_type, self.likes, self.original_message_id, self.artist_name, release_name))
+        self.add_item(DislikeButton(self.action_type, self.dislikes, self.original_message_id, self.artist_name, release_name))
         if similar_artists:
             self.add_item(SimilarArtistsButton(self.similar_artists))
         if self.streaming_links:
@@ -46,11 +52,13 @@ class RYMViewArtists(discord.ui.View):
 
 
 class LikeButton(discord.ui.Button):
-    def __init__(self, action_type, original_message_id, data_name):
-        super().__init__(label='❤️', style=discord.ButtonStyle.secondary, custom_id='like_button')
+    def __init__(self, action_type, likes, original_message_id, artist_name, release_name):
+        self.likes = likes
+        super().__init__(label=str(self.likes) + ' ❤️', style=discord.ButtonStyle.secondary, custom_id='like_button')
         self.action_type = action_type
         self.original_message_id = original_message_id
-        self.data_name = data_name
+        self.artist_name = artist_name
+        self.release_name = release_name
 
     async def callback(self, interaction: discord.Interaction):
         user_id = interaction.user.id
@@ -58,23 +66,23 @@ class LikeButton(discord.ui.Button):
 
         # Check if the user has already liked the release/artist
         if self.action_type == "release":
-            album_data = get_album_from_cache(self.view.link, increment_request_count=False)
+            album_data = get_album_from_cache(self.artist_name +"-"+ self.release_name, increment_request_count=False)
             if album_data and user_id in album_data.get('liked_users', []):
                 try:
                     await interaction.response.send_message('You have already liked this release.', ephemeral=True)
                 except discord.errors.NotFound:
                     print("Interaction not found or expired.")
                 return
+            handle_like_dislike(self.action_type, self.artist_name +"-"+ self.release_name, user_id, like=True)
         elif self.action_type == "artist":
-            artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
+            artist_data = get_artist_from_cache(self.artist_name, increment_request_count=False)
             if artist_data and user_id in artist_data.get('liked_users', []):
                 try:
                     await interaction.response.send_message('You have already liked this artist.', ephemeral=True)
                 except discord.errors.NotFound:
                     print("Interaction not found or expired.")
                 return
-
-        handle_like_dislike(self.action_type, self.view.link, user_id, like=True)
+            handle_like_dislike(self.action_type, self.artist_name, user_id, like=True)
 
         # Delete the previous dislike message if it exists
         previous_dislike_message_id = self.view.message_ids.get((user_id, 'dislike'))
@@ -93,34 +101,32 @@ class LikeButton(discord.ui.Button):
 
         # Send the new like message as a reply to the album embed and store its ID
         original_message = await interaction.channel.fetch_message(self.original_message_id)
-        message = await original_message.reply(f'{nickname} liked **{self.data_name}**!')
-        self.view.message_ids[(user_id, 'like')] = message.id
-
-        # Update the cache
         if self.action_type == "release": 
-            update_releases_likes_dislikes(self.view.release_name, user_id, like=True)
-            album_data = get_album_from_cache(self.view.release_name, increment_request_count=False)
-        
-        if self.action_type == "artist": 
-            update_artist_likes_dislikes(self.view.artist_name, user_id, like=True)
-            artist_data = artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
+            message = await original_message.reply(f'{nickname} liked **{self.release_name}**!')
+        elif self.action_type == "artist": 
+            message = await original_message.reply(f'{nickname} liked **{self.artist_name}**!')
+        self.view.message_ids[(user_id, 'like')] = message.id
 
         # Clear and update embed fields 
         new_embed = interaction.message.embeds[0] 
         new_embed.clear_fields() 
-        likes = album_data['likes'] if self.action_type == "release" else artist_data['likes'] 
-        dislikes = album_data['dislikes'] if self.action_type == "release" else artist_data['dislikes'] 
-        new_embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
+        likes = album_data['likes'] if self.action_type == "release" else artist_data['likes']
+        dislikes = album_data['dislikes'] if self.action_type == "release" else artist_data['dislikes']
+        for button in self.view.children:
+            if button.custom_id == 'like_button': button.label = str(likes + 1) + ' ❤️'
+            elif button.custom_id == 'dislike_button': button.label = str(dislikes - 1) + ' 👎'
 
-        await interaction.message.edit(embed=new_embed)
+        await interaction.message.edit(embed=new_embed, view=self.view)
 
 
 class DislikeButton(discord.ui.Button):
-    def __init__(self, action_type, original_message_id, data_name):
-        super().__init__(label='👎', style=discord.ButtonStyle.secondary, custom_id='dislike_button')
+    def __init__(self, action_type, dislikes, original_message_id, artist_name, release_name):
+        self.dislikes = dislikes
+        super().__init__(label=str(self.dislikes) + ' 👎', style=discord.ButtonStyle.secondary, custom_id='dislike_button')
         self.action_type = action_type
         self.original_message_id = original_message_id
-        self.data_name = data_name
+        self.artist_name = artist_name
+        self.release_name = release_name
 
     async def callback(self, interaction: discord.Interaction):
         user_id = interaction.user.id
@@ -128,23 +134,23 @@ class DislikeButton(discord.ui.Button):
 
         # Check if the user has already disliked the release
         if self.action_type == "release":
-            album_data = get_album_from_cache(self.view.link, increment_request_count=False)
+            album_data = get_album_from_cache(self.artist_name +"-"+ self.release_name, increment_request_count=False)
             if album_data and user_id in album_data.get('disliked_users', []):
                 try:
                     await interaction.response.send_message('You have already disliked this release.', ephemeral=True)
                 except discord.errors.NotFound:
                     print("Interaction not found or expired.")
                 return
+            handle_like_dislike(self.action_type, self.artist_name +"-"+ self.release_name, user_id, like=False)
         elif self.action_type == "artist":
-            artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
+            artist_data = get_artist_from_cache(self.artist_name, increment_request_count=False)
             if artist_data and user_id in artist_data.get('disliked_users', []):
                 try:
                     await interaction.response.send_message('You have already disliked this artist.', ephemeral=True)
                 except discord.errors.NotFound:
                     print("Interaction not found or expired.")
                 return
-
-        handle_like_dislike(self.action_type, self.view.link, user_id, like=True)
+            handle_like_dislike(self.action_type, self.artist_name, user_id, like=False)
 
         # Delete the previous like message if it exists
         previous_like_message_id = self.view.message_ids.get((user_id, 'like'))
@@ -163,25 +169,23 @@ class DislikeButton(discord.ui.Button):
 
         # Send the new dislike message as a reply to the album embed and store its ID
         original_message = await interaction.channel.fetch_message(self.original_message_id)
-        message = await original_message.reply(f'{nickname} disliked **{self.data_name}**!')
+        if self.action_type == "release": 
+            message = await original_message.reply(f'{nickname} disliked **{self.release_name}**!')
+        elif self.action_type == "artist": 
+            message = await original_message.reply(f'{nickname} disliked **{self.artist_name}**!')
         self.view.message_ids[(user_id, 'dislike')] = message.id
 
-       # Update the cache
-        if self.action_type == "release":
-            update_releases_likes_dislikes(self.view.release_name, user_id, like=False)
-            album_data = get_album_from_cache(self.view.release_name, increment_request_count=False)
-        elif self.action_type == "artist":
-            update_artist_likes_dislikes(self.view.artist_name, user_id, like=False)
-            artist_data = get_artist_from_cache(self.view.artist_name, increment_request_count=False)
 
         # Clear and update embed fields
         new_embed = interaction.message.embeds[0]
         new_embed.clear_fields()
         likes = album_data['likes'] if self.action_type == "release" else artist_data['likes']
-        dislikes = album_data['dislikes'] if self.action_type == "release" else artist_data['dislikes']
-        new_embed.add_field(name="\u200b", value=f"❤️ {likes} \t 👎 {dislikes}", inline=True)
+        dislikes = album_data['dislikes']if self.action_type == "release" else artist_data['dislikes']
+        for button in self.view.children:
+            if button.custom_id == 'like_button': button.label = str(likes - 1) + ' ❤️'
+            elif button.custom_id == 'dislike_button': button.label = str(dislikes + 1) + ' 👎'
 
-        await interaction.message.edit(embed=new_embed)
+        await interaction.message.edit(embed=new_embed, view=self.view)
 
 
 class AlbumInfoButton(discord.ui.Button):
@@ -264,9 +268,8 @@ class BackButton(discord.ui.Button):
 
     async def callback(self, interaction: discord.Interaction):
         self._view.clear_items()
-
-        self._view.add_item(LikeButton(self._view.action_type, self._view.original_message_id, self._view.release_name if self._view.action_type == "release" else self._view.artist_name))
-        self._view.add_item(DislikeButton(self._view.action_type, self._view.original_message_id, self._view.release_name if self._view.action_type == "release" else self._view.artist_name))
+        self._view.add_item(LikeButton(self._view.action_type, self._view.likes, self._view.original_message_id, self._view.artist_name, self._view.release_name))
+        self._view.add_item(DislikeButton(self._view.action_type, self._view.dislikes, self._view.original_message_id, self._view.artist_name, self._view.release_name))
 
         if self._view.action_type == "release":
             if self._view.album_wiki:
@@ -284,11 +287,11 @@ class BackButton(discord.ui.Button):
         await interaction.response.edit_message(embed=self._view.general_embed, view=self._view)
 
 
-def handle_like_dislike(action_type, artist_name, user_id, like=True):
+def handle_like_dislike(action_type, query, user_id, like=True):
     if action_type == "release":
-        update_releases_likes_dislikes(artist_name, user_id, like)
+        update_releases_likes_dislikes(query, user_id, like)
     elif action_type == "artist":
-        update_artist_likes_dislikes(artist_name, user_id, like)
+        update_artist_likes_dislikes(query, user_id, like)
 
 def normalize_link(s):
     # Remove special characters and normalize the string

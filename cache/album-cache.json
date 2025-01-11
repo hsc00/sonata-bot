@@ -89,10 +89,36 @@
             "https://music.youtube.com/playlist?list=OLAK5uy_mSiowBoA2TEBhc0rAIplNh8luwyd93d28&feature=gws_kp_album&feature=gws_kp_artist",
             "https://music.apple.com/pt/album/the-glowing-man/1099810877"
         ],
-        "request_count": 1,
+        "request_count": 0,
         "likes": 0,
         "dislikes": 0,
         "liked_users": [],
         "disliked_users": []
+    },
+    "joy-division-closer": {
+        "artist_name": "Joy Division",
+        "release_name": "Closer",
+        "release_year": "1980",
+        "genres": "Post-Punk, Gothic Rock",
+        "rating_value": "4.08",
+        "formatted_rating_count": "40,412",
+        "best_album_position": "#2 of 1980",
+        "all_time_album_position": "#89 overall",
+        "performers": "Ian Curtis (vocals), Bernard Sumner (guitar, synthesizer), Peter Hook (bass, backing vocals), Stephen Morris (drums, electronic drums, percussion), Martin Hannett (producer, engineer), Jon Caffery (engineer), Michael Johnson (assistant engineer), Peter Saville (design), Martyn Atkins (design), Bernard Pierre Wolff (photography).",
+        "link": "https://rateyourmusic.com/release/album/joy-division/closer/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/51709580b4f14898c8896b5049b168d1.png",
+        "album_wiki": "Closer is the second and final studio album by English rock band Joy Division, released on 18 July 1980 by Factory Records. Produced by Martin Hannett, it was released two months after the suicide of the band's lead singer and lyricist Ian Curtis. The album reached No. 6 on the UK Albums Chart, peaked at No. 3 in New Zealand in September 1981, and No. 2 in Greece during August 2020. Closer was also named NME Album of the Year. It was remastered and re-released in 2007. Today, Closer is widely recognized as a seminal release of the post-punk era. Following the release of the non-album single \"Love Will Tear Us Apart\" in June 1980, the remaining members re-formed as New Order. [Read more](https://www.last.fm/music/Joy+Division/Closer). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/0KBdfMTMxi0oD1oVqApTjr?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_l--2Q1rOZC1Qgibvo54bsOpAM5FjFPcCE&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/closer-collectors-edition/266610001"
+        ],
+        "request_count": 2,
+        "likes": 0,
+        "dislikes": 1,
+        "liked_users": [],
+        "disliked_users": [
+            408671768002297856
+        ]
     }
 }
