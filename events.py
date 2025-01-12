@@ -1,20 +1,41 @@
+import csv
 import logging
+import lzma
+import pickle
+import shutil
 import discord
+import requests
 from views import RYMViewReleases, RYMViewArtists
 import time
 from datetime import datetime
 import re
 from API.rym_search import search_rym_release, search_rym_artist
+from API.rympy_rating import *
 
+global ratings_cache
+ratings_cache = dict()
 bot_instance = None
 google_tokens = None
 cse_id = None
 lastfm_api_key = None
 
+try:
+    with lzma.open('cache/ratings_cache.lzma', 'rb') as file:
+        try:
+            ratings_cache = pickle.load(file)
+        except:
+            ratings_cache = dict()
+except FileNotFoundError:
+    with lzma.open('cache/ratings_cache.lzma', 'wb') as file:
+        pickle.dump(dict(), file)
+
 async def on_ready():
     logging.info(f'Logged in as {bot_instance.user}')
         
 async def on_message(message):
+    if message.author == bot_instance.user:
+        return
+    
     if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
         async with message.channel.typing():
             await process_release_link_or_text(message)
@@ -22,7 +43,12 @@ async def on_message(message):
     elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'):
         async with message.channel.typing():
             await process_artist_link_or_text(message)
-        time.sleep(5)
+            time.sleep(5)
+    elif message.content.startswith('!importratings'):
+        await process_ratings_command(message)
+    elif message.content.startswith('!wa'):
+        #await process_who_knows_command(message)
+        pass
 
 async def process_artist_link_or_text(message):
     artist_query = message.content
@@ -83,6 +109,54 @@ async def process_artist_link_or_text(message):
 
         await sent_message.edit(view=view)
 
+def import_ratings(url):
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        print("Request to ratings file failed.")
+        return
+    
+    ratings_proto = list(csv.DictReader(response.text.splitlines()))
+    ratings_list = []
+
+    for row in ratings_proto:
+        rating = Rating(
+            id=row["RYM Album"],
+            first_name=row[" First Name"],
+            last_name=row["Last Name"],
+            first_name_localized=row["First Name localized"],
+            last_name_localized=row[" Last Name localized"],
+            title=row["Title"],
+            release_year=int(row["Release_Date"]) if row["Release_Date"] else None,
+            rating=int(row["Rating"])/2 if row["Rating"] != "" else None,
+            ownership=row["Ownership"],
+            purchase_date=row["Purchase Date"],
+            media_type=row["Media Type"],
+            review=row.get(" Review")
+        )
+        ratings_list.append(rating)
+
+        if rating.rating == 5:
+            pass
+        elif rating.rating <= 2:
+            pass
+
+    return ratings_list
+    
+
+async def process_ratings_command(message):
+    global ratings_cache
+    processed_message = message.content.split(' ')
+    if len(processed_message) == 2:
+        ratings_cache[str(message.author.id)] = import_ratings(url=processed_message[1])
+    else:
+        ratings_cache[str(message.author.id)] = import_ratings(url=message.attachments[0].url)
+    await message.reply("Your ratings have been imported successfully.")
+    print("SAVING RATINGS CACHE, DON'T CLOSE THE BOT")
+    with lzma.open('cache/rating_cache_tmp.lzma', 'wb') as file:
+        pickle.dump(ratings_cache, file)
+    print("Ratings cache saved.")
+    shutil.move("rating_cache_tmp.lzma", "rating_cache.lzma")
 
 # searches release on rym
 async def process_release_link_or_text(message):

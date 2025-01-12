@@ -90,9 +90,10 @@
         ],
         "summary": " [Read more](https://www.last.fm/music/Ekcetera)",
         "streaming_links": null,
-        "request_count": 1,
+        "request_count": 3,
         "liked_users": [
-            601054815417532462
+            601054815417532462,
+            290082376300888064
         ],
         "disliked_users": []
     },
@@ -461,6 +462,72 @@
             677998132549648395,
             408671768002297856
         ],
+        "disliked_users": []
+    },
+    "gonemune": {
+        "artist_name": "goneMUNE",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSr-66EvA4oyoY7RiVXaGqU20dgDIphJE6tRROpaqBmax8CQSrF-26LqY0&s",
+        "founded_year": "Unknown",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/gonemune/credits/",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/1fb38c38559367b9da705fe12863667b.jpg",
+        "listeners": "201",
+        "similar_artists": [
+            "\u00c4ndl\u00f6s Otukt",
+            "Nik Sudan",
+            "Hazard and Bliss",
+            "Das Kriechtier",
+            "Jonathan Gillis"
+        ],
+        "summary": "goneMUNE (pronounced \u2018Moon\u2019) is a Singaporean dark alternative pop artist/musician. Their multi-sensory exorcism of trauma and darkness is a confrontation with mesmerizing soundscapes and a haunting physicality. \n\ngoneMUNE has collaborated with HEALTH on their remix of 'EXCESS' by Perturbator and performed in HEALTH's TORQUEFEST002. \n\nTheir personal influences include David Bowie, Placebo, and Depeche Mode. [Read more](https://www.last.fm/music/goneMUNE)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "fagot-y-popota": {
+        "artist_name": "Fagot y Popota",
+        "rym_img_url": "",
+        "founded_year": "Unknown",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/fagot_y_popota",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/0cea045977324af092ef4dfffb83a5b0.jpg",
+        "listeners": "23",
+        "similar_artists": [
+            "P\u00f3lo Norte",
+            "Mia Rose",
+            "Mafalda Veiga",
+            "Santamaria",
+            "KeeMo & Tim Royko feat. Cosmo Klein"
+        ],
+        "summary": " [Read more](https://www.last.fm/music/Popota)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "capella-leopoldina": {
+        "artist_name": "Capella Leopoldina",
+        "rym_img_url": "",
+        "founded_year": "Unknown",
+        "genres": "Unknown Genres",
+        "link": "https://rateyourmusic.com/artist/capella_leopoldina",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/6dc9ecbc7d5b4bb8be81ecf3fb05fa7a.jpg",
+        "listeners": "240",
+        "similar_artists": [
+            "Atl\u00e2ntica Banda",
+            "A R\u00d8da",
+            "Batatoon",
+            "Juventude Bronzeada",
+            "David Fonseca"
+        ],
+        "summary": " [Read more](https://www.last.fm/music/Leopoldina)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/11rOGwRUPBd162TLCxOVa2?autoplay=true",
+            "https://music.apple.com/pt/artist/capella-leopoldina/205695834"
+        ],
+        "request_count": 1,
+        "liked_users": [],
         "disliked_users": []
     }
 }

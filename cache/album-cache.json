@@ -467,5 +467,86 @@
         "request_count": 1,
         "liked_users": [],
         "disliked_users": []
+    },
+    "tigers-jaw-spirit-desire": {
+        "artist_name": "Tigers Jaw",
+        "release_name": "Spirit Desire",
+        "release_year": "2009",
+        "genres": "Emo, Indie Rock",
+        "rating_value": "3.64",
+        "formatted_rating_count": "360",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": null,
+        "link": "https://rateyourmusic.com/release/ep/tigers-jaw/spirit-desire/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/7e12ff7735904ed0845bec8160c820df.jpg",
+        "album_wiki": null,
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [
+            455301777055547394
+        ],
+        "disliked_users": []
+    },
+    "eldritch-anisette-eldritch-anisette": {
+        "artist_name": "Eldritch Anisette",
+        "release_name": "Eldritch Anisette",
+        "release_year": "1997",
+        "genres": "Emo, Midwest Emo",
+        "rating_value": "3.73",
+        "formatted_rating_count": "1,618",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "Courtney Miller (vocals), Allen Hitchens (guitar), Marc Krupanski (bass), Timothy Nichols (drums), Nick Rotundo (engineer), Eldritch Anisette (producer).",
+        "link": "https://rateyourmusic.com/release/ep/eldritch-anisette/eldritch-anisette/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/ca55e34d8622a2f647612a8234130fb3.jpg",
+        "album_wiki": null,
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "nine-inch-nails-the-downward-spiral": {
+        "artist_name": "Nine Inch Nails",
+        "release_name": "The Downward Spiral",
+        "release_year": "1994",
+        "genres": "Industrial Rock",
+        "rating_value": "4.10",
+        "formatted_rating_count": "38,597",
+        "best_album_position": "#3 of 1994",
+        "all_time_album_position": "#81 overall",
+        "performers": "Trent Reznor (vocals, songwriter, production, arranger, performer), Bill Kennedy (additional engineer), Sean Beavan (additional engineer), Chris Vrenna (assistant engineer, additional engineer, sampling, sound design), Maise (assistant engineer), Alan Moulder (additional engineer), Brian Pollack (additional engineer), John Aguto (additional engineer), Tom Baker (mastering engineer), Russell Mills (painting), David Buckland (photography), Gary Talpas (packaging).",
+        "link": "https://rateyourmusic.com/release/album/nine-inch-nails/the-downward-spiral/",
+        "album_cover_url": "https://lastfm.freetls.fastly.net/i/u/300x300/e53adbde5008bf50441f66c41e74d620.jpg",
+        "album_wiki": "The Downward Spiral (also known as Halo 8) is Nine Inch Nails' second studio album, though it is largely considered the third major release after the Broken EP, which consisted of entirely new material. It was released on March 8, 1994. It is likely the most acclaimed and well-known of the band's discography, and is said to have brought \"industrial\" music to the mainstream. A collection featuring remixes from The Downward Spiral was released as Further Down The Spiral on June 1, 1995.\n\nTrent Reznor has stated in various interviews some of the ideas and inspiration behind the album:\n\"The idea behind the album is of someone who sheds everything around them to a potential nothingness, but through career, religion, relationship, belief and so on. It's less muscle-flexing, though when I started it I didn't know what I wanted it to sound like. I knew I didn't want to be a full metal album, so I tried to address the issue of restraint. It was a long process.\nThematically I wanted to explore the idea of somebody who systematically throws or uncovers every layer of what he's surrounded with, comfort-wise, from pe...[Read more](https://www.last.fm/music/Nine+Inch+Nails/The+Downward+Spiral). ",
+        "streaming_links": [
+            "https://open.spotify.com/album/7a7arAXDE0BiaMgHLhdjGF?autoplay=true",
+            "https://music.youtube.com/playlist?list=OLAK5uy_mGt_MdLai3rmm3yCONSz1AtDi1tbJwUic&feature=gws_kp_album&feature=gws_kp_artist",
+            "https://music.apple.com/pt/album/the-downward-spiral/1440837096"
+        ],
+        "request_count": 1,
+        "liked_users": [
+            408671768002297856,
+            907362326011854858
+        ],
+        "disliked_users": []
+    },
+    "coil-the-gay-mans-guide-to-safer-sex-2": {
+        "artist_name": "Coil",
+        "release_name": "The Gay Man's Guide to Safer Sex +2",
+        "release_year": "2019",
+        "genres": "Film Soundtrack, Downtempo, Ambient House",
+        "rating_value": "3.50",
+        "formatted_rating_count": "713",
+        "best_album_position": null,
+        "all_time_album_position": null,
+        "performers": "John Balance (performer), Peter Christopherson (performer), Danny Hyde (performer).",
+        "link": "https://rateyourmusic.com/release/album/coil/the-gay-mans-guide-to-safer-sex-2/",
+        "album_cover_url": "",
+        "album_wiki": null,
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
     }
 }
