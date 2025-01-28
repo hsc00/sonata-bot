@@ -1,6 +1,6 @@
 # sonata-bot
  discord bot to gather music info
 
-# setup
+setup
 - add .env file to root
 - run bot.py
