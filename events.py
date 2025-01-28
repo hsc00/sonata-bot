@@ -44,8 +44,9 @@ async def on_message(message):
         async with message.channel.typing():
             await process_artist_link_or_text(message)
             time.sleep(5)
-    elif message.content.startswith('!importratings'):
+    elif message.content.startswith('!import') or message.content.startswith('!i'):
         await process_ratings_command(message)
+        print("tste")
     elif message.content.startswith('!wa'):
         #await process_who_knows_command(message)
         pass
