@@ -21,7 +21,6 @@ google_tokens = [
     os.getenv('GOOGLE_TOKEN_1'),
     os.getenv('GOOGLE_TOKEN_2'),
     os.getenv('GOOGLE_TOKEN_3'),
-    os.getenv('GOOGLE_CSE_ID')
 ]
 cse_id = os.getenv('GOOGLE_CSE_ID')
 lastfm_api_key = os.getenv('LASTFM_API_KEY')

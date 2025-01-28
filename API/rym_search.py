@@ -118,7 +118,7 @@ def get_streaming_links(action_type, artist, album, year):
         queries = [f"{formatted_artist}-{formatted_album}-{year} streaming"]
         action = 'listen_album'
     elif action_type == "artist":
-        queries = [f"{artist} band streaming", f"{artist} artist streaming"]
+        queries = [f"{artist} band streaming", f"{artist} artist streaming", f"{artist} streaming",]
         action = 'listen_artist'
 
     streaming_links = []

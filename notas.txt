@@ -25,3 +25,5 @@ devolve o bocado das lyrics in real time do que se esta a ouvir - https://pypi.o
 dá load dos ratings dos users em cada album
 profile proprio
 ultimos ratings
+
+implementar comando de mudanças manuais (implica a cache delas nao ser updated)

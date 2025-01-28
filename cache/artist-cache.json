@@ -115,7 +115,7 @@
         "streaming_links": [
             "https://open.spotify.com/artist/0U1D3GEq0HYA82J6WWw3DT?si=XQrEIckjSgqYgA8Ub3jweg"
         ],
-        "request_count": -5000,
+        "request_count": -4999,
         "liked_users": [
             442438894714224653
         ],
@@ -138,7 +138,7 @@
         ],
         "summary": "Encontro do cin\u00e9tico com a paisagem morta numa selvajaria de jazz-punk-p\u00f3s-aqu\u00e1tico.\nOs Sereias s\u00e3o: Ant\u00f3nio Pedro Ribeiro (voz), Arianna Casellas (voz), Jo\u00e3o Pires (bateria), Julius Gabriel (saxofone), Nils Meisel (sintetizadores), S\u00e9rgio Rocha (guitarra) e Tommy Luther Hughes (baixo), Celestino Monteiro (documenta\u00e7\u00e3o) e Francisco Laranjeira (v\u00eddeo). [Read more](https://www.last.fm/music/Sereias)",
         "streaming_links": null,
-        "request_count": 2,
+        "request_count": 3,
         "liked_users": [],
         "disliked_users": []
     },
@@ -163,10 +163,14 @@
             "https://music.youtube.com/channel/UCXExK7We8VKsIzFFQYNEgBg?feature=gws_kp_artist&feature=gws_kp_artist",
             "https://music.apple.com/pt/artist/new-order/176722"
         ],
-        "request_count": 1,
-        "liked_users": [],
+        "request_count": 2,
+        "liked_users": [
+            290082376300888064,
+            907362326011854858
+        ],
         "disliked_users": [
-            408671768002297856
+            408671768002297856,
+            210756305516756993
         ]
     },
     "mariah-carey": {
@@ -461,6 +465,220 @@
             677998132549648395,
             408671768002297856
         ],
+        "disliked_users": []
+    },
+    "the-cure": {
+        "artist_name": "The Cure",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTDz9lwWuVV9U0AtvIsZ3n0nvNNOc7scO40xr_5EfR3hImsizXlTSHkBo&s",
+        "founded_year": "Formed in: 1976",
+        "genres": "Post-Punk, Alternative Rock, Gothic Rock",
+        "link": "https://rateyourmusic.com/artist/the-cure",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/adb30de168061c7fc32b729a4326cbd1.jpg",
+        "listeners": "4,596,180",
+        "similar_artists": [
+            "Siouxsie and the Banshees",
+            "Joy Division",
+            "Bauhaus",
+            "Echo & the Bunnymen",
+            "The Glove"
+        ],
+        "summary": "The Cure are a band which formed in 1976 in Crawley, England, United Kingdom. The band originally consisted of Robert Smith (vocals, guitar), Porl Thompson (guitar), Michael Dempsey (bass) and Lol Tolhurst (drums), with the band's lineup overgoing several changes throughout the years and Smith remaining as the only constant member throughout the band's history. The band currently consists of Smith (vocals, guitar), Simon Gallup (bass), Roger O'Donnell (keyboards), Jason Cooper (drums) and Reeves Gabrels (guitar). [Read more](https://www.last.fm/music/The+Cure)",
+        "streaming_links": [
+            "https://music.apple.com/pt/artist/the-cure/566519",
+            "https://open.spotify.com/artist/7bu3H8JO7d0UbMoVzbo70s?autoplay=true",
+            "https://music.youtube.com/channel/UCKuG9-MGolUuWbEcoz5qijw?feature=gws_kp_artist&feature=gws_kp_artist"
+        ],
+        "request_count": 1,
+        "liked_users": [
+            408671768002297856
+        ],
+        "disliked_users": []
+    },
+    "natural-snow-buildings": {
+        "artist_name": "Natural Snow Buildings",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLIUJlPf5zLiQMFFcFMd1L5rD4XNRBjOljzYCWSw8pOwYidfMvZoaPcu8&s",
+        "founded_year": "Formed in: 1998",
+        "genres": "Drone, Free Folk, Psychedelic Folk",
+        "link": "https://rateyourmusic.com/artist/natural-snow-buildings",
+        "artist_img_url": null,
+        "listeners": "11",
+        "similar_artists": [],
+        "summary": " [Read more](https://www.last.fm/music/+noredirect/Natural+Snow+Building)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/6Y6w2HnL3GM49hOa74QhOO?autoplay=true",
+            "https://music.youtube.com/channel/UCLX06Ge6pBxgz7bGP04Nzog?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/natural-snow-buildings/277448916"
+        ],
+        "request_count": 2,
+        "liked_users": [
+            269251294848352256
+        ],
+        "disliked_users": []
+    },
+    "kafabindunya": {
+        "artist_name": "Kafabind\u00fcnya",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWFQwhwcciwhD8eMAG8ZmR7wkfywfpdxOWFaL97zHoSPk3mNPPUhM9r5M&s",
+        "founded_year": "Formed in: 2000",
+        "genres": "Post-Rock",
+        "link": "https://rateyourmusic.com/artist/kafabindunya",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/871a5686efd240b787dee90837d1cb20.jpg",
+        "listeners": "95",
+        "similar_artists": [],
+        "summary": "This is an incorrect tag for Kafabind\u00fcnya. If this non-artist appears in your charts, do last.fm and yourself a favor. Fix your artist tags. [Read more](https://www.last.fm/music/+noredirect/Kafabindunya)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "black-sabbath": {
+        "artist_name": "Black Sabbath",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpf7TgY6xcy_G9qY6hZEkarG4zJL7DN2tOcV5-IKgtci15FXccvvWI5SE&s",
+        "founded_year": "Formed in: 1969",
+        "genres": "Heavy Metal, Hard Rock, Traditional Doom Metal",
+        "link": "https://rateyourmusic.com/artist/black-sabbath",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/dbbba7e5fdce4303c3f1921c79950c17.jpg",
+        "listeners": "3,687,701",
+        "similar_artists": [
+            "Ozzy Osbourne",
+            "Dio",
+            "Heaven & Hell",
+            "Judas Priest",
+            "Deep Purple"
+        ],
+        "summary": "Black Sabbath were an English heavy metal band formed in Birmingham, Warwickshire in 1968 by guitarist Tony Iommi, drummer Bill Ward, bassist Geezer Butler and vocalist Ozzy Osbourne. They are often cited as pioneers of heavy metal music. The band helped define the genre with releases such as Black Sabbath (1970), Paranoid (1970) and Master of Reality (1971). The band had multiple line-up changes following Osbourne's departure in 1979 and Iommi is the only constant member throughout their history.  [Read more](https://www.last.fm/music/Black+Sabbath)",
+        "streaming_links": [
+            "https://open.spotify.com/artist/5M52tdBnJaKSvOpJGz8mfZ?autoplay=true",
+            "https://music.youtube.com/channel/UCLCELUuoHbkUxZ9EMHTYebg?feature=gws_kp_artist&feature=gws_kp_artist",
+            "https://music.apple.com/pt/artist/black-sabbath/165907"
+        ],
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "sadness": {
+        "artist_name": "Sadness",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1cRD4IflnaCwMhTzdDjjDRgyeqDDlo48GLf_Iw_zaqWiVGPwQHsySMkI&s",
+        "founded_year": "Unknown",
+        "genres": "Blackgaze, DSBM, Post-Metal",
+        "link": "https://rateyourmusic.com/artist/sadness-2",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/3b28c361c16ebd75b0f49fb266b6c4ec.jpg",
+        "listeners": "118,327",
+        "similar_artists": [
+            "A Rose Dying In The Rain",
+            "abriction",
+            "Left alone...",
+            "Moongazer",
+            "An Autumn for Crippled Children"
+        ],
+        "summary": "There are multiple artists with this name:\n\n1) Sadness is a depressive black metal/blackgaze/post-rock band, primarily created by Dami\u00e1n Ojeda, from Oak Park, IL, United States, formed in 2014. \nSee Bandcamp for releases.\n\n2) Sadness was a death doom/gothic metal band from Sion, Switzerland, active between 1990-1998. [Read more](https://www.last.fm/music/Sadness)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "cowboy-sadness": {
+        "artist_name": "Cowboy Sadness",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRRJMIi1oYEonlmwf-kbTNCmB7M3XBA_tKzs313F8VbLqeEji2eYCUz3C7&s",
+        "founded_year": "Unknown",
+        "genres": "Ambient",
+        "link": "https://rateyourmusic.com/artist/cowboy-sadness",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/3b28c361c16ebd75b0f49fb266b6c4ec.jpg",
+        "listeners": "118,392",
+        "similar_artists": [
+            "A Rose Dying In The Rain",
+            "abriction",
+            "Left alone...",
+            "Moongazer",
+            "An Autumn for Crippled Children"
+        ],
+        "summary": "There are multiple artists with this name:\n\n1) Sadness is a depressive black metal/blackgaze/post-rock band, primarily created by Dami\u00e1n Ojeda, from Oak Park, IL, United States, formed in 2014. \nSee Bandcamp for releases.\n\n2) Sadness was a death doom/gothic metal band from Sion, Switzerland, active between 1990-1998. [Read more](https://www.last.fm/music/Sadness)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "oceans-of-sadness": {
+        "artist_name": "Oceans of Sadness",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSE1ZEvvvtxy3N43kHqkbLcZJGjO6ViNiUlGNV98ONgwidLCl2ulfSpCVE&s",
+        "founded_year": "Formed in: 1995",
+        "genres": "Progressive Metal, Melodic Death Metal",
+        "link": "https://rateyourmusic.com/artist/oceans-of-sadness",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/3b28c361c16ebd75b0f49fb266b6c4ec.jpg",
+        "listeners": "118,327",
+        "similar_artists": [
+            "A Rose Dying In The Rain",
+            "abriction",
+            "Left alone...",
+            "Moongazer",
+            "An Autumn for Crippled Children"
+        ],
+        "summary": "There are multiple artists with this name:\n\n1) Sadness is a depressive black metal/blackgaze/post-rock band, primarily created by Dami\u00e1n Ojeda, from Oak Park, IL, United States, formed in 2014. \nSee Bandcamp for releases.\n\n2) Sadness was a death doom/gothic metal band from Sion, Switzerland, active between 1990-1998. [Read more](https://www.last.fm/music/Sadness)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "rain-recordings": {
+        "artist_name": "Rain Recordings",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSyYGi2fZOQUonHEFC4_lpqIT6PK1Uopc52x00pSFYg7fskR7cltMC_olcx&s",
+        "founded_year": "Formed in: 2021",
+        "genres": "Indie Rock, Slacker Rock, Chamber Pop",
+        "link": "https://rateyourmusic.com/artist/rain-recordings",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/fd941edd644d27e04ebd9addd7a7213e.jpg",
+        "listeners": "115,627",
+        "similar_artists": [
+            "Nature Recordings",
+            "Ambiworld",
+            "Sleep Waves",
+            "Natural Sound Makers",
+            "Worldwide Nature Studios"
+        ],
+        "summary": " [Read more](https://www.last.fm/music/Rain+Recordings)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "perturbator": {
+        "artist_name": "Perturbator",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWtpTrIKchIjvWaNfDdj55TSGJzDRY_X6LnOWwQ8VtldwAaqmqTuAZXMg&s",
+        "founded_year": "Unknown",
+        "genres": "Darksynth, Synthwave, Electro-Industrial",
+        "link": "https://rateyourmusic.com/artist/perturbator",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/eded839697990f7e427ec70f8a365700.jpg",
+        "listeners": "384,978",
+        "similar_artists": [
+            "Carpenter Brut",
+            "GosT",
+            "Mega Drive",
+            "Dan Terminus",
+            "Dance With the Dead"
+        ],
+        "summary": "Perturbator is James Kent, a French electronic musician from Paris. A producer of dark and retrofuturistic music inspired by the 80's often referred to as synthwave or retrowave.\nKent has a background as a guitar player in several black metal bands. Since 2012 he has produced electronic music inspired by cyberpunk culture and with inspiration from movies like Akira, Ghost In The Shell and The Running Man. He uses a variety of software synths in his productions, such as the emulators of old vintage synths like the OB-X or the CS-80. [Read more](https://www.last.fm/music/Perturbator)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
+        "disliked_users": []
+    },
+    "leonard-cohen": {
+        "artist_name": "Leonard Cohen",
+        "rym_img_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRKiMGhpLGPQZOsMXaZ2D07jsnZmY6GD-e7ip3XalcPK1e7LPMmGYW_gkwx&s",
+        "founded_year": "Born in: 1934",
+        "genres": "Singer-Songwriter, Contemporary Folk, Sophisti-Pop",
+        "link": "https://rateyourmusic.com/artist/leonard-cohen",
+        "artist_img_url": "https://lastfm.freetls.fastly.net/i/u/ar0/d36f0a80075ea368cbb21d4af41cf3a1.jpg",
+        "listeners": "1,854,665",
+        "similar_artists": [
+            "Bob Dylan",
+            "Tom Waits",
+            "Nick Cave & the Bad Seeds",
+            "Lou Reed",
+            "Joan Baez"
+        ],
+        "summary": "Leonard Norman Cohen (September 21, 1934 \u2013 November 7, 2016) was a Canadian songwriter  poet, singer, and novelist. His work explored religion, politics, isolation, sexuality, and romantic relationships. Cohen was inducted into the Canadian Music Hall of Fame, the Canadian Songwriters Hall of Fame, and the Rock and Roll Hall of Fame. He was invested as a Companion of the Order of Canada, the nation's highest civilian honour. In 2011, Cohen received one of the Prince of Asturias Awards for literature and the ninth Glenn Gould Prize. [Read more](https://www.last.fm/music/Leonard+Cohen)",
+        "streaming_links": null,
+        "request_count": 1,
+        "liked_users": [],
         "disliked_users": []
     }
 }
