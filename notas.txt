@@ -1,4 +1,6 @@
 proximo feature: 
+- testar o import de ratings
+- dar fix dos streaming links
 - faz o average rating de todas as releases de um artista que estejam na cache
 e apresenta essas releases com link para elas num botao novo
 
@@ -13,7 +15,7 @@ adicionar setlists do setlist.fm
 
 ## artist ##
 quando se pesquisa um artista pesquisar as releases que o rym manda e adicionar à cache de albuns
-(é so usares o metodo search_rym_release e passares cada uma das releases dos og:descriptors lá)
+(usa o metodo search_rym_release e passa cada uma das releases dos og:descriptors lá)
 procurar albuns do artista em cache para apresentar na parte de Popular albuns e o seu rating
 
 
