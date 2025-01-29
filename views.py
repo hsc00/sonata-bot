@@ -63,6 +63,7 @@ class LikeButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         user_id = interaction.user.id
         nickname = interaction.user.display_name
+        username = interaction.user.name
 
         # Check if the user has already liked the release/artist
         if self.action_type == "release":
@@ -111,9 +112,9 @@ class LikeButton(discord.ui.Button):
         # Send the new like message as a reply to the album embed and store its ID
         original_message = await interaction.channel.fetch_message(self.original_message_id)
         if self.action_type == "release": 
-            message = await original_message.reply(f'{nickname} liked **{self.release_name}**!')
+            message = await original_message.reply(f'{username} liked **{self.release_name}**!')
         elif self.action_type == "artist": 
-            message = await original_message.reply(f'{nickname} liked **{self.artist_name}**!')
+            message = await original_message.reply(f'{username} liked **{self.artist_name}**!')
         self.view.message_ids[(user_id, 'like')] = message.id
 
         # Clear and update embed fields 
@@ -135,6 +136,7 @@ class DislikeButton(discord.ui.Button):
     async def callback(self, interaction: discord.Interaction):
         user_id = interaction.user.id
         nickname = interaction.user.display_name
+        username = interaction.user.name
 
         # Check if the user has already disliked the release
         if self.action_type == "release":
@@ -184,9 +186,9 @@ class DislikeButton(discord.ui.Button):
         # Send the new dislike message as a reply to the album embed and store its ID
         original_message = await interaction.channel.fetch_message(self.original_message_id)
         if self.action_type == "release": 
-            message = await original_message.reply(f'{nickname} disliked **{self.release_name}**!')
+            message = await original_message.reply(f'{username} disliked **{self.release_name}**!')
         elif self.action_type == "artist": 
-            message = await original_message.reply(f'{nickname} disliked **{self.artist_name}**!')
+            message = await original_message.reply(f'{username} disliked **{self.artist_name}**!')
         self.view.message_ids[(user_id, 'dislike')] = message.id
 
 
