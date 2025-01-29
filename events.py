@@ -157,7 +157,7 @@ async def process_ratings_command(message):
     with lzma.open('cache/rating_cache_tmp.lzma', 'wb') as file:
         pickle.dump(ratings_cache, file)
     print("Ratings cache saved.")
-    shutil.move("rating_cache_tmp.lzma", "rating_cache.lzma")
+    shutil.move("cache/rating_cache_tmp.lzma", "cache/rating_cache.lzma")
 
 # searches release on rym
 async def process_release_link_or_text(message):
