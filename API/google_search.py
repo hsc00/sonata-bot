@@ -48,7 +48,7 @@ def search_streaming_links(query, google_tokens, cse_streaming):
     streaming_links = {}
     for item in results.get('items', []):
         link = item.get('link')
-        for service in ['spotify.com', 'apple.com', 'bandcamp.com', 'soundcloud.com', 'youtube.com']:
+        for service in ['open.spotify.com', 'music.apple.com', 'bandcamp.com', 'soundcloud.com', 'youtube.com']:
             if service in link and service not in streaming_links:
                 streaming_links[service] = link
                 
