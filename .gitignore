@@ -1,5 +1,9 @@
-#album cache
+#cache
 cache/album-cache.json
+cache/artist-cache.json
+
+# tests file
+teste.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,32 +1,29 @@
 import requests
 
-def clean_wiki_text(text):
-    # Add your cleaning logic here
-    return text
+def search_streaming_links(query, api_key, cx):
+    url = f"https://www.googleapis.com/customsearch/v1"
+    params = {
+        'q': query,
+        'key': api_key,
+        'cx': cx
+    }
+    response = requests.get(url, params=params)
+    results = response.json()
 
-def get_album_info_from_lastfm(artist_name, album_name, lastfm_api_key):
-    lastfm_url = f"http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key={lastfm_api_key}&artist={artist_name}&album={album_name}&format=json"
-    lastfm_response = requests.get(lastfm_url)
-    lastfm_data = lastfm_response.json()
-    album_cover_url = lastfm_data['album']['image'][-1]['#text'] if 'album' in lastfm_data and 'image' in lastfm_data['album'] else None
-    album_wiki = clean_wiki_text(lastfm_data['album']['wiki']['content']) if 'album' in lastfm_data and 'wiki' in lastfm_data['album'] else None
+    streaming_links = {}
+    for item in results.get('items', []):
+        link = item.get('link')
+        for service in ['spotify.com', 'apple.com', 'bandcamp.com', 'soundcloud.com', 'youtube.com']:
+            if service in link and service not in streaming_links:
+                streaming_links[service] = link
     
-    if album_wiki:
-        read_more_link_start = album_wiki.rfind("[Read more](")
-        read_more_link = album_wiki[read_more_link_start:] if read_more_link_start != -1 else ''
-        max_length = 1200 - len(read_more_link)
-        if len(album_wiki) > max_length:
-            album_wiki = album_wiki[:max_length-3] + '...' + read_more_link
-        elif read_more_link and not album_wiki.endswith(read_more_link):
-            album_wiki = album_wiki + read_more_link
-    
-    return album_cover_url, album_wiki
+    return list(streaming_links.values())
 
-# Example usage:
-artist_name = "The Beatles"
-album_name = "Abbey Road"
-lastfm_api_key = "your_lastfm_api_key"
+# Example usage
+api_key = 'AIzaSyB1iV2-ng6qnTkUiBDxHO9-3LEpnwwu8p0'
+cx = '675a4e2c9985340ed'
+query = "charli xcx brat album"
+links = search_streaming_links(query, api_key, cx)
+print(links)
 
-album_cover_url, album_wiki = get_album_info_from_lastfm(artist_name, album_name, lastfm_api_key)
-print(album_cover_url)
-print(album_wiki)
+##este algoritmo funciona, so tens de o fazer dar para artistas tambem

@@ -2,3 +2,4 @@ beautifulsoup4
 discordpy
 python-dotenv
 requests
+spotipy

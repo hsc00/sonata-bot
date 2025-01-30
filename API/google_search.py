@@ -19,6 +19,7 @@ def google_search(query, google_tokens, cse_id):
     return None
 
 def fetch_streaming_links(query, action):
+    # limited by google, not working
     url = f"https://www.google.com/search?q={query}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -33,3 +34,22 @@ def fetch_streaming_links(query, action):
             if any(service in href for service in ['spotify', 'apple', 'music.youtube', 'soundcloud', 'bandcamp']):
                 streaming_links.append(href)
     return streaming_links
+
+def search_streaming_links(query, google_tokens, cse_streaming):
+    url = f"https://www.googleapis.com/customsearch/v1"
+    params = {
+        'q': query,
+        'key': google_tokens,
+        'cx': cse_streaming
+    }
+    response = requests.get(url, params=params)
+    results = response.json()
+
+    streaming_links = {}
+    for item in results.get('items', []):
+        link = item.get('link')
+        for service in ['spotify.com', 'apple.com', 'bandcamp.com', 'soundcloud.com', 'youtube.com']:
+            if service in link and service not in streaming_links:
+                streaming_links[service] = link
+                
+    return list(streaming_links.values())

@@ -17,6 +17,7 @@ ratings_cache = dict()
 bot_instance = None
 google_tokens = None
 cse_id = None
+cse_id_streaming = None
 lastfm_api_key = None
 
 try:
@@ -59,7 +60,7 @@ async def process_artist_link_or_text(message):
             return
         artist_query = artist_query.split(' ', 1)[1] 
         
-        artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
+        artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
     else:
         #clean message link
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', artist_query)
@@ -67,7 +68,7 @@ async def process_artist_link_or_text(message):
 
         # Check if the query is a valid RYM link
         if artist_query.startswith('https://rateyourmusic.com/artist/') and len(artist_query.split('/')) > 3:
-            artist_info = search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key)
+            artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
         elif artist_query.startswith('rateyourmusic.com/'):
             await message.channel.send('Invalid link. Please provide a valid RateYourMusic **artist** link.')
             return
@@ -174,13 +175,13 @@ async def process_release_link_or_text(message):
 
    # Check if the query is a valid RYM link
     if (query.startswith('https://rateyourmusic.com/release/')) and len(query.split('/')) > 5:
-        search_result = search_rym_release(query, google_tokens, cse_id, lastfm_api_key)
+        search_result = search_rym_release(query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
     elif query.startswith('https://rateyourmusic.com/'):
         await message.channel.send('Invalid link. Please provide a valid RateYourMusic **release** link.')
         return
     else:
         # Perform a Google search if it's plain text
-        search_result = search_rym_release(query, google_tokens, cse_id, lastfm_api_key)
+        search_result = search_rym_release(query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
         if not search_result or not search_result['link'].startswith('https://rateyourmusic.com/release/'):
             await message.channel.send('Please provide a valid RateYourMusic **release** name.')
             return
@@ -238,11 +239,12 @@ async def process_release_link_or_text(message):
 
         await sent_message.edit(view=view)
 
-def setup(bot, tokens, cse, lastfm):
-    global bot_instance, google_tokens, cse_id, lastfm_api_key
+def setup(bot, tokens, cse, cse_streaming, lastfm):
+    global bot_instance, google_tokens, cse_id, cse_id_streaming, lastfm_api_key
     bot_instance = bot
     google_tokens = tokens
     cse_id = cse
+    cse_id_streaming = cse_streaming
     lastfm_api_key = lastfm
 
     bot.add_listener(on_ready)

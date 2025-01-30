@@ -5,10 +5,10 @@ from .album_cache import get_album_from_cache, add_album_to_cache, update_album_
 from .artist_cache import get_artist_from_cache, update_artist_in_cache, add_artist_to_cache
 from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
-from .google_search import google_search, fetch_streaming_links
+from .google_search import google_search, search_streaming_links
 
 
-def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
+def search_rym_release(query, google_tokens, cse_id, cse_streaming, lastfm_api_key):
     def fetch_google_results(query):
         return google_search(query, google_tokens, cse_id)
 
@@ -37,7 +37,7 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
         album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
         album_data['album_cover_url'] = album_cover_url
         album_data['album_wiki'] = album_wiki
-        album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'])
+        album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'], google_tokens, cse_streaming)
 
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
         if cached_album:
@@ -54,7 +54,7 @@ def search_rym_release(query, google_tokens, cse_id, lastfm_api_key):
     return album_data
     
 
-def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
+def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm_api_key):
     def fetch_google_results(query):
         return google_search(query, google_tokens, cse_id)
 
@@ -90,7 +90,7 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
                                 cached_artist['request_count'] = 1
 
                         artist_info = {**rym_info, **lastfm_info}
-                        artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
+                        artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "", google_tokens, cse_streaming)
                         add_artist_to_cache(rym_info['artist_name'], artist_info)
                     else:        
                         print("Artist not found.")
@@ -98,11 +98,7 @@ def search_rym_artist(artist_query, google_tokens, cse_id, lastfm_api_key):
     return artist_info
 
 
-def get_streaming_links(action_type, artist, album, year):
-    # Remove all - from the original names and then replace spaces with - for the url
-    formatted_artist = artist.replace('-', '').replace(' ', '-').lower()
-    if action_type == "release" : formatted_album = album.replace('-', '').replace(' ', '-').lower()
-
+def get_streaming_links(action_type, artist, album, year, google_tokens, cse_streaming):
     # Check if streaming links are already in cache
     if action_type == "release" : 
         cached_album = get_album_from_cache(f"{artist}-{album}", increment_request_count=False)
@@ -114,24 +110,15 @@ def get_streaming_links(action_type, artist, album, year):
             return cached_artist['streaming_links']
     
     # Initial query and action
-    if action_type == "release":
-        queries = [f"{formatted_artist}-{formatted_album}-{year} streaming"]
-        action = 'listen_album'
-    elif action_type == "artist":
-        queries = [f"{artist} band streaming", f"{artist} artist streaming", f"{artist} streaming",]
-        action = 'listen_artist'
+    if action_type == "release": query = f"{artist} - {album} album"
+    elif action_type == "artist": query = artist
 
-    streaming_links = []
-    for query in queries:
-        streaming_links = fetch_streaming_links(query, action)
-        if streaming_links:
-            break
-
-    if not streaming_links:
-        print("No streaming links found.")
-        return None
-
-    return streaming_links
+    streaming_links = search_streaming_links(query, google_tokens, cse_streaming)
+    if streaming_links:
+        return streaming_links
+    
+    print("No streaming links found.")
+    return None
 
 
 def extract_album_info(result):

@@ -23,11 +23,12 @@ google_tokens = [
     os.getenv('GOOGLE_TOKEN_3'),
 ]
 cse_id = os.getenv('GOOGLE_CSE_ID')
+cse_id_streaming = os.getenv('GOOGLE_CSE_ID_STREAMING')
 lastfm_api_key = os.getenv('LASTFM_API_KEY')
 
 # Import and setup events
 import events
-events.setup(bot, google_tokens, cse_id, lastfm_api_key)
+events.setup(bot, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
 
 # Load commands
 def load_commands():
