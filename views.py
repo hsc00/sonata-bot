@@ -29,6 +29,7 @@ class RYMViewReleases(discord.ui.View):
         if self.streaming_links:
             self.add_item(StreamingButton(self.streaming_links))
 
+
 class RYMViewArtists(discord.ui.View):
     def __init__(self, artist_name=None, similar_artists=None, general_embed=None, likes=None, dislikes=None, original_message_id=None, streaming_links=None, release_name=None):
         super().__init__()
@@ -48,7 +49,6 @@ class RYMViewArtists(discord.ui.View):
             self.add_item(SimilarArtistsButton(self.similar_artists))
         if self.streaming_links:
             self.add_item(StreamingButton(self.streaming_links))
-
 
 
 class LikeButton(discord.ui.Button):
@@ -252,10 +252,24 @@ class StreamingButton(discord.ui.Button):
         self.buttons = [
             discord.ui.Button(
                 label="",
-                emoji=streaming_emojis.get(link.split('.')[1].capitalize(), link.split('.')[1].capitalize()),
+                emoji=self.get_valid_emoji(link),
                 url=link
             ) for link in self.streaming_links
         ]
+
+    def get_valid_emoji(self, link):
+        if "spotify" in link:
+            return streaming_emojis["Spotify"]
+        elif "apple" in link:
+            return streaming_emojis["Apple"]
+        elif "bandcamp" in link:
+            return streaming_emojis["Bandcamp"]
+        elif "soundcloud" in link:
+            return streaming_emojis["Soundcloud"]
+        elif "youtube" in link or "music.youtube" in link:
+            return streaming_emojis["Youtube"]
+        else:
+            return '🔗'  # Default emoji
 
     async def callback(self, interaction: discord.Interaction):
         embed = interaction.message.embeds[0]
