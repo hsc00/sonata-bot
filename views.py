@@ -17,7 +17,7 @@ class Paginator(discord.ui.View):
         self.link = link
 
         self.update_buttons()
-        asyncio.create_task(self.update_embed(None))  # Initialize without author
+        asyncio.create_task(self.update_embed(None))
 
     @discord.ui.button(label="Previous", style=discord.ButtonStyle.primary, disabled=True)
     async def previous(self, interaction: discord.Interaction, button: discord.ui.Button):
