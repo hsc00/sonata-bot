@@ -1,6 +1,6 @@
+import config
 from views import *
 from API.setlist_search import *
-import config
 
 def setup(bot):
     @bot.command(name='setlists')
