@@ -5,12 +5,13 @@ import pickle
 import shutil
 import discord
 import requests
-from views import RYMViewReleases, RYMViewArtists
+from views import *
 import time
 from datetime import datetime
 import re
 from API.rym_search import search_rym_release, search_rym_artist
 from API.rympy_rating import *
+from API.setlist_search import get_setlist
 
 global ratings_cache
 ratings_cache = dict()
@@ -19,6 +20,7 @@ google_tokens = None
 cse_id = None
 cse_id_streaming = None
 lastfm_api_key = None
+setlist_api_key = None
 
 try:
     with lzma.open('cache/ratings_cache.lzma', 'rb') as file:
@@ -36,7 +38,6 @@ async def on_ready():
 async def on_message(message):
     if message.author == bot_instance.user:
         return
-    
     if 'rateyourmusic.com/release/' in message.content or message.content.startswith('!album') or message.content.startswith('!ab'):
         async with message.channel.typing():
             await process_release_link_or_text(message)
@@ -47,6 +48,10 @@ async def on_message(message):
             time.sleep(5)
     elif message.content.startswith('!import') or message.content.startswith('!i'):
         await process_ratings_command(message)
+    elif message.content.startswith('!setlist') or message.content.startswith('!st'):
+        async with message.channel.typing():
+            await process_setlist(message)
+            time.sleep(5)
     elif message.content.startswith('!wa'):
         #await process_who_knows_command(message)
         pass
@@ -239,13 +244,53 @@ async def process_release_link_or_text(message):
 
         await sent_message.edit(view=view)
 
-def setup(bot, tokens, cse, cse_streaming, lastfm):
-    global bot_instance, google_tokens, cse_id, cse_id_streaming, lastfm_api_key
+async def process_setlist(message):
+    if message.content.startswith('!setlist') or message.content.startswith('!st'):
+        content_parts = message.content.split(' ', 1)
+        if len(content_parts) > 1:
+            query = content_parts[1]
+            setlist = get_setlist(query, setlist_api_key)
+        else:
+            await message.channel.send('Please provide a valid artist.')
+            return
+
+        if 'url' in setlist:
+            link = setlist['url']
+            concert_name = setlist['concert_name']
+            city_name = setlist['city_name']
+            country_name = setlist['country_name']
+            concert_date = setlist['concert_date']
+            tracks_played = setlist['tracks_played']
+
+            if not tracks_played:
+                await message.channel.send(f'No tracks found in the setlist. You can be the one adding them [here]({link})')
+                return
+            
+            pages = [tracks_played[i:i + 10] for i in range(0, len(tracks_played), 10)]    
+
+            embed_title = f"{concert_name}, {city_name}, {country_name}"
+            embed_description = f"{concert_date}\n\n"
+
+            embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+            embed.set_footer(text=f"Requested by {message.author.display_name}")
+
+            tracks_description = "\n".join(f" - {track}" for track in pages[0])
+            embed.description += tracks_description
+            
+            sent_message = await message.channel.send(embed=embed)
+            view = Paginator(pages, embed, link)
+            await sent_message.edit(embed=embed, view=view)
+        else:
+            await message.channel.send('Setlist not found.')
+
+def setup(bot, tokens, cse, cse_streaming, lastfm, setlistfm_api_key):
+    global bot_instance, google_tokens, cse_id, cse_id_streaming, lastfm_api_key, setlist_api_key
     bot_instance = bot
     google_tokens = tokens
     cse_id = cse
     cse_id_streaming = cse_streaming
     lastfm_api_key = lastfm
+    setlist_api_key = setlistfm_api_key
 
     bot.add_listener(on_ready)
     bot.add_listener(on_message)

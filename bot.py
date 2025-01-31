@@ -25,10 +25,11 @@ google_tokens = [
 cse_id = os.getenv('GOOGLE_CSE_ID')
 cse_id_streaming = os.getenv('GOOGLE_CSE_ID_STREAMING')
 lastfm_api_key = os.getenv('LASTFM_API_KEY')
+setlist_api_key = os.getenv('SETLIST_API_KEY')
 
 # Import and setup events
 import events
-events.setup(bot, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
+events.setup(bot, google_tokens, cse_id, cse_id_streaming, lastfm_api_key, setlist_api_key)
 
 # Load commands
 def load_commands():
@@ -40,9 +41,6 @@ def load_commands():
                 module.setup(bot)
             else:
                 print(f"Module {module_name} does not have a setup function.")
-
+                
 load_commands()
-
-
-# Run the bot with your token
 bot.run(os.getenv('DISCORD_BOT_TOKEN'))

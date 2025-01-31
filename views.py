@@ -1,9 +1,55 @@
 import discord
 import unicodedata
 import re
+import asyncio
 from API.album_cache import get_album_from_cache, update_releases_likes_dislikes
 from API.artist_cache import get_artist_from_cache ,update_artist_likes_dislikes
 from emoji_links import streaming_emojis
+from discord.errors import NotFound, HTTPException
+
+
+class Paginator(discord.ui.View):
+    def __init__(self, pages, embed, link):
+        super().__init__(timeout=180)
+        self.pages = pages
+        self.embed = embed
+        self.current_page = 0
+        self.link = link
+
+        self.update_buttons()
+        asyncio.create_task(self.update_embed(None))  # Initialize without author
+
+    @discord.ui.button(label="Previous", style=discord.ButtonStyle.primary, disabled=True)
+    async def previous(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.handle_pagination(interaction, -1)
+
+    @discord.ui.button(label="Next", style=discord.ButtonStyle.primary, disabled=False)
+    async def next(self, interaction: discord.Interaction, button: discord.ui.Button):
+        await self.handle_pagination(interaction, +1)
+
+    async def handle_pagination(self, interaction: discord.Interaction, increment: int):
+        await interaction.response.defer()
+        self.current_page = max(0, min(self.current_page + increment, len(self.pages) - 1))
+        self.update_buttons()
+        await self.update_embed(interaction.user.display_name)
+        await self.safe_edit_message(interaction)
+
+    async def safe_edit_message(self, interaction: discord.Interaction):
+        try:
+            await interaction.edit_original_response(embed=self.embed, view=self)
+        except (NotFound, HTTPException):
+            await interaction.followup.send(embed=self.embed, view=self)
+
+    def update_buttons(self):
+        self.children[0].disabled = self.current_page == 0
+        self.children[1].disabled = self.current_page == len(self.pages) - 1
+
+    async def update_embed(self, user_display_name: str):
+        original_description = self.embed.description.split('\n\n')[0]
+        tracks_description = "\n".join(f" - {track}" for track in self.pages[self.current_page])
+        self.embed.description = f"{original_description}\n\n{tracks_description}"
+        footer_text = f"Requested by {user_display_name}" if user_display_name else "Requested by original author"
+        self.embed.set_footer(text=f"{footer_text} • Page {self.current_page + 1}/{len(self.pages)}")
 
 
 class RYMViewReleases(discord.ui.View):
