@@ -11,7 +11,7 @@ from datetime import datetime
 import re
 from API.rym_search import search_rym_release, search_rym_artist
 from API.rympy_rating import *
-from API.setlist_search import get_setlist
+from API.setlist_search import *
 
 global ratings_cache
 ratings_cache = dict()
@@ -48,9 +48,13 @@ async def on_message(message):
             time.sleep(5)
     elif message.content.startswith('!import') or message.content.startswith('!i'):
         await process_ratings_command(message)
-    elif message.content.startswith('!setlist') or message.content.startswith('!st'):
+    elif message.content.startswith('!setlist ') or message.content.startswith('!st '):
         async with message.channel.typing():
             await process_setlist(message)
+            time.sleep(5)
+    elif message.content.startswith('!setlists') or message.content.startswith('!sts'):
+        async with message.channel.typing():
+            await process_setlists(message)
             time.sleep(5)
     elif message.content.startswith('!wa'):
         #await process_who_knows_command(message)
@@ -245,7 +249,7 @@ async def process_release_link_or_text(message):
         await sent_message.edit(view=view)
 
 async def process_setlist(message):
-    if message.content.startswith('!setlist') or message.content.startswith('!st'):
+    if message.content.startswith('!setlist ') or message.content.startswith('!st '):
         content_parts = message.content.split(' ', 1)
         if len(content_parts) > 1:
             query = content_parts[1]
@@ -263,25 +267,60 @@ async def process_setlist(message):
             tracks_played = setlist['tracks_played']
 
             if not tracks_played:
-                await message.channel.send(f'No tracks found in the setlist. You can be the one adding them [here]({link})')
+                await message.channel.send(f'No tracks found in the setlist. You can be the one adding them [here]({link}).')
                 return
-            
-            pages = [tracks_played[i:i + 10] for i in range(0, len(tracks_played), 10)]    
 
-            embed_title = f"{concert_name}, {city_name}, {country_name}"
-            embed_description = f"{concert_date}\n\n"
+            pages = [tracks_played[i:i + 10] for i in range(0, len(tracks_played), 10)]
 
-            embed = discord.Embed(title=embed_title, description=embed_description, url=link)
-            embed.set_footer(text=f"Requested by {message.author.display_name}")
+            embeds = []
+            for i, page in enumerate(pages):
+                embed_description = "\n".join(f" - {track}" for track in page)
+                embed = discord.Embed(title=f"{concert_name}, {city_name}, {country_name}", description=f"{concert_date}\n\n{embed_description}")
+                embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
+                embeds.append(embed)
 
-            tracks_description = "\n".join(f" - {track}" for track in pages[0])
-            embed.description += tracks_description
-            
-            sent_message = await message.channel.send(embed=embed)
-            view = Paginator(pages, embed, link)
-            await sent_message.edit(embed=embed, view=view)
+            sent_message = await message.channel.send(embed=embeds[0])
+            view = Paginator(embeds)
+            await sent_message.edit(embed=embeds[0], view=view)
         else:
             await message.channel.send('Setlist not found.')
+
+
+async def process_setlists(message):
+    content_parts = message.content.split(' ', 1)
+    if len(content_parts) > 1:
+        query = content_parts[1]
+        setlists = get_setlists(query, setlist_api_key)
+    else:
+        await message.channel.send('Please provide a valid artist.')
+        return
+    
+    if not setlists or 'error' in setlists:
+        await message.channel.send('No setlists found.')
+        return
+    
+    embed_title = f"{query} last 10 setlists\n"
+    pages = []
+
+    for i in range(0, len(setlists), 5):
+        embed_description = ""
+        for setlist in setlists[i:i + 5]:
+            date = setlist['concert_date']
+            concert_name = setlist['concert_name']
+            city_name = setlist['city_name']
+            country_name = setlist['country_name']
+            link = setlist['url']
+            embed_description += f"{date}\n[{concert_name}, {city_name}, {country_name}]({link})\n\n"
+        
+        embed = discord.Embed(title=embed_title, description=embed_description)
+        embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i // 5 + 1}/{(len(setlists) + 4) // 5}")
+        pages.append(embed)
+    
+    # Send the first embed and set up pagination
+    sent_message = await message.channel.send(embed=pages[0])
+    view = Paginator(pages)
+    await sent_message.edit(embed=pages[0], view=view)
+
 
 def setup(bot, tokens, cse, cse_streaming, lastfm, setlistfm_api_key):
     global bot_instance, google_tokens, cse_id, cse_id_streaming, lastfm_api_key, setlist_api_key
