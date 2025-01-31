@@ -28,20 +28,8 @@ class Paginator(discord.ui.View):
         await interaction.edit_original_response(embed=self.embeds[self.current_page], view=self)
 
     def update_buttons(self):
-        self.previous.disabled = self.current_page == 0
-        self.next.disabled = self.current_page == len(self.embeds) - 1
-
-    def update_buttons(self):
         self.children[0].disabled = self.current_page == 0
         self.children[1].disabled = self.current_page == len(self.embeds) - 1
-
-
-    async def update_embed(self, user_display_name: str):
-        original_description = self.embed.description.split('\n\n')[0]
-        tracks_description = "\n".join(f" - {track}" for track in self.pages[self.current_page])
-        self.embed.description = f"{original_description}\n\n{tracks_description}"
-        footer_text = f"Requested by {user_display_name}" if user_display_name else "Requested by original author"
-        self.embed.set_footer(text=f"{footer_text} • Page {self.current_page + 1}/{len(self.pages)}")
 
 
 class RYMViewReleases(discord.ui.View):

@@ -9,102 +9,82 @@ def get_artist_id(query, setlist_api_key):
         'x-api-key': setlist_api_key
     }
     
-    # Search for the artist by name
     response = requests.get(f'{base_url}/search/artists', headers=headers, params={'artistName': query})
+    if response.status_code != 200:
+        return {'error': 'Failed to search for artist'}
     
-    if response.status_code == 200:
-        data = response.json()
-        # Find the artist with the exact name match
-        artist = next((a for a in data.get('artist', []) if a['name'].lower() == query.lower()), None)
-        if artist:
-            time.sleep(0.7)
-            return {
-                'mbid': artist['mbid'],
-                'name' : artist['name'],
-                'url' : artist['url']
-            }
+    data = response.json()
+    artist = next((a for a in data.get('artist', []) if a['name'].lower() == query.lower()), None)
+    if not artist:
         return {'error': 'Artist not found.'}
     
-    return
+    time.sleep(0.7)
+    return artist
 
-    
-# Get the last setlist for the artist using their MusicBrainz ID
 def get_setlist(query, setlist_api_key):
     artist_info = get_artist_id(query, setlist_api_key)
-    
-    if artist_info:
-        artist_mbid = artist_info['mbid']
-        url = f"{base_url}/artist/{artist_mbid}/setlists"
-        headers = {
-            'Accept': 'application/json',
-            'x-api-key': setlist_api_key
-        }
-        setlist_response = requests.get(url, headers=headers)
-
-        if setlist_response.status_code == 200:
-            setlist_data = setlist_response.json()
-            if 'setlist' in setlist_data and setlist_data['setlist']:
-                last_setlist = setlist_data['setlist'][0]
-                venue = last_setlist['venue']
-                concert_name = venue['name']
-                city_name = venue['city']['name']
-                country_name = venue['city']['country']['name']
-                concert_date = last_setlist['eventDate']
-                sets = last_setlist['sets']['set']
-
-                tracks_played = []
-                for set_ in sets:
-                    if 'song' in set_:
-                        for track in set_['song']:
-                            if track['name'] is not "":
-                                tracks_played.append(track['name'])
-
-                return {
-                    'artist_name' : artist_info['name'],
-                    'artist_url' : artist_info['url'],
-                    'concert_name': concert_name,
-                    'city_name': city_name,
-                    'country_name': country_name,
-                    'concert_date': concert_date,
-                    'tracks_played': tracks_played,
-                    'url': last_setlist['url']
-                }
-
-            else:
-                return {'error': 'No setlists found for the artist.'}
-        else:
-            return {'error': 'Failed to retrieve setlists'}
-    else:
+    if not artist_info:
         return None
+    
+    if 'error' in artist_info:
+        return artist_info
 
-# Get the last 10 setlists for the artist using their MusicBrainz ID
+    artist_mbid = artist_info['mbid']
+    url = f"{base_url}/artist/{artist_mbid}/setlists"
+    headers = {
+        'Accept': 'application/json',
+        'x-api-key': setlist_api_key
+    }
+    
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
+        return {'error': 'Failed to retrieve setlists'}
+    
+    data = response.json()
+    if 'setlist' not in data or not data['setlist']:
+        return {'error': 'No setlists found for the artist.'}
+    
+    last_setlist = data['setlist'][0]
+    venue = last_setlist['venue']
+    tracks_played = [track['name'] for set_ in last_setlist['sets']['set'] if 'song' in set_ for track in set_['song'] if track['name']]
+    
+    return {
+        'artist_name': artist_info['name'],
+        'concert_name': venue['name'],
+        'city_name': venue['city']['name'],
+        'country_name': venue['city']['country']['name'],
+        'concert_date': last_setlist['eventDate'],
+        'tracks_played': tracks_played,
+        'url': last_setlist['url']
+    }
+
 def get_setlists(query, setlist_api_key):
     artist_info = get_artist_id(query, setlist_api_key)
+    if not artist_info or 'error' in artist_info:
+        return artist_info if artist_info else None
 
-    if artist_info:
-        artist_mbid = artist_info['mbid']
-        url = f"{base_url}/artist/{artist_mbid}/setlists"
-        headers = {
-            'Accept': 'application/json',
-            'x-api-key': setlist_api_key
-        }
-        response = requests.get(url, headers=headers)
-        if response.status_code == 200:
-            data = response.json()
-            setlist_details = []
-            for setlist in data['setlist'][:10]:
-                details = {
-                    'artist_name' : artist_info['name'],
-                    'artist_url' : artist_info['url'],
-                    'url': setlist['url'],
-                    'concert_name': setlist['venue']['name'],
-                    'city_name': setlist['venue']['city']['name'],
-                    'country_name': setlist['venue']['city']['country']['name'],
-                    'concert_date': setlist['eventDate']
-                }
-                setlist_details.append(details)
-            return setlist_details
-            
+    artist_mbid = artist_info['mbid']
+    url = f"{base_url}/artist/{artist_mbid}/setlists"
+    headers = {
+        'Accept': 'application/json',
+        'x-api-key': setlist_api_key
+    }
+    
+    response = requests.get(url, headers=headers)
+    if response.status_code != 200:
         return {'error': 'Failed to retrieve setlists'}
-    else:
-        return None
+    
+    data = response.json()
+    setlist_details = [
+        {
+            'artist_name': artist_info['name'],
+            'artist_url': artist_info['url'],
+            'url': setlist['url'],
+            'concert_name': setlist['venue']['name'],
+            'city_name': setlist['venue']['city']['name'],
+            'country_name': setlist['venue']['city']['country']['name'],
+            'concert_date': setlist['eventDate']
+        }
+        for setlist in data.get('setlist', [])[:10]
+    ]
+    return setlist_details if setlist_details else {'error': 'No setlists found for the artist.'}

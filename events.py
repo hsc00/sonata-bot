@@ -253,43 +253,39 @@ async def process_setlist(message):
     if len(content_parts) > 1:
         query = content_parts[1]
         setlist = get_setlist(query, setlist_api_key)
-        if setlist is None:
-            await message.channel.send('Artist not found')
+        if not setlist or 'error' in setlist:
+            await message.channel.send('Artist not found or timeout. Try again.')
             return
     else:
         await message.channel.send('Please provide a valid artist.')
         return
 
-    if 'url' in setlist:
-        artist_name = setlist['artist_name']
-        artist_url = setlist['artist_url']
-        link = setlist['url']
-        concert_name = setlist['concert_name']
-        city_name = setlist['city_name']
-        country_name = setlist['country_name']
-        concert_date = setlist['concert_date']
-        tracks_played = setlist['tracks_played']
+    artist_name = setlist['artist_name']
+    link = setlist['url']
+    concert_name = setlist['concert_name']
+    city_name = setlist['city_name']
+    country_name = setlist['country_name']
+    concert_date = setlist['concert_date']
+    tracks_played = setlist['tracks_played']
 
-        if not tracks_played:
-            await message.channel.send(f'No tracks found in the setlist. You can be the one adding them [here]({link}).')
-            return
+    if not tracks_played:
+        await message.channel.send(f'No tracks found in the setlist. You can be the one adding them [here]({link}).')
+        return
 
-        pages = [tracks_played[i:i + 10] for i in range(0, len(tracks_played), 10)]
+    pages = [tracks_played[i:i + 10] for i in range(0, len(tracks_played), 10)]
 
-        embeds = []
-        embed_title = artist_name + " (last setlist)"
-        for i, page in enumerate(pages):
-            embed_description = f"**{concert_name}, {city_name}, {country_name}**\n{concert_date}\n\n"
-            embed_description += "\n".join(f" - {track}" for track in page)
-            embed = discord.Embed(title=embed_title, description=embed_description, url=artist_url)
-            embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
-            embeds.append(embed)
+    embeds = []
+    embed_title = f"{artist_name} (Last Setlist)"
+    for i, page in enumerate(pages):
+        embed_description = f"**{concert_name}, {city_name}, {country_name}**\n{concert_date}\n\n"
+        embed_description += "\n".join(f" - {track}" for track in page)
+        embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+        embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
+        embeds.append(embed)
 
-        sent_message = await message.channel.send(embed=embeds[0])
-        view = Paginator(embeds)
-        await sent_message.edit(embed=embeds[0], view=view)
-    else:
-        await message.channel.send('Setlist not found.')
+    sent_message = await message.channel.send(embed=embeds[0])
+    view = Paginator(embeds)
+    await sent_message.edit(embed=embeds[0], view=view)
 
 
 async def process_setlists(message):
@@ -297,15 +293,11 @@ async def process_setlists(message):
     if len(content_parts) > 1:
         query = content_parts[1]
         setlists = get_setlists(query, setlist_api_key)
-        if setlists is None:
-            await message.channel.send('Artist not found')
+        if not setlists or 'error' in setlists:
+            await message.channel.send('Artist not found or timeout. Try again.')
             return
     else:
         await message.channel.send('Please provide a valid artist.')
-        return
-    
-    if not setlists or 'error' in setlists:
-        await message.channel.send('No setlists found.')
         return
     
     pages = []
@@ -321,12 +313,11 @@ async def process_setlists(message):
             link = setlist['url']
             embed_description += f"{date}\n[{concert_name}, {city_name}, {country_name}]({link})\n\n"
         
-        embed_title = f"{artist_name} (last 10 setlists)\n"
+        embed_title = f"{artist_name} (Last 10 Setlists)\n"
         embed = discord.Embed(title=embed_title, description=embed_description, url=artist_url)
         embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i // 5 + 1}/{(len(setlists) + 4) // 5}")
         pages.append(embed)
     
-    # Send the first embed and set up pagination
     sent_message = await message.channel.send(embed=pages[0])
     view = Paginator(pages)
     await sent_message.edit(embed=pages[0], view=view)
