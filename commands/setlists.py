@@ -1,6 +1,4 @@
-import discord
 from views import *
-import time
 from API.setlist_search import *
 import config
 
