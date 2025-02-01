@@ -1,0 +1,2 @@
+Welcome to Sonata Bot! These are the commands you can use
+- `!setfm <username>`: Set your Last.fm username.
