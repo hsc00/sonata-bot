@@ -30,4 +30,4 @@ def setup(bot):
 
         # Create the hyperlink for the Last.fm username
         last_fm_profile_url = f"https://www.last.fm/user/{last_fm_username}"
-        await ctx.send(f"{ctx.author.mention} Last.fm has been set to [{last_fm_username}]({last_fm_profile_url})")
+        await ctx.send(f"{ctx.author.mention} last.fm has been set to [{last_fm_username}]({last_fm_profile_url})")
