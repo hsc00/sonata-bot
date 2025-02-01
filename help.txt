@@ -1,5 +1,5 @@
 These are the Sonata bible commands:
-- `!setfm <username>`: Set your Last.fm username.
+- `!setfm <username>`: Set your last.fm username.
 - `!ab or !album`: Check RYM info for an album.
 - `!a or !artist`: Check RYM and last.fm info for an artist.
 - `!import or !i`: Import your RYM ratings to the bot. Check instructions [here].
