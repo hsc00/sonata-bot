@@ -1,4 +1,4 @@
-These are the Sonata Bible commands:
+These are the Sonata bible commands:
 - `!setfm <username>`: Set your Last.fm username.
 - `!ab or !album`: Check RYM info for an album.
 - `!a or !artist`: Check RYM and last.fm info for an artist.
@@ -6,3 +6,8 @@ These are the Sonata Bible commands:
 - `!st or !setlist`: Check an artist last concert setlist.
 - `!sts or !setlists`: Get the info and links to an artist last 10 concerts setlists.
 - `!pingsonata`: Check if the bot is online.
+- `!whosampled`: Coming soon
+- `!covers`: Coming soon
+- `!profile`: Coming soon
+- `!influences`: Coming soon
+- `!currentlyrics`: Conceptual
