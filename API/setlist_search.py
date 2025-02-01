@@ -1,5 +1,6 @@
 import requests
 import time
+from datetime import datetime
 
 base_url = 'https://api.setlist.fm/rest/1.0'
 
@@ -20,6 +21,7 @@ def get_artist_id(query, setlist_api_key):
     
     time.sleep(0.7)
     return artist
+
 
 def get_setlist(query, setlist_api_key):
     artist_info = get_artist_id(query, setlist_api_key)
@@ -44,7 +46,17 @@ def get_setlist(query, setlist_api_key):
     if 'setlist' not in data or not data['setlist']:
         return {'error': 'No setlists found for the artist.'}
     
-    last_setlist = data['setlist'][0]
+    # Filter setlists to only include those before today's date
+    today = datetime.now().date()
+    past_setlists = [
+        setlist for setlist in data['setlist']
+        if datetime.strptime(setlist['eventDate'], "%d-%m-%Y").date() < today
+    ]
+    
+    if not past_setlists:
+        return {'error': 'No past setlists found for the artist.'}
+    
+    last_setlist = past_setlists[0]
     venue = last_setlist['venue']
     tracks_played = [track['name'] for set_ in last_setlist['sets']['set'] if 'song' in set_ for track in set_['song'] if track['name']]
     
@@ -57,6 +69,7 @@ def get_setlist(query, setlist_api_key):
         'tracks_played': tracks_played,
         'url': last_setlist['url']
     }
+
 
 def get_setlists(query, setlist_api_key):
     artist_info = get_artist_id(query, setlist_api_key)
