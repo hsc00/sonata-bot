@@ -97,8 +97,9 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
                         add_artist_to_cache(rym_info['artist_name'], artist_info)
                     else:        
                         print("Artist not found.")
+                return artist_info
         
-    return artist_info
+    return None
 
 
 def get_streaming_links(action_type, artist, album, year, google_tokens, cse_streaming):

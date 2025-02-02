@@ -2,6 +2,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 import logging
+import json
 
 def fetch_json(url):
     """Fetches JSON data from a given URL."""
@@ -106,3 +107,36 @@ def search_lastfm_artist(artist_name, lastfm_api_key):
             "summary": summary
         }
     return None
+
+def check_user_lastfm_cache(user_id):
+    """Checks if a user's Discord ID is in the lastfm-cache.json file."""
+    try:
+        with open('cache/lastfm-cache.json', 'r') as f:
+            data = json.load(f)
+            return data.get(str(user_id)) if str(user_id) in data else None
+    except FileNotFoundError:
+        return False 
+
+def clean_name(name):
+    # Remove (remaster) and similar variants within parentheses
+    name = re.sub(r'\s*\([^)]*remaster[^)]*\)', '', name, flags=re.IGNORECASE)
+    # Remove remaster variants with hyphens or standalone
+    name = re.sub(r'(\s*-\s*)?remaster(ed)?(\s*-\s*)?', '', name, flags=re.IGNORECASE)
+    # Clean up extra whitespace and any trailing hyphens
+    return re.sub(r'\s*-\s*$', '', name.strip())
+
+def get_last_played(last_fm_username, api_key, type):
+    url = f"http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user={last_fm_username}&api_key={api_key}&format=json"
+    response = requests.get(url)
+    data = response.json()
+    if 'recenttracks' in data and 'track' in data['recenttracks']:
+        last_track = data['recenttracks']['track'][0]
+        track_name = clean_name(last_track['name'])
+        artist_name = last_track['artist']['#text']
+        album_name = clean_name(last_track['album']['#text'])
+        if type == 'release':
+            return f'{artist_name} - {album_name}'
+        elif type == 'artist':
+            return artist_name
+    else:
+        return None

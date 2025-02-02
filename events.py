@@ -12,6 +12,7 @@ import re
 from API.rym_search import search_rym_release, search_rym_artist
 from API.rympy_rating import *
 from API.setlist_search import *
+from API.search_lastfm import check_user_lastfm_cache, get_last_played
 
 global ratings_cache
 ratings_cache = dict()
@@ -45,7 +46,7 @@ async def on_message(message):
     elif 'rateyourmusic.com/artist/' in message.content and len(message.content.split('/')) > 3 or message.content.startswith('!artist') or message.content.startswith('!a'):
         async with message.channel.typing():
             await process_artist_link_or_text(message)
-            time.sleep(5)
+        time.sleep(5)
     elif message.content.startswith('!import') or message.content.startswith('!i'):
         await process_ratings_command(message)
     elif message.content.startswith('!wa'):
@@ -55,11 +56,17 @@ async def on_message(message):
 async def process_artist_link_or_text(message):
     artist_query = message.content
     if artist_query.startswith('!artist') or artist_query.startswith('!a'):
-        content_parts = message.content.split(' ', 1)
-        if len(content_parts) < 2:
-            await message.channel.send('Please provide an artist.')
-            return
-        artist_query = artist_query.split(' ', 1)[1] 
+        content_parts = artist_query.split(' ', 1)
+        if len(content_parts) > 1:
+            artist_query = content_parts[1]
+        else:
+            last_fm_username = check_user_lastfm_cache(message.author.id)
+            # Check if the user last.fm username was stored
+            if last_fm_username is not None:
+                artist_query = get_last_played(last_fm_username, lastfm_api_key, 'artist')
+            else:
+                await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
+                return
     else:
         #clean message to get only the link
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', artist_query)
@@ -104,8 +111,12 @@ async def process_release_link_or_text(message):
         if len(content_parts) > 1:
             query = content_parts[1]
         else:
-            await message.channel.send('Please provide a release.')
-            return
+            last_fm_username = check_user_lastfm_cache(message.author.id)
+            if last_fm_username is not None:
+                query = get_last_played(last_fm_username, lastfm_api_key, 'release')
+            else:
+                await message.channel.send('Please provide a release or use `!setfm` to set your last.fm account.')
+                return
     else:
         #clean message to get only the link
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', release_query)
