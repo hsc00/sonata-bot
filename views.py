@@ -46,14 +46,22 @@ class RYMViewReleases(discord.ui.View):
         self.streaming_links = streaming_links or []
         self.performers = performers
         self.message_ids = {}
-        self.add_item(LikeButton(self.action_type, self.likes, self.original_message_id, self.artist_name, self.release_name))
-        self.add_item(DislikeButton(self.action_type, self.dislikes, self.original_message_id, self.artist_name, self.release_name))
+        
+        # Initialize only required items
+        buttons = [
+            LikeButton(self.action_type, self.likes, self.original_message_id, self.artist_name, self.release_name),
+            DislikeButton(self.action_type, self.dislikes, self.original_message_id, self.artist_name, self.release_name)
+        ]
+        
         if album_wiki:
-            self.add_item(AlbumInfoButton(album_wiki))
+            buttons.append(AlbumInfoButton(album_wiki))
         if performers:
-            self.add_item(CreditsButton(self.performers))
+            buttons.append(CreditsButton(self.performers))
         if self.streaming_links:
-            self.add_item(StreamingButton(self.streaming_links))
+            buttons.append(StreamingButton(self.streaming_links))
+        
+        for button in buttons:
+            self.add_item(button)
 
 
 class RYMViewArtists(discord.ui.View):

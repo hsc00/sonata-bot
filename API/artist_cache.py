@@ -44,7 +44,6 @@ def update_artist_in_cache(artist_name, artist_data):
     cache[normalized_name] = artist_data
     save_cache(cache)
 
-
 def update_artist_likes_dislikes(artist_name, user_id, like=True):
     cache = load_cache()
     normalized_name = normalize_name(artist_name)

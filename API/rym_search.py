@@ -46,7 +46,7 @@ def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastf
 
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
         if cached_album and cached_album['request_count'] > 5:
-            cached_album['request_count'] = 0
+            cached_album['request_count'] = 1
             update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
             return cached_album
         else:
@@ -62,9 +62,8 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
     def fetch_google_results(query):
         return google_search(query, google_tokens, cse_id)
 
-    artist_name = artist_query if 'rateyourmusic.com/' not in artist_query else re.sub(r'\W+', ' ', artist_query.split('/')[-1])
-    artist_query += " site:rateyourmusic.com" if 'rateyourmusic.com/' not in artist_query else ""
-    
+    artist_name = artist_query if 'rateyourmusic.com/' not in artist_query else re.sub(r'[\W_]+', ' ', artist_query.split('/')[-1])
+
     cached_artist = get_artist_from_cache(artist_name)
     if cached_artist:
         if cached_artist['request_count'] <= 5:
@@ -72,22 +71,22 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
 
     artist_info = None
     with ThreadPoolExecutor() as executor:
-        google_future = executor.submit(fetch_google_results, artist_query)
+        google_future = executor.submit(fetch_google_results, artist_name)
         google_results = google_future.result()
         
         if google_results:
             for result in google_results:
                 link = result['link']
-                if link.startswith('https://rateyourmusic.com/artist/') and all(term.lower() in link.lower().replace('-', ' ') for term in artist_name):
+                if link.startswith('https://rateyourmusic.com/artist/') and all(word.lower() in link.lower() for word in artist_name.split()):
                     rym_info = extract_artist_info(result) or {}
                     rym_info['link'] = link
                     lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key) or {}
-
+                    
                     if rym_info and lastfm_info:
                         cached_artist = get_artist_from_cache(rym_info['artist_name'])
                         if cached_artist:
                             if cached_artist['request_count'] > 5:
-                                cached_artist['request_count'] = 0
+                                cached_artist['request_count'] = 1
                                 update_artist_in_cache(rym_info['artist_name'], cached_artist)
                                 return cached_artist
                             else:

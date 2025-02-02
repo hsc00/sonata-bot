@@ -42,7 +42,7 @@ async def on_message(message):
         async with message.channel.typing():
             await process_release_link_or_text(message)
         time.sleep(5)
-    elif 'rateyourmusic.com/artist/' in message.content or message.content.startswith('!artist') or message.content.startswith('!a'):
+    elif 'rateyourmusic.com/artist/' in message.content and len(message.content.split('/')) > 3 or message.content.startswith('!artist') or message.content.startswith('!a'):
         async with message.channel.typing():
             await process_artist_link_or_text(message)
             time.sleep(5)
@@ -60,19 +60,13 @@ async def process_artist_link_or_text(message):
             await message.channel.send('Please provide an artist.')
             return
         artist_query = artist_query.split(' ', 1)[1] 
-        
-        artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
     else:
-        #clean message link
+        #clean message to get only the link
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', artist_query)
         artist_query = match.group(0)
 
-        # Check if the query is a valid RYM link
-        if artist_query.startswith('https://rateyourmusic.com/artist/') and len(artist_query.split('/')) > 3:
-            artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
-        elif artist_query.startswith('rateyourmusic.com/'):
-            await message.channel.send('Invalid link. Please provide a valid RateYourMusic **artist** link.')
-            return
+    artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
+    return
         
     if artist_info:
         artist_name = artist_info['artist_name']
@@ -114,8 +108,9 @@ async def process_artist_link_or_text(message):
 
 # searches release on rym
 async def process_release_link_or_text(message):
-    if message.content.startswith('!album') or message.content.startswith('!ab'):
-        content_parts = message.content.split(' ', 1)
+    release_query = message.content
+    if release_query.startswith('!album') or release_query.startswith('!ab'):
+        content_parts = release_query.split(' ', 1)
         if len(content_parts) > 1:
             query = content_parts[1]
         else:
@@ -123,7 +118,7 @@ async def process_release_link_or_text(message):
             return
     else:
         #clean message to get only the link
-        match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', message.content)
+        match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', release_query)
         query = match.group(0)
 
     # perform a google search
