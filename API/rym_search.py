@@ -1,36 +1,41 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
-from .album_cache import get_album_from_cache, add_album_to_cache, update_album_in_cache
-from .artist_cache import get_artist_from_cache, update_artist_in_cache, add_artist_to_cache
+from .album_cache import *
+from .artist_cache import *
 from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
-from .google_search import google_search, search_streaming_links
+from .google_search import *
 
 
-def search_rym_release(query, google_tokens, cse_id, cse_streaming, lastfm_api_key):
-    def fetch_google_results(query):
-        return google_search(query, google_tokens, cse_id)
+def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastfm_api_key):
+    # Regex patterns
+    rym_pattern = re.compile(r'https://rateyourmusic.com/release/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)/')
+    dash_pattern = re.compile(r'\s*-\s*')
 
-    release_name = re.sub(r'https://rateyourmusic.com/release/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)/', '', query).replace('/', ' ').replace('-', ' ').strip()
-    query = release_name + " site:rateyourmusic.com"
+    def fetch_google_results(release_name):
+        return google_search(release_name, google_tokens, cse_id)
+
+    if 'rateyourmusic.com/release/' in release_name:
+        release_name = rym_pattern.sub('', release_name).replace('/', ' ').replace('-', ' ').strip()
+    else:
+        release_name = dash_pattern.sub(' ', release_name).strip()
+
     cached_album = get_album_from_cache(release_name)
-
-    if cached_album:
-        if cached_album['request_count'] <= 5:
-            return cached_album
+    if cached_album and cached_album['request_count'] <= 5:
+        return cached_album
 
     album_data = None
-    with ThreadPoolExecutor() as executor:
-        google_future = executor.submit(fetch_google_results, query)
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        google_future = executor.submit(fetch_google_results, release_name)
         google_results = google_future.result()
-        
-        if google_results:
-            for result in google_results:
-                link = result['link']
-                if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in link.lower() for word in release_name.split()):
-                    album_data = extract_album_info(result)
-                    album_data['link'] = link
+
+    if google_results:
+        for result in google_results:
+            link = result['link']
+            if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in link.lower() for word in release_name.split()):
+                album_data = extract_album_info(result)
+                album_data['link'] = link
                 break   
 
     if album_data:
@@ -40,15 +45,14 @@ def search_rym_release(query, google_tokens, cse_id, cse_streaming, lastfm_api_k
         album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'], google_tokens, cse_streaming)
 
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
-        if cached_album:
-            if cached_album['request_count'] > 5:
-                cached_album['request_count'] = 0
-                update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
+        if cached_album and cached_album['request_count'] > 5:
+            cached_album['request_count'] = 0
+            update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
             return cached_album
         else:
             album_data['request_count'] = 1
             add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
-    else:        
+    else:
         print("Album not found.")
 
     return album_data
@@ -129,6 +133,7 @@ def extract_album_info(result):
 
     artist_name = pagemap.get('musicgroup', [{}])[0].get('name', 'Unknown Artist')
     release_name = musicalbum.get('name', 'Unknown Album')
+    rym_cover_url = pagemap.get('cse_thumbnail', [{}])[0].get('src', '')
     og_description = metatags.get('og:description', '')
 
     release_year = extract_release_year(og_description)
@@ -144,6 +149,7 @@ def extract_album_info(result):
     return {
         'artist_name': artist_name,
         'release_name': release_name,
+        'rym_cover_url': rym_cover_url,
         'release_year': release_year,
         'genres': genres,
         'rating_value': rating_value,
@@ -171,8 +177,6 @@ def extract_artist_info(result):
         'genres': genres,
     }
 
-
-import re
 
 def extract_founded_or_born_year(description):
     # Try to find a pattern for "formed" or "born"

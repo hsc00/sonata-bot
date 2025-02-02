@@ -1,21 +1,21 @@
 import requests
-import logging 
 from bs4 import BeautifulSoup
 
 def google_search(query, google_tokens, cse_id):
-    for token in google_tokens:
-        try:
-            search_url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={token}&cx={cse_id}"
-            response = requests.get(search_url)
-            if response.status_code == 429:
-                logging.warning("Rate limit exceeded for token %s, retrying with next token.", token)
-                continue
-            results = response.json().get('items', [])
-            if results:
-                return results
-        except Exception as e:
-            logging.error("Error during Google search with token %s: %s", token, e)
-    logging.info("No results found.")
+    with requests.Session() as session:
+        for token in google_tokens:
+            try:
+                search_url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={token}&cx={cse_id}"
+                response = session.get(search_url)
+                if response.status_code == 429:
+                    print(f"Rate limit exceeded for token {token}, retrying with next token.")
+                    continue
+                results = response.json().get('items', [])
+                if results:
+                    return results
+            except Exception as e:
+                print(f"Error during Google search with token {token}: {e}")
+    print("No results found.")
     return None
 
 def fetch_streaming_links(query, action):
