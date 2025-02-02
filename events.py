@@ -35,6 +35,8 @@ except FileNotFoundError:
 
 async def on_ready():
     logging.info(f'Logged in as {bot_instance.user}')
+    channel = bot_instance.get_channel(1039885578155597854)
+    await channel.send('I am back online!')
         
 async def on_message(message):
     if message.author == bot_instance.user:
