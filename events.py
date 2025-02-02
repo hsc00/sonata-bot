@@ -66,7 +66,6 @@ async def process_artist_link_or_text(message):
         artist_query = match.group(0)
 
     artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
-    return
         
     if artist_info:
         artist_name = artist_info['artist_name']
