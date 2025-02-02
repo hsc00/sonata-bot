@@ -69,25 +69,16 @@ async def process_artist_link_or_text(message):
         
     if artist_info:
         artist_name = artist_info['artist_name']
-        if artist_info['founded_year'] == "Unknown":
-            founded_year = ""
-        else:
-            founded_year = artist_info['founded_year']
-
-        genres = artist_info['genres']
-        listeners = artist_info['listeners']
-        similar_artists = artist_info['similar_artists']
-        if artist_info['artist_img_url']:
-            artist_img_url = artist_info['artist_img_url']
-        else:
-            artist_img_url = artist_info['rym_img_url']
-
-        artist_summary = artist_info['summary']
-        streaming_links = artist_info['streaming_links']
-        link = artist_info['link']
+        founded_year = artist_info.get('founded_year') if artist_info.get('founded_year') != "Unknown" else None
+        genres = artist_info.get('genres')
+        listeners = artist_info.get('listeners')
+        similar_artists = artist_info.get('similar_artists')
+        artist_img_url = artist_info.get('artist_img_url', artist_info.get('rym_img_url'))
+        artist_summary = artist_info.get('summary')
+        streaming_links = artist_info.get('streaming_links')
+        link = artist_info.get('link')
         likes = len(artist_info.get('liked_users', []))
         dislikes = len(artist_info.get('disliked_users', []))
-
 
         embed_title = f"{artist_name}"
         embed_description = f"*{genres}*\n\nListeners: **{listeners}**\n {founded_year}\n\n {artist_summary}"
@@ -96,7 +87,7 @@ async def process_artist_link_or_text(message):
         if artist_img_url:
             embed.set_thumbnail(url=artist_img_url)
 
-        embed.set_footer(text=f"Requested by {message.author.display_name}")
+        embed.set_footer(text=f"Requested by {message.author.name}")
         sent_message = await message.channel.send(embed=embed)
 
         view = RYMViewArtists(artist_name, similar_artists, embed, likes=likes, dislikes=dislikes, original_message_id=sent_message.id, streaming_links=streaming_links, release_name=None)
@@ -148,7 +139,6 @@ async def process_release_link_or_text(message):
         likes = len(search_result.get('liked_users', []))
         dislikes = len(search_result.get('disliked_users', []))
 
-
         embed_title = f"{artist_name} - {release_name} ({release_year})"
         embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
         embed_color = discord.Color.blue()
@@ -174,7 +164,7 @@ async def process_release_link_or_text(message):
         if album_cover_url:
             embed.set_thumbnail(url=album_cover_url)
 
-        embed.set_footer(text=f"Requested by {message.author.display_name}")
+        embed.set_footer(text=f"Requested by {message.author.name}")
         sent_message = await message.channel.send(embed=embed)
  
         view = RYMViewReleases(album_wiki, embed, likes=likes, dislikes=dislikes, original_message_id=sent_message.id, artist_name=artist_name, release_name=release_name, streaming_links=streaming_links, performers=performers)
