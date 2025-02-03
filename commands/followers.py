@@ -10,13 +10,13 @@ def setup(bot):
     async def followers(ctx):
         async with ctx.message.channel.typing():
             await check_influences(ctx.message)
-        time.sleep(5)
+            time.sleep(5)
 
     @bot.command(name='fl')
     async def fl(ctx):
         async with ctx.message.channel.typing():
             await check_influences(ctx.message)
-        time.sleep(5)
+            time.sleep(5)
 
 async def check_influences(message):
     artist = ' '.join(message.content.split(' ')[1:]) if len(message.content.split(' ')) > 1 else None

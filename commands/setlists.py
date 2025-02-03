@@ -8,13 +8,13 @@ def setup(bot):
     async def setlists(ctx):
         async with ctx.message.channel.typing():
             await process_setlists(ctx.message)
-        time.sleep(5)
+            time.sleep(5)
 
     @bot.command(name='sts')
     async def sts(ctx):
         async with ctx.message.channel.typing():
             await process_setlists(ctx.message)
-        time.sleep(5)
+            time.sleep(5)
 
 async def process_setlists(message):
     content_parts = message.content.split(' ', 1)
