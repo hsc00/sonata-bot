@@ -16,4 +16,4 @@ def setup(bot):
         time.sleep(5)
 
 async def who_liked_disliked_artist(message):
-    print("Who liked artist")
+    likes = get_artist_from_cache()
