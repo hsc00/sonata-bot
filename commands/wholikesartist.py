@@ -5,8 +5,8 @@ import discord
 from views import Paginator
 
 def setup(bot):
-    @bot.command(name='wholikedartist')
-    async def wholiked(ctx):
+    @bot.command(name='wholikesartist')
+    async def wholikesartist(ctx):
         async with ctx.message.channel.typing():
             await who_liked_artist(ctx.message)
             pass

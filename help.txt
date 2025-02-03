@@ -7,10 +7,10 @@ These are the Sonata bible commands:
 - `!sts or !setlists`: Get the info and links to an artist last 10 concerts setlists.
 - `!inf` or `!influences`: Check an artist influences.
 - `!fl` or `!followers`: Check artists influenced by an artist.
-- `!wla or !wholikesdartist`: Check who liked an artist.
+- `!wla or !wholikesartist`: Check who liked an artist.
 - `!wda or !whodislikesartist`: Check who disliked an artist.
 - `!pingsonata`: Check if the bot is online.
-- `!wlr or !wholikedrelease`: Coming soon
+- `!wlr or !wholikesrelease`: Coming soon
 - `!wdr or !whodislikedrelease`: Coming soon
 - `!wr or !whorated`: Coming soon
 - `!t or !trackinfo`: Coming soon
