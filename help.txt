@@ -8,6 +8,8 @@ These are the Sonata bible commands:
 - `!inf` or `!influences`: Check an artist influences.
 - `!fl` or `!followers`: Check artists influenced by an artist.
 - `!pingsonata`: Check if the bot is online.
+- `!wl or !wholiked`: Coming soon
+- `!wd or !whodisliked`: Coming soon
 - `!wr or !whorated`: Coming soon
 - `!t or !trackinfo`: Coming soon
 - `!whosampled`: Coming soon
