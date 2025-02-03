@@ -13,7 +13,7 @@ def setup(bot):
             time.sleep(5)
 
     @bot.command(name='wla')
-    async def wl(ctx):
+    async def wla(ctx):
         await who_liked_artist(ctx.message)
         pass
         time.sleep(5)
@@ -31,7 +31,6 @@ async def who_liked_artist(message):
         pages = [result['liked_users'][i:i + 10] for i in range(0, len(result['liked_users']), 10)]
         artist_name = result.get('artist_name')
         link = result.get('link')
-
         embeds = []
         embed_title = f"{artist_name} Lovers"
         for i, page in enumerate(pages):
