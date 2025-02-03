@@ -19,7 +19,7 @@ def get_artist_id(query, setlist_api_key):
     if not artist:
         return {'error': 'Artist not found.'}
     
-    time.sleep(0.7)
+    time.sleep(1)
     return artist
 
 
