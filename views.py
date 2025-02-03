@@ -11,14 +11,22 @@ class Paginator(discord.ui.View):
         super().__init__(timeout=180)
         self.embeds = embeds
         self.current_page = 0
+        
+        if len(embeds) > 1:
+            self.previous_button = discord.ui.Button(label="Previous", style=discord.ButtonStyle.primary, disabled=True)
+            self.previous_button.callback = self.previous_callback
+            self.add_item(self.previous_button)
+            
+            self.next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.primary, disabled=False)
+            self.next_button.callback = self.next_callback
+            self.add_item(self.next_button)
+        
         self.update_buttons()
 
-    @discord.ui.button(label="Previous", style=discord.ButtonStyle.primary, disabled=True)
-    async def previous(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def previous_callback(self, interaction: discord.Interaction):
         await self.change_page(interaction, -1)
 
-    @discord.ui.button(label="Next", style=discord.ButtonStyle.primary, disabled=False)
-    async def next(self, interaction: discord.Interaction, button: discord.ui.Button):
+    async def next_callback(self, interaction: discord.Interaction):
         await self.change_page(interaction, 1)
 
     async def change_page(self, interaction: discord.Interaction, increment: int):
@@ -28,8 +36,9 @@ class Paginator(discord.ui.View):
         await interaction.edit_original_response(embed=self.embeds[self.current_page], view=self)
 
     def update_buttons(self):
-        self.children[0].disabled = self.current_page == 0
-        self.children[1].disabled = self.current_page == len(self.embeds) - 1
+        if len(self.embeds) > 1:
+            self.previous_button.disabled = self.current_page == 0
+            self.next_button.disabled = self.current_page == len(self.embeds) - 1
 
 
 class RYMViewReleases(discord.ui.View):
