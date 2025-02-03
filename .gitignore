@@ -1,6 +1,7 @@
 #cache
 cache/album-cache.json
 cache/artist-cache.json
+cache/influences-cache.json
 
 # tests file
 teste.py

@@ -3,34 +3,38 @@ from bs4 import BeautifulSoup
 import json
 import os
 
-def get_list(artist_name, list_id):
+def get_lists(artist_name):
     url = f"https://inflooenz.com/?artist={artist_name}&submit=Search"
     response = requests.get(url)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Find the section that contains the relevant list
-        list_section = soup.find('ul', id=list_id)
+        # Find the sections that contain the relevant lists
+        influencers_section = soup.find('ul', id='influencers-list')
+        followers_section = soup.find('ul', id='followers-list')
         
-        if list_section is None:
-            return []
-
         # Extract names or details, while filtering out unwanted elements
-        names = [
-            item.get_text() for item in list_section.find_all('a')
+        influencers = [
+            item.get_text() for item in influencers_section.find_all('a')
             if item.get_text().strip() != "" and "playlist" not in item.get_text().lower() 
                and "Get featured here!" not in item.get_text()
-        ]
+        ] if influencers_section else []
+
+        followers = [
+            item.get_text() for item in followers_section.find_all('a')
+            if item.get_text().strip() != "" and "playlist" not in item.get_text().lower() 
+               and "Get featured here!" not in item.get_text()
+        ] if followers_section else []
         
-        return names
+        return {"influences": influencers, "followers": followers}
     else:
         print(f"Failed to retrieve data: {response.status_code}")
-        return []
+        return {"influences": [], "followers": []}
 
-def save_to_cache(artist_name, list_type, names):
-    # Only save if names are not empty
-    if not names:
+def save_to_cache(artist_name, data):
+    # Only save if there is data to save
+    if not data["influences"] and not data["followers"]:
         return False
     
     # Create the data structure
@@ -49,13 +53,11 @@ def save_to_cache(artist_name, list_type, names):
             pass
 
     # Update the cache data with the new data
-    if artist_key in cache_data:
-        cache_data[artist_key][list_type] = names
-    else:
-        cache_data[artist_key] = {
-            "artist_name": artist_name,
-            list_type: names
-        }
+    cache_data[artist_key] = {
+        "artist_name": artist_name,
+        "influences": data["influences"],
+        "followers": data["followers"]
+    }
 
     # Write the updated data back to the cache file
     with open(cache_file_path, "w") as cache_file:
