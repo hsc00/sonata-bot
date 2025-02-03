@@ -1,7 +1,7 @@
 import config
 from views import *
 from API.setlist_search import *
-from API.search_lastfm import check_user_lastfm_cache, get_last_played
+from API.search_lastfm import get_lastfm_track
 
 def setup(bot):
     @bot.command(name='setlists')
@@ -21,11 +21,9 @@ async def process_setlists(message):
     if len(content_parts) > 1:
         artist_name = content_parts[1]
     else:
-        last_fm_username = check_user_lastfm_cache(message.author.id)
+        artist_name = get_lastfm_track(message.author.id, 'artist')
         # Check if the user's last.fm username is stored
-        if last_fm_username is not None:
-            artist_name = get_last_played(last_fm_username, config.lastfm_api_key, 'artist')
-        else:
+        if artist_name is None:
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
     setlists = get_setlists(artist_name, config.setlist_api_key)
@@ -46,7 +44,7 @@ async def process_setlists(message):
             link = setlist['url']
             embed_description += f"{date}\n[{concert_name}, {city_name}, {country_name}]({link})\n\n"
         
-        embed_title = f"{artist_name} (Last 10 Setlists)\n"
+        embed_title = f"{artist_name} (Latest Setlists)\n"
         embed = discord.Embed(title=embed_title, description=embed_description, url=artist_url)
         embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i // 5 + 1}/{(len(setlists) + 4) // 5}")
         pages.append(embed)

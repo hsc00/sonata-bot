@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import json
+from config import lastfm_api_key
 
 def fetch_json(url):
     """Fetches JSON data from a given URL."""
@@ -108,12 +109,16 @@ def search_lastfm_artist(artist_name, lastfm_api_key):
         }
     return None
 
-def check_user_lastfm_cache(user_id):
+def get_lastfm_track(user_id, data_type):
     """Checks if a user's Discord ID is in the lastfm-cache.json file."""
     try:
         with open('cache/lastfm-cache.json', 'r') as f:
             data = json.load(f)
-            return data.get(str(user_id)) if str(user_id) in data else None
+            last_fm_username = data.get(str(user_id))
+            if last_fm_username:
+                return get_last_played(last_fm_username, lastfm_api_key, data_type)
+            else:
+                return None
     except FileNotFoundError:
         return False 
 

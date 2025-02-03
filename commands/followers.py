@@ -1,6 +1,5 @@
 from API.influences_search import *
-from config import lastfm_api_key
-from API.search_lastfm import check_user_lastfm_cache, get_last_played
+from API.search_lastfm import get_lastfm_track
 from views import Paginator
 import time
 import discord
@@ -21,14 +20,11 @@ def setup(bot):
 async def check_influences(message):
     artist = ' '.join(message.content.split(' ')[1:]) if len(message.content.split(' ')) > 1 else None
     if not artist:
-        last_fm_username = check_user_lastfm_cache(message.author.id)
+        artist = get_lastfm_track(message.author.id, 'artist')
         # Check if the user's last.fm username is stored
-        if last_fm_username is not None:
-            artist = get_last_played(last_fm_username, lastfm_api_key, 'artist')
-        else:
+        if artist is None:
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
-        
     result = await fetch_artist_data(artist, 'followers')
     if result:
         pages = [result[i:i + 10] for i in range(0, len(result), 10)]
@@ -43,7 +39,7 @@ async def check_influences(message):
         view = Paginator(embeds)
         await sent_message.edit(embed=embeds[0], view=view)
     else:
-        await message.channel.send("No data found.")
+        await message.channel.send(f"No data found for **{artist}**")
 
 async def fetch_artist_data(artist, list_type):
     cached_data = load_from_cache(artist.lower())

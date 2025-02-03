@@ -1,7 +1,6 @@
 import time
 from API.artist_cache import *
-from API.search_lastfm import check_user_lastfm_cache, get_last_played
-from config import lastfm_api_key
+from API.search_lastfm import get_lastfm_track
 import discord
 from views import Paginator
 
@@ -22,11 +21,9 @@ def setup(bot):
 async def who_liked_artist(message):
     artist = ' '.join(message.content.split(' ')[1:]) if len(message.content.split(' ')) > 1 else None
     if not artist:
-        last_fm_username = check_user_lastfm_cache(message.author.id)
+        artist = get_lastfm_track(message.author.id, 'artist')
         # Check if the user's last.fm username is stored
-        if last_fm_username is not None:
-            artist = get_last_played(last_fm_username, lastfm_api_key, 'artist')
-        else:
+        if artist is None:
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
     result = get_artist_from_cache(artist, increment_request_count=False)
