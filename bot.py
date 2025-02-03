@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 import importlib
 import events
-import config
+from config import *
 
 # Define the intents
 intents = discord.Intents.default()
@@ -13,7 +13,7 @@ intents.message_content = True  # Enable the intent to read message content
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Import and setup events
-events.setup(bot, config.google_tokens, config.cse_id, config.cse_id_streaming, config.lastfm_api_key, config.setlist_api_key)
+events.setup(bot, google_tokens, cse_id, cse_id_streaming, lastfm_api_key, setlist_api_key)
 
 # Load commands
 def load_commands():
