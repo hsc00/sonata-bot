@@ -33,11 +33,7 @@ except FileNotFoundError:
     with lzma.open('cache/ratings_cache.lzma', 'wb') as file:
         pickle.dump(dict(), file)
 
-async def on_ready():
-    logging.info(f'Logged in as {bot_instance.user}')
-    channel = bot_instance.get_channel(1039885578155597854)
-    await channel.send('I am back online!')
-        
+
 async def on_message(message):
     if message.author == bot_instance.user:
         return
@@ -244,6 +240,5 @@ def setup(bot, tokens, cse, cse_streaming, lastfm, setlistfm_api_key):
     cse_id_streaming = cse_streaming
     lastfm_api_key = lastfm
     setlist_api_key = setlistfm_api_key
-
-    bot.add_listener(on_ready)
+    
     bot.add_listener(on_message)

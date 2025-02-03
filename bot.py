@@ -2,12 +2,8 @@ import discord
 from discord.ext import commands
 import os
 import importlib
-import logging
 import events
 import config
-
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
 
 # Define the intents
 intents = discord.Intents.default()
@@ -31,4 +27,14 @@ def load_commands():
                 print(f"Module {module_name} does not have a setup function.")
 
 load_commands()
-bot.run(os.getenv('DISCORD_SONATA_TOKEN'))
+##################### Choose the bot token ##########################
+discord_bot_token = os.getenv('DISCORD_SONATA_TOKEN')
+#####################################################################
+async def on_ready():
+    print(f'Logged in as {bot.user}')
+    if discord_bot_token[-1] == 'E':
+        channel = bot.get_channel(1039885578155597854)
+        await channel.send('I am back online!')
+
+bot.add_listener(on_ready)
+bot.run(discord_bot_token)
