@@ -13,5 +13,4 @@ These are the Sonata bible commands:
 - `!whosampled`: Coming soon
 - `!covers`: Coming soon
 - `!profile`: Coming soon
-- `!lyrics`: Coming soon
 - `!currentlyrics`: Conceptual
