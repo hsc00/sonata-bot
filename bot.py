@@ -31,4 +31,4 @@ def load_commands():
                 print(f"Module {module_name} does not have a setup function.")
 
 load_commands()
-bot.run(os.getenv('DISCORD_BOT_TOKEN'))
+bot.run(os.getenv('DISCORD_SONATA_TOKEN'))
