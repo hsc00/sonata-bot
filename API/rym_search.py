@@ -77,7 +77,6 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
         if google_results:
             for result in google_results:
                 link = result['link']
-                print(link)
                 artist_segment_dash = artist_name.lower().replace(' ', '-')
                 artist_segment_underscore = artist_name.lower().replace(' ', '_')
 
