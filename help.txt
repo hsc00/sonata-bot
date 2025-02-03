@@ -6,11 +6,12 @@ These are the Sonata bible commands:
 - `!st or !setlist`: Check an artist last concert setlist.
 - `!sts or !setlists`: Get the info and links to an artist last 10 concerts setlists.
 - `!pingsonata`: Check if the bot is online.
+- `inf` or `!influences`: Check an artist influences.
+- `fl` or `!followers`: Check an artist influences.
 - `!wr or !whorated`: Coming soon
 - `!t or !trackinfo`: Coming soon
 - `!whosampled`: Coming soon
 - `!covers`: Coming soon
 - `!profile`: Coming soon
-- `!influences`: Coming soon
 - `!lyrics`: Coming soon
 - `!currentlyrics`: Conceptual
