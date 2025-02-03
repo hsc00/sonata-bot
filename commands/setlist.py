@@ -1,6 +1,7 @@
 import config
 from views import *
 from API.setlist_search import *
+from API.search_lastfm import check_user_lastfm_cache, get_last_played
 
 def setup(bot):
     @bot.command(name='setlist')
@@ -18,13 +19,18 @@ def setup(bot):
 async def process_setlist(message):
     content_parts = message.content.split(' ', 1)
     if len(content_parts) > 1:
-        query = content_parts[1]
-        setlist = get_setlist(query, config.setlist_api_key)
-        if not setlist or 'error' in setlist:
-            await message.channel.send('Artist not found or timeout. Try again.')
-            return
+        artist_name = content_parts[1]
     else:
-        await message.channel.send('Please provide a valid artist.')
+        last_fm_username = check_user_lastfm_cache(message.author.id)
+        # Check if the user's last.fm username is stored
+        if last_fm_username is not None:
+            artist_name = get_last_played(last_fm_username, config.lastfm_api_key, 'artist')
+        else:
+            await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
+            return
+    setlist = get_setlist(artist_name, config.setlist_api_key)
+    if not setlist or 'error' in setlist:
+        await message.channel.send('Artist not found or timeout. Try again.')
         return
 
     artist_name = setlist['artist_name']

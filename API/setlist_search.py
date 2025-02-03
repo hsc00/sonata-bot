@@ -12,11 +12,13 @@ def get_artist_id(query, setlist_api_key):
     
     response = requests.get(f'{base_url}/search/artists', headers=headers, params={'artistName': query})
     if response.status_code != 200:
+        print("1")
         return {'error': 'Failed to search for artist'}
     
     data = response.json()
     artist = next((a for a in data.get('artist', []) if a['name'].lower() == query.lower()), None)
     if not artist:
+        print("2")
         return {'error': 'Artist not found.'}
     
     time.sleep(0.7)
@@ -40,10 +42,13 @@ def get_setlist(query, setlist_api_key):
     
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
+        print(response)
+        print("3")
         return {'error': 'Failed to retrieve setlists'}
     
     data = response.json()
     if 'setlist' not in data or not data['setlist']:
+        print("4")
         return {'error': 'No setlists found for the artist.'}
     
     # Filter setlists to only include those before today's date
@@ -54,6 +59,7 @@ def get_setlist(query, setlist_api_key):
     ]
     
     if not past_setlists:
+        print("5")
         return {'error': 'No past setlists found for the artist.'}
     
     last_setlist = past_setlists[0]
