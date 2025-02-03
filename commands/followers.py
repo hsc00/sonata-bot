@@ -3,7 +3,7 @@ import time
 
 def setup(bot):
     @bot.command(name='followers')
-    async def influences(ctx):
+    async def followers(ctx):
         artist = ' '.join(ctx.message.content.split(' ')[1:]) if len(ctx.message.content.split(' ')) > 1 else None
         if not artist:
             await ctx.send("Please provide an artist name.")
@@ -16,7 +16,7 @@ def setup(bot):
                 await ctx.send("No data found.")
         time.sleep(5)
     @bot.command(name='fl')
-    async def inf(ctx):
+    async def fl(ctx):
         artist = ' '.join(ctx.message.content.split(' ')[1:]) if len(ctx.message.content.split(' ')) > 1 else None
         if not artist:
             await ctx.send("Please provide an artist name.")
