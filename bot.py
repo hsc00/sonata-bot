@@ -27,7 +27,7 @@ def load_commands():
                 print(f"Module {module_name} does not have a setup function.")
 
 load_commands()
-##################### Choose the bot token ##########################
+################# Choose the production bot token ###################
 discord_bot_token = os.getenv('DISCORD_SONATA_TOKEN')
 #####################################################################
 async def on_ready():
