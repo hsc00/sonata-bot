@@ -130,7 +130,7 @@ def clean_name(name):
     # Clean up extra whitespace and any trailing hyphens
     return re.sub(r'\s*-\s*$', '', name.strip())
 
-def get_last_played(last_fm_username, api_key, type):
+def get_last_played(last_fm_username, api_key, data_type):
     url = f"http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user={last_fm_username}&api_key={api_key}&format=json"
     response = requests.get(url)
     data = response.json()
@@ -139,9 +139,9 @@ def get_last_played(last_fm_username, api_key, type):
         track_name = clean_name(last_track['name'])
         artist_name = last_track['artist']['#text']
         album_name = clean_name(last_track['album']['#text'])
-        if type == 'release':
+        if data_type == 'release':
             return f'{artist_name} - {album_name}'
-        elif type == 'artist':
+        elif data_type == 'artist':
             return artist_name
     else:
         return None
