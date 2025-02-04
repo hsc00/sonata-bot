@@ -13,6 +13,7 @@ These are the Sonata bible commands:
 - `!wdr or !whodislikesrelease`: Check who dislikes a release.
 - `!pingsonata`: Check if the bot is online.
 - `!wr or !whorated`: Coming soon
+- `!ratingchanges or !rc`: Coming soon
 - `!t or !trackinfo`: Coming soon
 - `!whosampled`: Coming soon
 - `!covers`: Coming soon
