@@ -5,11 +5,16 @@ import re
 
 CACHE_FILE = 'cache/album-cache.json'
 
+import unicodedata
+import re
+
 def normalize_name(s):
     # Remove special characters and normalize the string
     s = unicodedata.normalize('NFKD', s)
-    s = re.sub(r'[^\w\s-]', '', s)
-    s = s.replace(' ', '-').lower()
+    # Remove any special characters, replace spaces with hyphens, convert to lowercase
+    s = re.sub(r'[^\w\s-]', '', s).replace(' ', '-').lower()
+    # Remove any leading hyphens and replace multiple hyphens with a single hyphen
+    s = re.sub(r'^-+|-+$', '', re.sub(r'-+', '-', s))
     return s
 
 def load_cache():
