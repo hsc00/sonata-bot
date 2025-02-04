@@ -5,10 +5,17 @@ import os
 
 def get_lists(artist_name):
     url = f"https://inflooenz.com/?artist={artist_name}&submit=Search"
-    response = requests.get(url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
         soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Extract the image URL
+        img_tag = soup.find('img', class_='main')
+        img_url = img_tag['src'] if img_tag else None
 
         # Find the sections that contain the relevant lists
         influencers_section = soup.find('ul', id='influencers-list')
@@ -27,10 +34,10 @@ def get_lists(artist_name):
                and "Get featured here!" not in item.get_text()
         ] if followers_section else []
         
-        return {"influences": influencers, "followers": followers}
+        return {"artist_image": img_url, "influences": influencers, "followers": followers}
     else:
         print(f"Failed to retrieve data: {response.status_code}")
-        return {"influences": [], "followers": []}
+        return {"artist_image": None, "influences": [], "followers": []}
 
 def save_to_cache(artist_name, data):
     # Only save if there is data to save
@@ -55,6 +62,7 @@ def save_to_cache(artist_name, data):
     # Update the cache data with the new data
     cache_data[artist_key] = {
         "artist_name": artist_name,
+        "artist_image": data["artist_image"],
         "influences": data["influences"],
         "followers": data["followers"]
     }

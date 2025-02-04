@@ -26,28 +26,34 @@ async def check_influences(message):
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
     result = await fetch_artist_data(artist, 'followers')
-    if result:
-        pages = [result[i:i + 10] for i in range(0, len(result), 10)]
+    followers = result['data']
+    artist_image = result['artist_image']
+
+    if followers:
+        pages = [followers[i:i + 10] for i in range(0, len(followers), 10)]
         embeds = []
         embed_title = f"{artist.title()} Followers"
         for i, page in enumerate(pages):
             embed_description = "\n".join(f"- [{name}](https://rateyourmusic.com/artist/{name.replace(' ', '-').lower()})" for name in page)
             embed = discord.Embed(title=embed_title, description=embed_description)
             embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
+            embed.set_thumbnail(url=artist_image)
             embeds.append(embed)
         sent_message = await message.channel.send(embed=embeds[0])
         view = Paginator(embeds)
         await sent_message.edit(embed=embeds[0], view=view)
     else:
-        await message.channel.send(f"No data found for **{artist}**")
+        await message.channel.send(f"No data found for **{artist.title()}**")
 
 async def fetch_artist_data(artist, list_type):
     cached_data = load_from_cache(artist.lower())
     if cached_data and list_type in cached_data:
-        data = cached_data[list_type]
+        data = cached_data
     else:
         data = get_lists(artist.replace(" ", "+"))
         save_to_cache(artist, data)
-        data = data[list_type]
 
-    return data
+    return {
+        "data": data[list_type],
+        "artist_image": data.get('artist_image')
+    }
