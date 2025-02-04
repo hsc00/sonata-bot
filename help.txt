@@ -14,6 +14,7 @@ These are the Sonata bible commands:
 - `!pingsonata`: Check if the bot is online.
 - `!wr or !whorated`: Coming soon
 - `!ratingchanges or !rc`: Coming soon
+- `!listenerchanges or !lc`: Coming soon
 - `!t or !trackinfo`: Coming soon
 - `!whosampled`: Coming soon
 - `!covers`: Coming soon
