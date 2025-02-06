@@ -41,7 +41,7 @@ def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastf
     if album_data:
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
         if cached_album:
-            if cached_album['request_count'] >= 5: 
+            if cached_album['request_count'] > 5: 
                 cached_album['request_count'] = 1
                 update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
             return cached_album
@@ -76,28 +76,25 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
         if google_results:
             for result in google_results:
                 link = result['link']
-                artist_segment_dash = artist_name.lower().replace(' ', '-')
-                artist_segment_underscore = artist_name.lower().replace(' ', '_')
-
-                if (link.startswith('https://rateyourmusic.com/artist/') and 
-                all(word.lower() in link.lower() for word in artist_name.split()) and
-                 (link.rstrip('/').endswith(artist_segment_dash) or link.rstrip('/').endswith(artist_segment_underscore))):
+                title = result['title']
+                if artist_name.lower() in title.lower() and link.startswith('https://rateyourmusic.com/artist/'):
                     rym_info = extract_artist_info(result) or {}
                     rym_info['link'] = link
                     lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key) or {}
+                    
                     if rym_info and lastfm_info:
                         cached_artist = get_artist_from_cache(rym_info['artist_name'])
                         if cached_artist:
                             if cached_artist['request_count'] > 5:
                                 cached_artist['request_count'] = 1
                                 update_artist_in_cache(rym_info['artist_name'], cached_artist)
-                                return cached_artist
-                            else:
-                                cached_artist['request_count'] = 1
-                        artist_info = {**rym_info, **lastfm_info}
-                        artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "", google_tokens, cse_streaming)
-                        add_artist_to_cache(rym_info['artist_name'], artist_info)
-                        return artist_info
+                            return cached_artist
+                        else:
+                            cached_artist['request_count'] = 1
+                    artist_info = {**rym_info, **lastfm_info}
+                    artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "", google_tokens, cse_streaming)
+                    add_artist_to_cache(rym_info['artist_name'], artist_info)
+                    return artist_info
             else:
                 print("Artist not found.")
     return None

@@ -72,7 +72,7 @@ async def process_artist_link_or_text(message):
         
     if artist_info:
         artist_name = artist_info['artist_name']
-        founded_year = artist_info.get('founded_year') if artist_info.get('founded_year') != "Unknown" else None
+        founded_year = artist_info.get('founded_year') if artist_info.get('founded_year') != "Unknown" else ''
         genres = artist_info.get('genres')
         listeners = artist_info.get('listeners')
         similar_artists = artist_info.get('similar_artists')
@@ -97,6 +97,8 @@ async def process_artist_link_or_text(message):
         view.link = link
 
         await sent_message.edit(view=view)
+    else:
+        await message.channel.send('Artist not found.')
 
 
 # searches release on rym
