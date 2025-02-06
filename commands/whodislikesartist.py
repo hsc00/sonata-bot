@@ -37,6 +37,8 @@ async def who_disliked_artist(message):
             embed_description = "\n".join(f"- <@{liked_users}>" for liked_users in page)
             embed = discord.Embed(title=embed_title, description=embed_description, url=link)
             embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
+            if result['artist_img_url']:
+                embed.set_thumbnail(url=result['artist_img_url'])
             embeds.append(embed)
         sent_message = await message.channel.send(embed=embeds[0])
         view = Paginator(embeds)

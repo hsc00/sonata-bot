@@ -37,6 +37,10 @@ async def who_liked_release(message):
         for i, page in enumerate(pages):
             embed_description = "\n".join(f"- <@{liked_users}>" for liked_users in page)
             embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+            if result['album_cover_url']:
+                embed.set_thumbnail(url=result['album_cover_url'])
+            elif result['rym_cover_url']:
+                embed.set_thumbnail(url=result['rym_cover_url'])
             embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
             embeds.append(embed)
         sent_message = await message.channel.send(embed=embeds[0])
