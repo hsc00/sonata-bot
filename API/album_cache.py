@@ -73,14 +73,15 @@ def update_releases_likes_dislikes(release_name, user_id, like=True):
 def get_album_from_cache(release_name, increment_request_count=True):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
-    if normalized_name in cache:
-        album_data = cache[normalized_name]
-        if increment_request_count:
-            album_data['request_count'] += 1
-        album_data.setdefault('liked_users', [])
-        album_data.setdefault('disliked_users', [])
-        save_cache(cache)
-        print(f"Retrieved from cache for {normalized_name}")
-        return album_data
+    for key in cache:
+        if normalized_name in key:
+            album_data = cache[key]
+            if increment_request_count:
+                album_data['request_count'] += 1
+            album_data.setdefault('liked_users', [])
+            album_data.setdefault('disliked_users', [])
+            save_cache(cache)
+            print(f"Retrieved from cache for {normalized_name}")
+            return album_data
     print(f"Not found in release cache: {normalized_name}")
     return None
