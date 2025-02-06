@@ -13,7 +13,7 @@ intents.message_content = True  # Enable the intent to read message content
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Import and setup events
-events.setup(bot, google_tokens, cse_id, cse_id_streaming, lastfm_api_key, setlist_api_key)
+events.setup(bot)
 
 # Load commands
 def load_commands():

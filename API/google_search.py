@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 
-def google_search(query, google_tokens, cse_id):
+from config import *
+
+def google_search(query):
     with requests.Session() as session:
         for token in google_tokens:
             try:
@@ -35,12 +37,12 @@ def fetch_streaming_links(query, action):
                 streaming_links.append(href)
     return streaming_links
 
-def search_streaming_links(query, google_tokens, cse_streaming):
+def search_streaming_links(query):
     url = f"https://www.googleapis.com/customsearch/v1"
     params = {
         'q': query,
         'key': google_tokens,
-        'cx': cse_streaming
+        'cx': cse_id_streaming
     }
     response = requests.get(url, params=params)
     results = response.json()

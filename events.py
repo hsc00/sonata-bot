@@ -1,14 +1,15 @@
 import csv
-import logging
 import lzma
 import pickle
 import shutil
 import discord
 import requests
-from views import *
 import time
 from datetime import datetime
 import re
+
+from views import *
+from config import *
 from API.rym_search import search_rym_release, search_rym_artist
 from API.rympy_rating import *
 from API.setlist_search import *
@@ -17,11 +18,6 @@ from API.search_lastfm import get_lastfm_track
 global ratings_cache
 ratings_cache = dict()
 bot_instance = None
-google_tokens = None
-cse_id = None
-cse_id_streaming = None
-lastfm_api_key = None
-setlist_api_key = None
 
 try:
     with lzma.open('cache/ratings_cache.lzma', 'rb') as file:
@@ -68,7 +64,7 @@ async def process_artist_link_or_text(message):
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', artist_query)
         artist_query = match.group(0)
 
-    artist_info = search_rym_artist(artist_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
+    artist_info = search_rym_artist(artist_query)
         
     if artist_info:
         artist_name = artist_info['artist_name']
@@ -120,7 +116,7 @@ async def process_release_link_or_text(message):
         release_query = match.group(0)
 
     # perform a google search
-    search_result = search_rym_release(release_query, google_tokens, cse_id, cse_id_streaming, lastfm_api_key)
+    search_result = search_rym_release(release_query)
     if not search_result:
         await message.channel.send('Release not found.')
         return
@@ -231,13 +227,7 @@ async def process_ratings_command(message):
     shutil.move("cache/rating_cache_tmp.lzma", "cache/rating_cache.lzma")
 
 
-def setup(bot, tokens, cse, cse_streaming, lastfm, setlistfm_api_key):
-    global bot_instance, google_tokens, cse_id, cse_id_streaming, lastfm_api_key, setlist_api_key
+def setup(bot):
+    global bot_instance
     bot_instance = bot
-    google_tokens = tokens
-    cse_id = cse
-    cse_id_streaming = cse_streaming
-    lastfm_api_key = lastfm
-    setlist_api_key = setlistfm_api_key
-    
     bot.add_listener(on_message)

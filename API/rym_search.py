@@ -1,14 +1,17 @@
 import re
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
+
+from config import *
 from .album_cache import *
 from .artist_cache import *
 from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
 from .google_search import *
+from config import *
 
 
-def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastfm_api_key):
+def search_rym_release(release_name):
     # Regex patterns
     rym_pattern = re.compile(r'https://rateyourmusic.com/release/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)/')
     dash_pattern = re.compile(r'\s*-\s*')
@@ -49,7 +52,7 @@ def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastf
             album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
             album_data['album_cover_url'] = album_cover_url
             album_data['album_wiki'] = album_wiki
-            album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'], google_tokens, cse_streaming)
+            album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'])
             add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
     else:
         print("Album not found.")
@@ -57,9 +60,9 @@ def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastf
     return album_data
     
 
-def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm_api_key):
+def search_rym_artist(artist_query):
     def fetch_google_results(query):
-        return google_search(query, google_tokens, cse_id)
+        return google_search(query)
 
     artist_name = artist_query if 'rateyourmusic.com/' not in artist_query else re.sub(r'[\W_]+', ' ', artist_query.split('/')[-1])
 
@@ -85,14 +88,12 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
                     if rym_info and lastfm_info:
                         cached_artist = get_artist_from_cache(rym_info['artist_name'])
                         if cached_artist:
-                            if cached_artist['request_count'] > 5:
-                                cached_artist['request_count'] = 1
-                                update_artist_in_cache(rym_info['artist_name'], cached_artist)
+                            if cached_artist['request_count'] > 5: cached_artist['request_count'] = 1
+                            else: cached_artist['request_count'] += 1
+                            update_artist_in_cache(rym_info['artist_name'], cached_artist)
                             return cached_artist
-                        else:
-                            cached_artist['request_count'] = 1
                     artist_info = {**rym_info, **lastfm_info}
-                    artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "", google_tokens, cse_streaming)
+                    artist_info['streaming_links'] = get_streaming_links("artist", rym_info['artist_name'], "", "")
                     add_artist_to_cache(rym_info['artist_name'], artist_info)
                     return artist_info
             else:
@@ -100,7 +101,7 @@ def search_rym_artist(artist_query, google_tokens, cse_id, cse_streaming, lastfm
     return None
 
 
-def get_streaming_links(action_type, artist, album, year, google_tokens, cse_streaming):
+def get_streaming_links(action_type, artist, album, year):
     # Check if streaming links are already in cache
     if action_type == "release" : 
         cached_album = get_album_from_cache(f"{artist}-{album}", increment_request_count=False)
@@ -115,7 +116,7 @@ def get_streaming_links(action_type, artist, album, year, google_tokens, cse_str
     if action_type == "release": query = f"{artist} - {album} album"
     elif action_type == "artist": query = artist
 
-    streaming_links = search_streaming_links(query, google_tokens, cse_streaming)
+    streaming_links = search_streaming_links(query)
     if streaming_links:
         return streaming_links
     
