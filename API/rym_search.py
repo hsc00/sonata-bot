@@ -39,18 +39,17 @@ def search_rym_release(release_name, google_tokens, cse_id, cse_streaming, lastf
                 break   
 
     if album_data:
-        album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
-        album_data['album_cover_url'] = album_cover_url
-        album_data['album_wiki'] = album_wiki
-        album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'], google_tokens, cse_streaming)
-
         cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
-        if cached_album and cached_album['request_count'] > 5:
-            cached_album['request_count'] = 1
-            update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
+        if cached_album:
+            if cached_album['request_count'] >= 5: 
+                cached_album['request_count'] = 1
+                update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
             return cached_album
         else:
-            album_data['request_count'] = 1
+            album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
+            album_data['album_cover_url'] = album_cover_url
+            album_data['album_wiki'] = album_wiki
+            album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'], google_tokens, cse_streaming)
             add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
     else:
         print("Album not found.")
