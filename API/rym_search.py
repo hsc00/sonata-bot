@@ -17,7 +17,7 @@ def search_rym_release(release_name):
     dash_pattern = re.compile(r'\s*-\s*')
 
     def fetch_google_results(release_name):
-        return google_search(release_name, google_tokens, cse_id)
+        return google_search(release_name)
 
     if 'rateyourmusic.com/release/' in release_name:
         release_name = rym_pattern.sub('', release_name).replace('/', ' ').replace('-', ' ').strip()
