@@ -8,14 +8,14 @@ from API.rym_search import get_rym_rating
 
 def setup(bot):
     @bot.command(name='ratingchanges')
-    async def wholikesartist(ctx):
+    async def ratingchanges(ctx):
         async with ctx.message.channel.typing():
             await get_rating(ctx.message)
             pass
             time.sleep(5)
 
     @bot.command(name='rc')
-    async def wla(ctx):
+    async def rc(ctx):
         await get_rating(ctx.message)
         pass
         time.sleep(5)
