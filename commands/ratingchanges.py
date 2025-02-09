@@ -64,9 +64,11 @@ async def get_rating(message):
 def format_release_changes(release_changes):
     formatted_output = []
     release_year = release_changes.get('release_year', 'N/A')
-    for idx in range(len(release_changes['rating_history'])):
-        date = datetime.datetime.fromisoformat(release_changes['rating_history'][idx]['timestamp']).strftime('%d-%m-%Y')
-        rating_value = release_changes['rating_history'][idx]['value']
+    sorted_rating_history = sorted(release_changes['rating_history'], key=lambda x: x['timestamp'], reverse=True)
+
+    for idx in range(len(sorted_rating_history)):
+        date = datetime.datetime.fromisoformat(sorted_rating_history[idx]['timestamp']).strftime('%d-%m-%Y')
+        rating_value = sorted_rating_history[idx]['value']
         rating_count = release_changes['rating_count_history'][idx].get('count', 'N/A')
         year_position = release_changes['year_position_history'][idx].get('position', 'N/A')
         all_time_position = release_changes['all_time_position_history'][idx].get('position', 'N/A')
