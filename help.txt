@@ -11,8 +11,9 @@ These are the Sonata bible commands:
 - `!wla or !wholikesartist`: Check who likes an artist.
 - `!wda or !whodislikesartist`: Check who dislikes an artist.
 - `!wlr or !wholikesrelease`: Check who likes a release.
-- `!mlr or !mostlovedreleases`: Check the most loved releases.
 - `!wdr or !whodislikesrelease`: Check who dislikes a release.
+- `!mlr or !mostlovedreleases`: Check the most loved releases.
+- `!mhr or !mosthatedreleases`: Check the most hated releases.
 - `!pingsonata`: Check if the bot is online.
 - `!wr or !whorated`: Coming soon
 - `!listenerschanges or !lc`: Coming soon
