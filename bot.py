@@ -4,6 +4,7 @@ import os
 import importlib
 import events
 from config import *
+import ratings_cache
 
 # Define the intents
 intents = discord.Intents.default()
@@ -19,14 +20,16 @@ events.setup(bot)
 def load_commands():
     for filename in os.listdir('./commands'):
         if filename.endswith('.py'):
-            module_name = filename[:-3]
-            module = importlib.import_module(f'commands.{module_name}')
+            module_name = f'commands.{filename[:-3]}'
+            module = importlib.import_module(module_name)
+            
             if hasattr(module, 'setup'):
                 module.setup(bot)
             else:
                 print(f"Module {module_name} does not have a setup function.")
 
 load_commands()
+ratings_cache.load()
 ################# Choose the production bot token ###################
 discord_bot_token = os.getenv('DISCORD_SONATA_TOKEN')
 #####################################################################
