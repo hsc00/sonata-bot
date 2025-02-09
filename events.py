@@ -148,14 +148,22 @@ async def process_release_link_or_text(message):
         embed_color = discord.Color.blue()
 
         if best_album_position:
-            if not best_album_position.isdigit(): best_album_number = int(re.search(r'#(\d+)', best_album_position).group(1))
-            else: best_album_number = int(best_album_position)
-            
+            if not best_album_position.isdigit():
+                match = re.search(r'#(\d+)', best_album_position)
+                if match:
+                    best_album_number = int(match.group(1))
+            else:
+                best_album_number = int(best_album_position)
+
             embed_description += f"\n#**{best_album_number}** of [{release_year}](https://rateyourmusic.com/charts/top/album/{release_year}/)"
 
         if all_time_album_position:
-            if not all_time_album_position.isdigit(): all_time_album_number = int(re.search(r'#(\d+)', all_time_album_position).group(1))
-            else: all_time_album_number = int(all_time_album_position)
+            if not all_time_album_position.isdigit():
+                match = re.search(r'#(\d+)', all_time_album_position)
+                if match:
+                    all_time_album_number = int(match.group(1))
+            else:
+                all_time_album_number = int(all_time_album_position)
 
             embed_description += f", #**{all_time_album_number}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)"
             embed_color = (
