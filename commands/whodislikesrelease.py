@@ -9,14 +9,13 @@ def setup(bot):
     async def whodislikesrelease(ctx):
         async with ctx.message.channel.typing():
             await who_disliked_release(ctx.message)
-            pass
             time.sleep(5)
 
     @bot.command(name='wdr')
     async def wdr(ctx):
-        await who_disliked_release(ctx.message)
-        pass
-        time.sleep(5)
+        async with ctx.message.channel.typing():
+            await who_disliked_release(ctx.message)
+            time.sleep(5)
 
 async def who_disliked_release(message):
     release = ' '.join(message.content.split(' ')[1:]) if len(message.content.split(' ')) > 1 else None

@@ -9,14 +9,13 @@ def setup(bot):
     async def wholikesartist(ctx):
         async with ctx.message.channel.typing():
             await who_liked_artist(ctx.message)
-            pass
             time.sleep(5)
 
     @bot.command(name='wla')
     async def wla(ctx):
-        await who_liked_artist(ctx.message)
-        pass
-        time.sleep(5)
+        async with ctx.message.channel.typing():
+            await who_liked_artist(ctx.message)
+            time.sleep(5)
 
 async def who_liked_artist(message):
     artist = ' '.join(message.content.split(' ')[1:]) if len(message.content.split(' ')) > 1 else None
