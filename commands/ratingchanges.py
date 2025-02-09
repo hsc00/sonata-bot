@@ -31,7 +31,7 @@ async def get_rating(message):
         release_name = f'{release["artist_name"]} - {release["release_name"]}'
         link = release['link']
         release_rating_history = get_rym_rating(release_name)
-        if release_rating_history:
+        if len(release_rating_history['rating_history']) > 1:
             release_changes = format_release_changes(release_rating_history)
             if release_changes:
                 pages = [release_changes[i:i + 10] for i in range(0, len(release_changes), 10)]
@@ -55,46 +55,27 @@ async def get_rating(message):
                 view = Paginator(embeds)
                 await sent_message.edit(embed=embeds[0], view=view)
             else:
-                await message.channel.send(f"No rating changes found for **{release_name}**")
+                await message.channel.send(f"The data couldn't be formatted correctly.")
         else:
             await message.channel.send(f"No rating changes found for **{release_name}**")
     else:
         await message.channel.send(f'No previous ratings found for **{release_query.title()}**. Please use `!album` or `!ab` to add the release.')
 
 def format_release_changes(release_changes):
-    formatted_changes = defaultdict(lambda: defaultdict(list))
-    for key, changes in release_changes.items():
-        for change in changes:
-            if 'timestamp' in change:
-                date = datetime.datetime.fromisoformat(change['timestamp']).strftime('%d-%m-%Y')
-                formatted_changes[date][key].append(change)
-            else:
-                return None
-
     formatted_output = []
-    more_than_one_rating = sum(len(data['rating_history']) for data in formatted_changes.values() if 'rating_history' in data) > 1
+    release_year = release_changes.get('release_year', 'N/A')
+    for idx in range(len(release_changes['rating_history'])):
+        date = datetime.datetime.fromisoformat(release_changes['rating_history'][idx]['timestamp']).strftime('%d-%m-%Y')
+        rating_value = release_changes['rating_history'][idx]['value']
+        rating_count = release_changes['rating_count_history'][idx].get('count', 'N/A')
+        year_position = release_changes['year_position_history'][idx].get('position', 'N/A')
+        all_time_position = release_changes['all_time_position_history'][idx].get('position', 'N/A')
 
-    if more_than_one_rating:
-        for date, data in formatted_changes.items():
-            ratings = [rh['value'] for rh in data.get('rating_history', [])]
-            counts = [ch['count'] for ch in data.get('rating_count_history', [])]
-            year_positions = [yh['position'] for yh in data.get('year_position_history', [])]
-            all_time_positions = [pos['position'] for pos in data.get('all_time_position_history', [])]
+        formatted_data = f"{date}\n**{rating_value}** ⭐ from **{rating_count}** ratings\n**#{year_position}** of [{release_year}](https://rateyourmusic.com/charts/top/album/{release_year})"
+        if all_time_position:
+            formatted_data += f", **#{all_time_position}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)"
+        formatted_output.append('')
+        formatted_output.append(formatted_data)
 
-            release_year = release_changes.get('release_year', 'N/A')
+    return formatted_output
 
-            for i in range(max(len(ratings), len(counts), len(year_positions), len(all_time_positions))):
-                rating_value = ratings[i] if i < len(ratings) else 'N/A'
-                rating_count = counts[i] if i < len(counts) else 'N/A'
-                year_position = year_positions[i] if i < len(year_positions) and year_positions[i] is not None else None
-                all_time_position = ', '.join([pos for pos in all_time_positions if pos]) if all_time_positions else None
-
-                formatted_date_data = f"\n{date}\n**{rating_value}** ⭐ from **{rating_count}** ratings"
-                if year_position:
-                    formatted_date_data += f"\n**#{year_position}** of [{release_year}](https://rateyourmusic.com/charts/top/album/{release_year}/)"
-                if all_time_position:
-                    formatted_date_data += f", **#{all_time_position}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)"
-                formatted_output.append('')
-                formatted_output.append(formatted_date_data.strip())
-
-    return formatted_output if more_than_one_rating else None
