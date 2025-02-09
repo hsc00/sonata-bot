@@ -1173,5 +1173,19 @@
             "Stackridge",
             "Mana"
         ]
+    },
+    "ariana-grande": {
+        "artist_name": "ariana grande",
+        "artist_image": "https://i.scdn.co/image/ab6761610000517440b5c07ab77b6b1a9075fdc0",
+        "influences": [
+            "Mariah Carey",
+            "Whitney Houston",
+            "Avril Lavigne",
+            "Ashley Tisdale",
+            "Jesse McCartney"
+        ],
+        "followers": [
+            "Airy Jeanine"
+        ]
     }
 }
