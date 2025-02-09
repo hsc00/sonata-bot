@@ -9,14 +9,12 @@ def setup(bot):
     async def mostlovedreleases(ctx):
         async with ctx.message.channel.typing():
             await most_loved_releases(ctx)
-            pass
             time.sleep(5)
 
     @bot.command(name='mlr')
     async def mlr(ctx):
         async with ctx.message.channel.typing():
             await most_loved_releases(ctx)
-            pass
             time.sleep(5)
 
 async def most_loved_releases(message):

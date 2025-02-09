@@ -11,14 +11,13 @@ def setup(bot):
     async def ratingchanges(ctx):
         async with ctx.message.channel.typing():
             await get_rating(ctx.message)
-            pass
             time.sleep(5)
 
     @bot.command(name='rc')
     async def rc(ctx):
-        await get_rating(ctx.message)
-        pass
-        time.sleep(5)
+        async with ctx.message.channel.typing():
+            await get_rating(ctx.message)
+            time.sleep(5)
 
 async def get_rating(message):
     release_query = ' '.join(message.content.split(' ')[1:]) if len(message.content.split(' ')) > 1 else None
@@ -72,19 +71,10 @@ def format_release_changes(release_changes):
 
     if more_than_one_rating:
         for date, data in formatted_changes.items():
-            ratings = []
-            counts = []
-            year_positions = []
-            all_time_positions = []
-
-            if 'rating_history' in data:
-                ratings = [rh['value'] for rh in data['rating_history']]
-            if 'rating_count_history' in data:
-                counts = [ch['count'] for ch in data['rating_count_history'] if 'count' in ch]
-            if 'year_position_history' in data:
-                year_positions = [yh['position'] for yh in data['year_position_history']]
-            if 'all_time_position_history' in data:
-                all_time_positions = [pos['position'] for pos in data['all_time_position_history']]
+            ratings = [rh['value'] for rh in data.get('rating_history', [])]
+            counts = [ch['count'] for ch in data.get('rating_count_history', [])]
+            year_positions = [yh['position'] for yh in data.get('year_position_history', [])]
+            all_time_positions = [pos['position'] for pos in data.get('all_time_position_history', [])]
 
             release_year = release_changes.get('release_year', 'N/A')
 
