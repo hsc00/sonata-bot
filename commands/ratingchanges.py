@@ -86,12 +86,9 @@ def format_release_changes(release_changes):
 
                 formatted_date_data = f"\n{date}\n**{rating_value}** ⭐ from **{rating_count}** ratings"
                 if year_position:
-                    formatted_date_data += f"\n**#{year_position}** of {release_year}"
+                    formatted_date_data += f"\n**#{year_position}** of [{release_year}](https://rateyourmusic.com/charts/top/album/{release_year}/)"
                 if all_time_position:
-                    formatted_date_data += f", **#{all_time_position}** overall"
-
-                formatted_date_data += "\n"
-
+                    formatted_date_data += f", **#{all_time_position}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)"
                 formatted_output.append('')
                 formatted_output.append(formatted_date_data.strip())
 
