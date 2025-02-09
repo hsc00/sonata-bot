@@ -137,3 +137,15 @@ def get_album_from_cache(release_name, increment_request_count=True):
             return album_data
     print(f"Not found in release cache: {normalized_name}")
     return None
+
+def get_most_loved_releases():
+    cache = load_cache()
+    # Create a list of tuples (release_name, liked_users_count)
+    loved_releases = [(release_name, len(album_data.get('liked_users', []))) for release_name, album_data in cache.items() if len(album_data.get('liked_users', [])) > 0]
+    # Sort the list by liked_users_count in descending order
+    loved_releases.sort(key=lambda x: x[1], reverse=True)
+    # Get the top 100 releases or all releases with at least one like
+    top_loved_releases = loved_releases[:100]
+    # Retrieve album data for the top releases
+    top_releases_data = [cache[release_name] for release_name, _ in top_loved_releases]
+    return top_releases_data
