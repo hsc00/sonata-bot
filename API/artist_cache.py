@@ -26,12 +26,18 @@ def save_cache(cache):
 def add_artist_to_cache(artist_name, artist_data):
     cache = load_cache()
     normalized_name = normalize_name(artist_name)
+
+    cached_artist_data = cache.setdefault(normalized_name, {})
+
+    artist_data['liked_users'] = cached_artist_data.get('liked_users', [])
+    artist_data['disliked_users'] = cached_artist_data.get('disliked_users', [])
+
     artist_data['request_count'] = 1
-    artist_data['liked_users'] = []
-    artist_data['disliked_users'] = []
+
     cache[normalized_name] = artist_data
     save_cache(cache)
     print(f"Added {artist_name} to cache")
+
 
 def update_artist_in_cache(artist_name, artist_data):
     cache = load_cache()
@@ -72,6 +78,7 @@ def get_artist_from_cache(artist_name, increment_request_count=True):
     if normalized_name in cache:
         artist_data = cache[normalized_name]
         if increment_request_count:
+            artist_data.setdefault('request_count', 0)
             artist_data['request_count'] += 1
         artist_data.setdefault('liked_users', [])
         artist_data.setdefault('disliked_users', [])

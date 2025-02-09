@@ -33,16 +33,22 @@ def add_album_to_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
     timestamp = datetime.datetime.now().isoformat()
-    album_data['request_count'] = 1
-    album_data['liked_users'] = []
-    album_data['disliked_users'] = []
-    cache[normalized_name] = album_data
-    album_data['rating_history'] = {'value': album_data['rating_value'],'timestamp': timestamp}
-    album_data['rating_count_history'] = album_data['formatted_rating_count']
-    album_data['year_position_history'] = album_data['best_album_position']
-    album_data['all_time_position_history'] = album_data['all_time_album_position']
+
+    cached_album_data = cache.setdefault(normalized_name, {})
+
+    cached_album_data['liked_users'] = cached_album_data.get('liked_users', [])
+    cached_album_data['disliked_users'] = cached_album_data.get('disliked_users', [])
+
+    cached_album_data['request_count'] = 1
+
+    cached_album_data['rating_history'] = {'value': album_data['rating_value'], 'timestamp': timestamp}
+    cached_album_data['rating_count_history'] = album_data['formatted_rating_count']
+    cached_album_data['year_position_history'] = album_data['best_album_position']
+    cached_album_data['all_time_position_history'] = album_data['all_time_album_position']
+
     save_cache(cache)
     print(f"Added {normalized_name} to cache")
+
 
 def update_album_in_cache(release_name, album_data):
     cache = load_cache()

@@ -88,7 +88,7 @@ def search_rym_artist(artist_query):
     artist_name = artist_query if 'rateyourmusic.com/' not in artist_query else re.sub(r'[\W_]+', ' ', artist_query.split('/')[-1])
 
     cached_artist = get_artist_from_cache(artist_name)
-    if cached_artist:
+    if cached_artist and cached_artist.get('artist_name'):
         if cached_artist['request_count'] <= 5:
             return cached_artist
 
@@ -108,7 +108,7 @@ def search_rym_artist(artist_query):
                     
                     if rym_info and lastfm_info:
                         cached_artist = get_artist_from_cache(rym_info['artist_name'])
-                        if cached_artist:
+                        if cached_artist and cached_artist.get('artist_name'):
                             if cached_artist['request_count'] > 5: cached_artist['request_count'] = 1
                             else: cached_artist['request_count'] += 1
                             update_artist_in_cache(rym_info['artist_name'], cached_artist)
