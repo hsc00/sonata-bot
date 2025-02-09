@@ -36,7 +36,8 @@ async def who_liked_release(message):
         embed_title = f"{artist_name} - {release_name} Lovers"
         for i, page in enumerate(pages):
             embed_description = "\n".join(f"- <@{liked_users}>" for liked_users in page)
-            embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+            embed_color = discord.Color.green()
+            embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
             if result['album_cover_url']:
                 embed.set_thumbnail(url=result['album_cover_url'])
             elif result['rym_cover_url']:

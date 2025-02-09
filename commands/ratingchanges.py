@@ -39,7 +39,12 @@ async def get_rating(message):
                 embed_title = f"{release_name}"
                 for i, page in enumerate(pages):
                     embed_description = "\n".join(page)
-                    embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+                    # Determine the color based on the latest rating change
+                    newest_rating = float(release_rating_history['rating_history'][-1]['value'])
+                    previous_rating = float(release_rating_history['rating_history'][-2]['value'])
+                    embed_color = discord.Color.green() if newest_rating > previous_rating else discord.Color.red()
+                    
+                    embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
                     if release['album_cover_url']:
                         embed.set_thumbnail(url=release['album_cover_url'])
                     elif release['rym_cover_url']:

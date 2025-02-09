@@ -81,8 +81,8 @@ async def process_artist_link_or_text(message):
 
         embed_title = f"{artist_name}"
         embed_description = f"*{genres}*\n\nListeners: **{listeners}**\n {founded_year}\n\n {artist_summary}"
-
-        embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+        embed_color = discord.Color.blue()
+        embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
         if artist_img_url:
             embed.set_thumbnail(url=artist_img_url)
 

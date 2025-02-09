@@ -45,7 +45,8 @@ async def process_setlists(message):
             embed_description += f"{date}\n[{concert_name}, {city_name}, {country_name}]({link})\n\n"
         
         embed_title = f"{artist_name} (Latest Setlists)\n"
-        embed = discord.Embed(title=embed_title, description=embed_description, url=artist_url)
+        embed_color = discord.Color.blue()
+        embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
         embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i // 5 + 1}/{(len(setlists) + 4) // 5}")
         pages.append(embed)
     

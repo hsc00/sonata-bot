@@ -35,7 +35,8 @@ async def check_influences(message):
         embed_title = f"{artist.title()} Influences"
         for i, page in enumerate(pages):
             embed_description = "\n".join(f"- [{name}](https://rateyourmusic.com/artist/{name.replace(' ', '-').lower()})" for name in page)
-            embed = discord.Embed(title=embed_title, description=embed_description)
+            embed_color = discord.Color.blue()
+            embed = discord.Embed(title=embed_title, description=embed_description, color=embed_color)
             embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
             embed.set_thumbnail(url=artist_image)
             embeds.append(embed)

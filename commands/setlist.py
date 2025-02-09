@@ -50,7 +50,8 @@ async def process_setlist(message):
     for i, page in enumerate(pages):
         embed_description = f"**{concert_name}, {city_name}, {country_name}**\n{concert_date}\n\n"
         embed_description += "\n".join(f" - {track}" for track in page)
-        embed = discord.Embed(title=embed_title, description=embed_description, url=link)
+        embed_color = discord.Color.blue()
+        embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
         embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
         embeds.append(embed)
 
