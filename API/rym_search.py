@@ -10,6 +10,27 @@ from API.search_lastfm import search_lastfm_artist
 from .google_search import *
 from config import *
 
+def get_rym_rating(release_name):
+    def fetch_google_results(release_name):
+        return google_search(release_name)
+
+    album_data = None
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        google_future = executor.submit(fetch_google_results, release_name)
+        google_results = google_future.result()
+
+    if google_results:
+        for result in google_results:
+            link = result['link']
+            if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in link.lower() for word in release_name.split()):
+                album_data = extract_rating_info(result)
+                break   
+    if album_data:
+        update_album = update_album_rating(f"{album_data['artist_name']} {album_data['release_name']}", album_data)
+        return update_album
+    else:
+        print("Album not found.")
+    return None
 
 def search_rym_release(release_name):
     # Regex patterns
@@ -124,6 +145,33 @@ def get_streaming_links(action_type, artist, album, year):
     return None
 
 
+def extract_rating_info(result):
+    pagemap = result.get('pagemap', {})
+    musicalbum = pagemap.get('musicalbum', [{}])[0]
+    aggregaterating = pagemap.get('aggregaterating', [{}])[0]
+    metatags = pagemap.get('metatags', [{}])[0]
+
+    artist_name = pagemap.get('musicgroup', [{}])[0].get('name', 'Unknown Artist')
+    release_name = musicalbum.get('name', 'Unknown Album')
+    og_description = metatags.get('og:description', '')
+
+    best_album_position = extract_best_album_position(og_description)
+    all_time_album_position = extract_all_time_album_position(og_description)
+
+    rating_value = aggregaterating.get('ratingvalue', 'No Rating')
+    rating_count = aggregaterating.get('ratingcount', 'No Ratings')
+    formatted_rating_count = f"{int(rating_count):,}" if rating_count.isdigit() else rating_count
+
+    return {
+        'artist_name': artist_name,
+        'release_name': release_name,
+        'rating_value': rating_value,
+        'formatted_rating_count': formatted_rating_count,
+        'best_album_position': best_album_position,
+        'all_time_album_position': all_time_album_position,
+    }
+
+
 def extract_album_info(result):
     pagemap = result.get('pagemap', {})
     musicalbum = pagemap.get('musicalbum', [{}])[0]
@@ -215,12 +263,12 @@ def extract_genres(description):
     return genres_match.group(1) if genres_match else 'Unknown Genres'
 
 def extract_best_album_position(description):
-    best_album_match = re.search(r'#(\d+) in the best albums of (\d{4})', description)
-    return f"#{best_album_match.group(1)} of {best_album_match.group(2)}" if best_album_match else None
+    best_album_match = re.search(r'#(\d+)\s+in\s+the\s+best\s+albums\s+of\s+\d{4}', description)
+    return best_album_match.group(1) if best_album_match else None
 
 def extract_all_time_album_position(description):
-    all_time_album_match = re.search(r'#(\d+) of all time album', description)
-    return f"#{all_time_album_match.group(1)} overall" if all_time_album_match else None
+    all_time_album_match = re.search(r'#(\d+)\s+of\s+all\s+time\s+album', description)
+    return all_time_album_match.group(1) if all_time_album_match else None
 
 def extract_performers(description):
     performers_match = re.search(r'Featured (?:performers|peformers): (.+)', description)

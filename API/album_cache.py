@@ -2,6 +2,7 @@ import json
 import os
 import unicodedata
 import re
+import datetime
 
 CACHE_FILE = 'cache/album-cache.json'
 
@@ -47,6 +48,57 @@ def update_album_in_cache(release_name, album_data):
     save_cache(cache)
     print(f"Updated {normalized_name}")
 
+def update_album_rating(release_name, rating_info):
+    cache = load_cache()
+    normalized_name = normalize_name(release_name)
+    album_data = cache.get(normalized_name, {})
+    timestamp = datetime.datetime.now().isoformat()
+    # Refresh current info
+    album_data['rating_value'] = rating_info['rating_value']
+    album_data['formatted_rating_count'] = rating_info['formatted_rating_count']
+    album_data['best_album_position'] = rating_info['best_album_position']
+    album_data['all_time_album_position'] = rating_info['all_time_album_position']
+    
+    # Update rating value history
+    rating_history = album_data.get('rating_history', [])
+    if not rating_history or rating_history[-1]['value'] != rating_info['rating_value']:
+        rating_history.append({'value': rating_info['rating_value'], 'timestamp': timestamp})
+        album_data['rating_history'] = rating_history
+        
+        # Only update if rating_history changes
+        # Update rating count history
+        rating_count_history = album_data.get('rating_count_history', [])
+        rating_count_history.append({'count': rating_info['formatted_rating_count']})
+        album_data['rating_count_history'] = rating_count_history
+        
+        # Update best album position history
+        year_position_history = album_data.get('year_position_history', [])
+        year_position_history.append({'position': rating_info['best_album_position']})
+        album_data['year_position_history'] = year_position_history
+        
+        # Update all-time album position history
+        all_time_position_history = album_data.get('all_time_position_history', [])
+        all_time_position_history.append({'position': rating_info['all_time_album_position']})
+        album_data['all_time_position_history'] = all_time_position_history
+ 
+        cache[normalized_name] = album_data
+        save_cache(cache)
+        print(f"Updated {normalized_name} rating info")
+    overall_rating_history = get_album_rating_history(album_data)
+    return overall_rating_history
+
+def get_album_rating_history(album_data):
+    rating_history = album_data.get('rating_history', [])
+    rating_count_history = album_data.get('rating_count_history', [])
+    year_position_history = album_data.get('year_position_history', [])
+    all_time_position_history = album_data.get('all_time_position_history', [])
+    
+    return {
+        'rating_history': rating_history,
+        'rating_count_history': rating_count_history,
+        'year_position_history': year_position_history,
+        'all_time_position_history': all_time_position_history
+    }
 
 def update_releases_likes_dislikes(release_name, user_id, like=True):
     cache = load_cache()
