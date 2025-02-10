@@ -113,7 +113,7 @@ async def process_release_link_or_text(ctx):
                 average_str = str()
                 if average[1]:
                     average = average[0]/average[1]
-                    average_str = f"\n\n**Sotão average rating:** {round(average, 2)} / 5.0\n\n{user_ratings}"
+                    average_str = f"\n\n**Sótão average rating:** {round(average, 2)} ⭐\n\n{user_ratings}"
 
                 embed_description += average_str
 
@@ -129,7 +129,7 @@ async def process_release_link_or_text(ctx):
         if ratings_count:
             if average[1]:
                 average = average[0]/average[1]
-                average_str = f"\n\n**Sotão average rating:** {round(average, 2)} / 5.0\n\n{user_ratings}"
+                average_str = f"\n\n**Sótão average rating:** {round(average, 2)} ⭐\n\n{user_ratings}"
 
             embed_description += average_str
             embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
