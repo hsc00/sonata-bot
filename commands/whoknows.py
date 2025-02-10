@@ -7,11 +7,15 @@ from views import *
 import ratings_cache
 
 def setup(bot):
-    @bot.command(name='wa')
-    async def import_ratings(ctx):
+    @bot.command(name='whoknowsalbum')
+    async def whoknowsalbum(ctx):
         async with ctx.channel.typing():
             await process_release_link_or_text(ctx)
 
+    @bot.command(name='wa')
+    async def wa(ctx):
+        async with ctx.channel.typing():
+            await process_release_link_or_text(ctx)
 
 async def process_release_link_or_text(ctx):
     message = ctx.message

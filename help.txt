@@ -2,6 +2,7 @@ These are the Sonata bible commands:
 - `!setfm <username>`: Set your last.fm username.
 - `!ab or !album`: Check RYM info for an album or release.
 - `!a or !artist`: Check RYM and last.fm info for an artist.
+- `!wa or !whoknowsalbum`: Check who rated a release
 - `!ratingchanges or !rc`: Check the rating changes for a release.
 - `!i or !import`: Import your RYM ratings to the bot. Check instructions [here].
 - `!st or !setlist`: Check an artist last concert setlist.
@@ -15,7 +16,6 @@ These are the Sonata bible commands:
 - `!mlr or !mostlovedreleases`: Check the most loved releases.
 - `!mhr or !mosthatedreleases`: Check the most hated releases.
 - `!pingsonata`: Check if the bot is online.
-- `!wr or !whorated`: Coming soon
 - `!listenerschanges or !lc`: Coming soon
 - `!t or !trackinfo`: Coming soon
 - `!whosampled`: Coming soon
