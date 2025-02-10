@@ -128,11 +128,15 @@ def update_releases_likes_dislikes(release_name, user_id, like=True):
         if like:
             if user_id not in album_data['liked_users']:
                 album_data['liked_users'].append(user_id)
+            else:
+                album_data['liked_users'].remove(user_id)
             if user_id in album_data['disliked_users']:
                 album_data['disliked_users'].remove(user_id)
         else:
             if user_id not in album_data['disliked_users']:
                 album_data['disliked_users'].append(user_id)
+            else:
+                album_data['disliked_users'].remove(user_id)
             if user_id in album_data['liked_users']:
                 album_data['liked_users'].remove(user_id)
         save_cache(cache)
