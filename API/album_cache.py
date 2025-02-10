@@ -147,7 +147,8 @@ def get_album_from_cache(release_name, increment_request_count=True):
         if normalized_name in key:
             album_data = cache[key]
             if increment_request_count:
-                album_data['request_count'] += 1
+                album_data['request_count'] = album_data.get('request_count', 0) + 1
+
             album_data.setdefault('liked_users', [])
             album_data.setdefault('disliked_users', [])
             save_cache(cache)
