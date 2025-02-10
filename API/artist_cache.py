@@ -60,11 +60,15 @@ def update_artist_likes_dislikes(artist_name, user_id, like=True):
         if like:
             if user_id not in artist_data['liked_users']:
                 artist_data['liked_users'].append(user_id)
+            else:
+                artist_data['liked_users'].remove(user_id)
             if user_id in artist_data['disliked_users']:
                 artist_data['disliked_users'].remove(user_id)
         else:
             if user_id not in artist_data['disliked_users']:
                 artist_data['disliked_users'].append(user_id)
+            else:
+                artist_data['disliked_users'].remove(user_id)
             if user_id in artist_data['liked_users']:
                 artist_data['liked_users'].remove(user_id)
         save_cache(cache)
