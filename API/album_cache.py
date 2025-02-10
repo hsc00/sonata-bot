@@ -3,7 +3,6 @@ import os
 import unicodedata
 import re
 import datetime
-from API.rym_search import search_rym_release
 
 CACHE_FILE = 'cache/album-cache.json'
 
@@ -147,10 +146,6 @@ def get_album_from_cache(release_name, increment_request_count=True):
     for key in cache:
         if normalized_name in key:
             album_data = cache[key]
-            if not album_data.get('release_name'):
-                cache[key] = search_rym_release(release_name)
-                save_cache(cache)
-                return cache[key]
             if increment_request_count:
                 album_data.setdefault('request_count', 0)
                 album_data['request_count'] += 1

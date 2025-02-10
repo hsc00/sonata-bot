@@ -46,7 +46,7 @@ def search_rym_release(release_name):
         release_name = dash_pattern.sub(' ', release_name).strip()
 
     cached_album = get_album_from_cache(release_name)
-    if cached_album and cached_album.get('release_name') and cached_album['request_count'] <= 5:
+    if cached_album and cached_album['request_count'] <= 5:
         return cached_album
     else:
         album_data = None
@@ -64,7 +64,7 @@ def search_rym_release(release_name):
 
         if album_data:
             cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
-            if cached_album and cached_album.get('release_name'):
+            if cached_album:
                 if cached_album['request_count'] > 5: 
                     cached_album['request_count'] = 1
                     update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
