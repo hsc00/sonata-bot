@@ -71,7 +71,7 @@ def import_ratings(url,user_id):
 
 async def process_ratings_command(message):
     processed_message = message.content.split(' ')
-    user_id = str(message.author.id)
+    user_id = message.author.id
     if len(processed_message) == 2:
         ratings_cache.ratings_cache[user_id] = import_ratings(processed_message[1],user_id)
     else:
