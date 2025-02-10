@@ -1,5 +1,6 @@
 import time
 from API.album_cache import *
+from API.rym_search import search_rym_release
 from API.search_lastfm import get_lastfm_track
 import discord
 from views import Paginator
@@ -25,7 +26,7 @@ async def who_liked_release(message):
         if release is None:
             await message.channel.send('Please provide a release or use `!setfm` to set your last.fm account.')
             return
-    result = get_album_from_cache(release, increment_request_count=False)
+    result = search_rym_release(release)
     if result and len(result['liked_users']) > 0:
         pages = [result['liked_users'][i:i + 10] for i in range(0, len(result['liked_users']), 10)]
         artist_name = result.get('artist_name')

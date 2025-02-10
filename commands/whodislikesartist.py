@@ -1,5 +1,6 @@
 import time
 from API.artist_cache import *
+from API.rym_search import search_rym_artist
 from API.search_lastfm import get_lastfm_track
 import discord
 from views import Paginator
@@ -25,7 +26,7 @@ async def who_disliked_artist(message):
         if artist is None:
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
-    result = get_artist_from_cache(artist, increment_request_count=False)
+    result = search_rym_artist(artist)
     if result and len(result['disliked_users']) > 0:
         pages = [result['disliked_users'][i:i + 10] for i in range(0, len(result['disliked_users']), 10)]
         artist_name = result.get('artist_name')

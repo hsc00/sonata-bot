@@ -3,6 +3,7 @@ import unicodedata
 import re
 from API.album_cache import get_album_from_cache, update_releases_likes_dislikes
 from API.artist_cache import get_artist_from_cache ,update_artist_likes_dislikes
+from API.rym_search import search_rym_artist, search_rym_release
 from emoji_links import streaming_emojis
 
 
@@ -118,7 +119,7 @@ class LikeButton(discord.ui.Button):
 
         # Check if the user has already liked the release/artist
         if self.action_type == "release":
-            album_data = get_album_from_cache(self.artist_name +"-"+ self.release_name, increment_request_count=False)
+            album_data = search_rym_release(self.artist_name +"-"+ self.release_name)
             if album_data and user_id in album_data.get('liked_users', []):
                 try:
                     await interaction.response.send_message('You have already liked this release.', ephemeral=True)
@@ -128,7 +129,7 @@ class LikeButton(discord.ui.Button):
             handle_like_dislike(self.action_type, self.artist_name +"-"+ self.release_name, user_id, like=True)
             refresh_likes = album_data
         elif self.action_type == "artist":
-            artist_data = get_artist_from_cache(self.artist_name, increment_request_count=False)
+            artist_data = search_rym_artist(self.artist_name)
             if artist_data and user_id in artist_data.get('liked_users', []):
                 try:
                     await interaction.response.send_message('You have already liked this artist.', ephemeral=True)
@@ -191,7 +192,7 @@ class DislikeButton(discord.ui.Button):
 
         # Check if the user has already disliked the release
         if self.action_type == "release":
-            album_data = get_album_from_cache(self.artist_name +"-"+ self.release_name, increment_request_count=False)
+            album_data = search_rym_release(self.artist_name +"-"+ self.release_name)
             if album_data and user_id in album_data.get('disliked_users', []):
                 try:
                     await interaction.response.send_message('You have already disliked this release.', ephemeral=True)
@@ -202,7 +203,7 @@ class DislikeButton(discord.ui.Button):
             refresh_dislikes = album_data
 
         elif self.action_type == "artist":
-            artist_data = get_artist_from_cache(self.artist_name, increment_request_count=False)
+            artist_data = search_rym_artist(self.artist_name)
             if artist_data and user_id in artist_data.get('disliked_users', []):
                 try:
                     await interaction.response.send_message('You have already disliked this artist.', ephemeral=True)

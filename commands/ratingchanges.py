@@ -4,7 +4,7 @@ from collections import defaultdict
 from views import Paginator
 from API.album_cache import *
 from API.search_lastfm import get_lastfm_track
-from API.rym_search import get_rym_rating
+from API.rym_search import get_rym_rating, search_rym_release
 
 def setup(bot):
     @bot.command(name='ratingchanges')
@@ -26,7 +26,7 @@ async def get_rating(message):
         if release_query is None:
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
-    release = get_album_from_cache(release_query)
+    release = search_rym_release(release_query)
     if release:
         release_name = f'{release["artist_name"]} - {release["release_name"]}'
         link = release['link']
