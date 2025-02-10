@@ -1,4 +1,5 @@
 import re
+import unicodedata
 import requests
 from bs4 import BeautifulSoup
 import logging
@@ -29,6 +30,7 @@ def extract_image_url(url):
             start = style.find('url(') + 4
             end = style.find(')', start)
             return style[start:end]
+    
         else:
             logging.warning(f"Image not found for URL: {url}")
             return None
@@ -123,6 +125,8 @@ def get_lastfm_track(user_id, data_type):
         return False 
 
 def clean_name(name):
+    # Normalize special characters to ASCII
+    name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
     # Remove (remaster) and similar variants within parentheses
     name = re.sub(r'\s*\([^)]*remaster[^)]*\)', '', name, flags=re.IGNORECASE)
     # Remove remaster variants with hyphens or standalone
