@@ -3,6 +3,8 @@ import os
 import unicodedata
 import re
 
+from API.rym_search import search_rym_artist
+
 ARTIST_CACHE_FILE = 'cache/artist-cache.json'
 
 def normalize_name(s):
@@ -77,6 +79,10 @@ def get_artist_from_cache(artist_name, increment_request_count=True):
     normalized_name = normalize_name(artist_name)
     if normalized_name in cache:
         artist_data = cache[normalized_name]
+        if not artist_data.get('artist_name'):
+                cache[normalized_name] = search_rym_artist(artist_name)
+                save_cache(cache)
+                return cache[normalized_name]
         if increment_request_count:
             artist_data.setdefault('request_count', 0)
             artist_data['request_count'] += 1
