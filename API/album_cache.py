@@ -36,11 +36,12 @@ def add_album_to_cache(release_name, album_data):
 
     cached_album_data = cache.setdefault(normalized_name, {})
 
+    for key, value in album_data.items():
+        cached_album_data[key] = value
+
     cached_album_data['liked_users'] = cached_album_data.get('liked_users', [])
     cached_album_data['disliked_users'] = cached_album_data.get('disliked_users', [])
-
     cached_album_data['request_count'] = 1
-
     cached_album_data['rating_history'] = {'value': album_data['rating_value'], 'timestamp': timestamp}
     cached_album_data['rating_count_history'] = album_data['formatted_rating_count']
     cached_album_data['year_position_history'] = album_data['best_album_position']
