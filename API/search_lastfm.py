@@ -66,7 +66,7 @@ def clean_summary(summary):
 
     return summary
 
-def get_album_info_from_lastfm(artist_name, album_name, lastfm_api_key):
+def get_album_info_from_lastfm(artist_name, album_name):
     """Fetches album information from Last.fm."""
     lastfm_url = f"http://ws.audioscrobbler.com/2.0/?method=album.getinfo&api_key={lastfm_api_key}&artist={artist_name}&album={album_name}&format=json"
     lastfm_data = fetch_json(lastfm_url)
@@ -89,7 +89,7 @@ def get_album_info_from_lastfm(artist_name, album_name, lastfm_api_key):
     
     return None, None
 
-def search_lastfm_artist(artist_name, lastfm_api_key):
+def search_lastfm_artist(artist_name):
     """Fetches artist information from Last.fm"""
     lastfm_url = f"http://ws.audioscrobbler.com/2.0/?method=artist.getinfo&api_key={lastfm_api_key}&artist={artist_name}&format=json"
     lastfm_data = fetch_json(lastfm_url)

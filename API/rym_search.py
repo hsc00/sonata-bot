@@ -2,13 +2,11 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 
-from config import *
 from .album_cache import *
 from .artist_cache import *
 from .search_lastfm import get_album_info_from_lastfm
 from API.search_lastfm import search_lastfm_artist
 from .google_search import *
-from config import *
 
 def get_rym_rating(release_name):
     def fetch_google_results(release_name):
@@ -70,7 +68,7 @@ def search_rym_release(release_name):
                     update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
                 return cached_album
             else:
-                album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'], lastfm_api_key)
+                album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'])
                 album_data['album_cover_url'] = album_cover_url
                 album_data['album_wiki'] = album_wiki
                 album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'])
@@ -104,7 +102,7 @@ def search_rym_artist(artist_query):
                 if artist_name.lower() in title.lower() and link.startswith('https://rateyourmusic.com/artist/'):
                     rym_info = extract_artist_info(result) or {}
                     rym_info['link'] = link
-                    lastfm_info = search_lastfm_artist(artist_name, lastfm_api_key) or {}
+                    lastfm_info = search_lastfm_artist(artist_name) or {}
                     
                     if rym_info and lastfm_info:
                         cached_artist = get_artist_from_cache(rym_info['artist_name'])
