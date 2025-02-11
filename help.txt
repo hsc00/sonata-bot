@@ -1,25 +1,34 @@
 These are the Sonata bible commands:
+# Setup
 - `!setfm <username>`: Set your last.fm username.
 - `!setrym <username>`: Set your RYM username.
 - `!i or !import`: Import your RYM ratings to the bot. Check instructions [here].
+- `!pingsonata`: Check if the bot is online.
+
+
+
+
+# Albums
 - `!ab or !album`: Check RYM info for an album or release.
-- `!a or !artist`: Check RYM and last.fm info for an artist.
 - `!wa or !whoknowsalbum`: Check who rated a release
-- `!rdr or !randomrating`: Check a random rating from available users.
+- `!wlr or !wholikesrelease`: Check who likes a release.
+- `!mlr or !mostlovedreleases`: Check the most loved releases.
+- `!wdr or !whodislikesrelease`: Check who dislikes a release.
+- `!mhr or !mosthatedreleases`: Check the most hated releases.
 - `!ratingchanges or !rc`: Check the rating changes for a release.
+- `!rdr or !randomrating`: Check a random rating from available users.
+
+# Artists
+- `!a or !artist`: Check RYM and last.fm info for an artist.
 - `!st or !setlist`: Check an artist last concert setlist.
 - `!sts or !setlists`: Get the info and links to an artist latest concerts setlists.
 - `!inf` or `!influences`: Check an artist influences.
 - `!fl` or `!followers`: Check artists influenced by an artist.
 - `!wla or !wholikesartist`: Check who likes an artist.
-- `!wda or !whodislikesartist`: Check who dislikes an artist.
-- `!wlr or !wholikesrelease`: Check who likes a release.
-- `!wdr or !whodislikesrelease`: Check who dislikes a release.
-- `!mlr or !mostlovedreleases`: Check the most loved releases.
-- `!mhr or !mosthatedreleases`: Check the most hated releases.
 - `!mla or !mostlovedartists`: Check the most loved artists.
+- `!wda or !whodislikesartist`: Check who dislikes an artist.
 - `!mha or !mosthatedartists`: Check the most hated artists.
-- `!pingsonata`: Check if the bot is online.
+# Coming Soon
 - `!listenerschanges or !lc`: Coming soon
 - `!t or !trackinfo`: Coming soon
 - `!whosampled`: Coming soon
