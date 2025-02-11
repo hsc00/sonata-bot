@@ -1,5 +1,4 @@
 import re
-import unicodedata
 import requests
 from bs4 import BeautifulSoup
 import logging
@@ -125,14 +124,13 @@ def get_lastfm_track(user_id, data_type):
         return False 
 
 def clean_name(name):
-    # Normalize special characters to ASCII
-    name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
     # Remove (remaster) and similar variants within parentheses
     name = re.sub(r'\s*\([^)]*remaster[^)]*\)', '', name, flags=re.IGNORECASE)
     # Remove remaster variants with hyphens or standalone
     name = re.sub(r'(\s*-\s*)?remaster(ed)?(\s*-\s*)?', '', name, flags=re.IGNORECASE)
     # Clean up extra whitespace and any trailing hyphens
     return re.sub(r'\s*-\s*$', '', name.strip())
+
 
 def get_last_played(last_fm_username, api_key, data_type):
     url = f"http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user={last_fm_username}&api_key={api_key}&format=json"
