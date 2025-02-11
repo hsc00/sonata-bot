@@ -145,5 +145,7 @@ def get_last_played(last_fm_username, api_key, data_type):
             return f'{artist_name} - {album_name}'
         elif data_type == 'artist':
             return artist_name
+        elif data_type == 'track':
+            return f'{artist_name} - {track_name}'
     else:
         return None
