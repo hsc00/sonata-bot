@@ -1,8 +1,10 @@
 These are the Sonata bible commands:
 - `!setfm <username>`: Set your last.fm username.
+- `!setrym <username>`: Set your RYM username.
 - `!ab or !album`: Check RYM info for an album or release.
 - `!a or !artist`: Check RYM and last.fm info for an artist.
 - `!wa or !whoknowsalbum`: Check who rated a release
+- `!rdr or !randomrating`: Check a random rating from available users.
 - `!ratingchanges or !rc`: Check the rating changes for a release.
 - `!i or !import`: Import your RYM ratings to the bot. Check instructions [here].
 - `!st or !setlist`: Check an artist last concert setlist.
