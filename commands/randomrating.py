@@ -44,8 +44,11 @@ async def get_random_rating(ctx):
             embed_title = f"{artist_name} - {release_name} ({release_year})"
             embed_description = f"\n{star_rating}"
             embed_color = discord.Color.blue()
+
             if float(rating_value) < 2.50:
                 embed_color = discord.Color.red()
+            elif float(rating_value) >= 4:
+                embed_color = discord.Color.gold()
             if release_year != "Unknown Year" and int(release_year) == datetime.now().year:
                 embed_color = discord.Color.green()
 
@@ -56,7 +59,7 @@ async def get_random_rating(ctx):
                 embed.set_author(name=f"{username} rated...", url=f"https://rateyourmusic.com/~{rym_username}", icon_url=avatar_url)
             else:
                 embed.set_author(name=f"{username} rated...", icon_url=avatar_url)
-                
+
             if album_cover_url:
                 embed.set_thumbnail(url=album_cover_url)
             embeds.append(embed)
