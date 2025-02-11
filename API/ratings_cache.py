@@ -1,6 +1,7 @@
 import lzma
 import pickle
 import shutil
+import random
 
 global ratings_cache
 ratings_cache = dict()
@@ -17,6 +18,15 @@ def load():
         with lzma.open('cache/ratings_cache.lzma', 'wb') as file:
             pickle.dump(dict(), file)
 
+
+def get_random_rating():
+    all_ratings = []
+    # Collect all ratings from the cache
+    for user in ratings_cache:
+        all_ratings.extend(ratings_cache)
+        return all_ratings
+    else:
+        return None
 
 def save():
     with lzma.open('cache/ratings_cache_tmp.lzma', 'wb') as file:

@@ -1,7 +1,7 @@
 import csv
 import requests
 from API.rympy_rating import Rating
-import ratings_cache
+import API.ratings_cache as ratings_cache
 import API.album_cache as album_cache
 import API.artist_cache as artist_cache
 

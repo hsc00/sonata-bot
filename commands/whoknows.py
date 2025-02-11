@@ -4,7 +4,7 @@ import discord
 from API.search_lastfm import get_lastfm_track
 from API.rym_search import search_rym_release
 from views import *
-import ratings_cache
+import API.ratings_cache as ratings_cache
 
 def setup(bot):
     @bot.command(name='whoknowsalbum')
@@ -45,19 +45,13 @@ async def process_release_link_or_text(ctx):
         formatted_rating_count = search_result['formatted_rating_count']
         best_album_position = search_result['best_album_position']
         all_time_album_position = search_result['all_time_album_position']
-        performers = search_result['performers']
 
         if search_result['album_cover_url']:
             album_cover_url = search_result['album_cover_url']
         else:
             album_cover_url = search_result['rym_cover_url']
 
-        album_wiki = search_result['album_wiki']
-        streaming_links = search_result['streaming_links']
         link = search_result['link']
-        likes = len(search_result.get('liked_users', []))
-        dislikes = len(search_result.get('disliked_users', []))
-
         embed_title = f"{artist_name} - {release_name} ({release_year})"
         embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
         embed_color = discord.Color.blue()
@@ -113,7 +107,7 @@ async def process_release_link_or_text(ctx):
                 average_str = str()
                 if average[1]:
                     average = average[0]/average[1]
-                    average_str = f"\n\n**Sótão average rating:** {round(average, 2)} ⭐\n\n{user_ratings}"
+                    average_str = f"\n\nSótão average rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
 
                 embed_description += average_str
 
@@ -129,7 +123,7 @@ async def process_release_link_or_text(ctx):
         if ratings_count:
             if average[1]:
                 average = average[0]/average[1]
-                average_str = f"\n\n**Sótão average rating:** {round(average, 2)} ⭐\n\n{user_ratings}"
+                average_str = f"\n\nSótão average rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
 
             embed_description += average_str
             embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
