@@ -163,16 +163,26 @@ def get_album_from_cache(release_name, increment_request_count=True):
 
 def get_most_loved_hated_releases(data_type):
     cache = load_cache()
-    # Create a list of tuples (release_name, liked_users_count)
     releases = [
         (release_name, len(album_data.get(f'{data_type}_users', [])))
         for release_name, album_data in cache.items()
         if len(album_data.get(f'{data_type}_users', [])) > 0
     ]
-    # Sort the list by liked_users_count in descending order
+    # Sort the list in descending order
     releases.sort(key=lambda x: x[1], reverse=True)
     # Get the top 100 releases or all releases with at least one like
     top_releases = releases[:100]
-    # Retrieve album data for the top releases
-    top_releases_data = [cache[release_name] for release_name, _ in top_releases]
+    # Retrieve album data for the top releases, maintaining the order
+    top_releases_data = [
+        {
+            'artist_name': cache[release_name]['artist_name'],
+            'release_name': cache[release_name]['release_name'],
+            'link': cache[release_name].get('link', ''),
+            'album_cover_url': cache[release_name].get('album_cover_url', ''),
+            f'{data_type}_users': cache[release_name].get(f'{data_type}_users', [])
+        }
+        for release_name, _ in top_releases
+        if 'artist_name' in cache[release_name] and 'release_name' in cache[release_name]
+    ]
+
     return top_releases_data

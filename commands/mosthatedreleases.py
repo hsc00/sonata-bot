@@ -26,7 +26,7 @@ async def most_hated_releases(message):
         artist_name = album.get('artist_name')
         link = album.get('link')
         liked_users_count = len(album.get('disliked_users', []))
-        leaderboard.append(f"{idx}. [{artist_name} - {release_name}]({link}) ({liked_users_count} dislikes)")
+        leaderboard.append(f"{idx}. [{artist_name} - {release_name}]({link}) ({liked_users_count})")
 
     # Split leaderboard into pages of 10 entries each
     pages = [leaderboard[i:i + 10] for i in range(0, len(leaderboard), 10)]
