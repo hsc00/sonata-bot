@@ -42,7 +42,7 @@ async def get_random_rating(ctx):
             username, avatar_url = user_info
             star_rating = "<:star:1338267791639445564>" * int(rating_value) + "<:half:1338267704959828069> "  * (1 if rating_value != int(rating_value) else 0)
             embed_title = f"{artist_name} - {release_name} ({release_year})"
-            embed_description = f"\n{star_rating}"
+            embed_description = f"\n{star_rating}\n\n{review if review else ''}"
             embed_color = discord.Color.blue()
 
             if float(rating_value) < 2.50:
