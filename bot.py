@@ -43,7 +43,7 @@ async def on_ready():
         await channel.send('I am back online!')
         asyncio.create_task(periodic_tasks(channel))
 
-class FakeMessage:
+class BotMessage:
     def __init__(self, channel, author, content):
         self.channel = channel
         self.author = author
@@ -56,9 +56,9 @@ async def periodic_tasks(channel):
     while True:
         await asyncio.sleep(21600) # Sends a random rating every 6 hours
         author = bot.user
-        fake_message = FakeMessage(channel, author, '!randomrating')
+        bot_message = BotMessage(channel, author, '!randomrating')
         
-        ctx = await bot.get_context(fake_message, cls=commands.Context)
+        ctx = await bot.get_context(bot_message, cls=commands.Context)
         async with ctx.channel.typing():
             await get_random_rating(ctx)
 
