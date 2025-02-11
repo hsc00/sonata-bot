@@ -32,7 +32,6 @@ async def get_rating(message):
         link = release['link']
         release_rating_history = get_rym_rating(release_name)
         if len(release_rating_history['rating_history']) > 2:
-            print(len(release_rating_history['rating_history']))
             release_changes = format_release_changes(release_rating_history)
             if release_changes:
                 pages = [release_changes[i:i + 10] for i in range(0, len(release_changes), 10)]
