@@ -5,6 +5,8 @@ import os
 import importlib
 import events
 from config import *
+from discord.ext.commands import Context
+from commands.randomrating import get_random_rating
 import API.ratings_cache as ratings_cache
 
 # Define the intents
@@ -39,8 +41,26 @@ async def on_ready():
     if discord_bot_token[-1] == 'E':
         channel = bot.get_channel(1039885578155597854)
         await channel.send('I am back online!')
+        asyncio.create_task(periodic_tasks(channel))
 
+class FakeMessage:
+    def __init__(self, channel, author, content):
+        self.channel = channel
+        self.author = author
+        self.content = content
+        self.guild = channel.guild
+        self._state = channel._state
+        self.id = 1
 
+async def periodic_tasks(channel):
+    while True:
+        await asyncio.sleep(21600) # Sends a random rating every 6 hours
+        author = bot.user
+        fake_message = FakeMessage(channel, author, '!randomrating')
+        
+        ctx = await bot.get_context(fake_message, cls=commands.Context)
+        async with ctx.channel.typing():
+            await get_random_rating(ctx)
 
 bot.add_listener(on_ready)
 bot.run(discord_bot_token)

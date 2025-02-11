@@ -13,6 +13,14 @@ async def on_message(message):
         message.content = "!a " + message.content
         await bot_instance.process_commands(message)
 
+async def get_user_info(user_id):
+    user = await bot_instance.fetch_user(user_id)
+    if user:
+        username = user.name
+        avatar_url = user.avatar.url
+        return username, avatar_url
+    return None, None
+
 def setup(bot):
     global bot_instance
     bot_instance = bot
