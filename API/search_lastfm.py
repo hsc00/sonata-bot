@@ -124,6 +124,8 @@ def get_lastfm_track(user_id, data_type):
         return False 
 
 def clean_name(name):
+    # Replace apostrophes with a space
+    name = re.sub(r"'", " ", name)
     # Remove (remaster) and similar variants within parentheses
     name = re.sub(r'\s*\([^)]*remaster[^)]*\)', '', name, flags=re.IGNORECASE)
     # Remove remaster variants with hyphens or standalone
