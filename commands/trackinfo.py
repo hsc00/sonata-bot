@@ -29,8 +29,8 @@ async def check_genius(message):
         if track_name is None:
             await message.channel.send('Please provide a track or use `!setfm` to set your last.fm account.')
             return
-    track_info = get_track_samples(track_name)
-    if track_info:
+    track_info = get_track_info(track_name)
+    if track_info.get('artist_name'):
         artist_name = track_info.get("artist_name", "")
         track_name = track_info.get("track_name", "")
         release_year = track_info.get("release_year", "")
@@ -53,4 +53,4 @@ async def check_genius(message):
         view = RYMViewTracks(embed, wiki, credits, streaming_links)
         await sent_message.edit(view=view)
     else:
-        await message.channel.send(f'{track_name} info not found.')
+        await message.channel.send(f'**{track_name.title()}** info not found.')
