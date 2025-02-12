@@ -3,13 +3,13 @@ import os
 import unicodedata
 import re
 import datetime
+import urllib.parse
 
 CACHE_FILE = 'cache/album-cache.json'
 
-import unicodedata
-import re
-
 def normalize_name(s):
+    # Remove localized names []
+    s = re.sub(r'\[.*?\]', '', s)
     # Remove special characters and normalize the string
     s = unicodedata.normalize('NFKD', s)
     # Remove any special characters, replace spaces with hyphens, convert to lowercase
@@ -33,9 +33,7 @@ def add_album_to_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
     timestamp = datetime.datetime.now().isoformat()
-
     cached_album_data = cache.setdefault(normalized_name, {})
-
     for key, value in album_data.items():
         cached_album_data[key] = value
 
@@ -54,8 +52,9 @@ def add_album_to_cache(release_name, album_data):
 def update_album_in_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
-    album_data.setdefault('liked_users', [])
-    album_data.setdefault('disliked_users', [])
+    existing_data = cache[normalized_name]
+    album_data['liked_users'] = existing_data.get('liked_users', [])
+    album_data['disliked_users'] = existing_data.get('disliked_users', [])
     cache[normalized_name] = album_data
     save_cache(cache)
     print(f"Updated {normalized_name}")
@@ -140,7 +139,7 @@ def update_releases_likes_dislikes(release_name, user_id, like=True):
             if user_id in album_data['liked_users']:
                 album_data['liked_users'].remove(user_id)
         save_cache(cache)
-        print(f"Updated cache for {normalized_name}")
+        print(f"Updated likes/dislikes for {normalized_name}")
     else:
         print(f"Link not found in release cache: {normalized_name}")
 

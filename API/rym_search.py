@@ -27,7 +27,7 @@ def get_rym_rating(release_name):
         update_album = update_album_rating(f"{album_data['artist_name']} {album_data['release_name']}", album_data)
         return update_album
     else:
-        print("Album not found.")
+        print(f"{release_name} not found.")
     return None
 
 def search_rym_release(release_name):
@@ -46,35 +46,40 @@ def search_rym_release(release_name):
     cached_album = get_album_from_cache(release_name)
     if cached_album and cached_album.get('release_name') and cached_album['request_count'] <= 5:
         return cached_album
-    else:
-        album_data = None
-        with ThreadPoolExecutor(max_workers=5) as executor:
-            google_future = executor.submit(fetch_google_results, release_name)
-            google_results = google_future.result()
 
-        if google_results:
-            for result in google_results:
-                link = result['link']
-                if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in link.lower() for word in release_name.split()):
-                    album_data = extract_album_info(result)
-                    album_data['link'] = link
-                    break   
+    album_data = None
+    with ThreadPoolExecutor(max_workers=5) as executor:
+        google_future = executor.submit(fetch_google_results, release_name)
+        google_results = google_future.result()
 
-        if album_data:
-            cached_album = get_album_from_cache(album_data['artist_name'] + "-" + album_data['release_name'])
-            if cached_album and cached_album.get('release_name'):
-                if cached_album['request_count'] > 5: 
-                    cached_album['request_count'] = 1
-                    update_album_in_cache(album_data['artist_name'] + "-" + album_data['release_name'], cached_album)
-                return cached_album
-            else:
-                album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'])
-                album_data['album_cover_url'] = album_cover_url
-                album_data['album_wiki'] = album_wiki
-                album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'])
-                add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
+    if google_results:
+        for result in google_results:
+            link = result['link']
+            title = result['title']
+            if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in title.lower() for word in release_name.split()):
+                album_data = extract_album_info(result)
+                album_data['link'] = link
+                break
+    if album_data:
+        cached_album = get_album_from_cache(release_name)
+        if cached_album and cached_album.get('release_name'):
+            if cached_album['request_count'] > 5: 
+                cached_album['request_count'] = 1
+                update_album_in_cache(release_name, cached_album)
+            return cached_album
         else:
-            print("Album not found.")
+            album_cover_url, album_wiki = get_album_info_from_lastfm(album_data['artist_name'], album_data['release_name'])
+            album_data['album_cover_url'] = album_cover_url
+            album_data['album_wiki'] = album_wiki
+            album_data['streaming_links'] = get_streaming_links("release", album_data['artist_name'], album_data['release_name'], album_data['release_year'])
+            
+            if cached_album and not cached_album.get('release_name'):
+                cached_album['request_count'] = 1
+                update_album_in_cache(release_name, album_data)
+            else:
+                add_album_to_cache(album_data['artist_name'] + "-" + album_data['release_name'], album_data)
+    else:
+        print(f"{release_name} not found.")
 
     return album_data
     
@@ -116,7 +121,7 @@ def search_rym_artist(artist_query):
                     add_artist_to_cache(rym_info['artist_name'], artist_info)
                     return artist_info
             else:
-                print("Artist not found.")
+                print(f"{artist_name} not found.")
     return None
 
 
