@@ -53,8 +53,9 @@ def update_album_in_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
     existing_data = cache[normalized_name]
-    album_data['liked_users'] = existing_data.get('liked_users', [])
-    album_data['disliked_users'] = existing_data.get('disliked_users', [])
+    if existing_data:
+        album_data['liked_users'] = existing_data.get('liked_users', [])
+        album_data['disliked_users'] = existing_data.get('disliked_users', [])
     cache[normalized_name] = album_data
     save_cache(cache)
     print(f"Updated {normalized_name}")
