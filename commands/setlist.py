@@ -8,13 +8,11 @@ def setup(bot):
     async def setlist_command(ctx):
         async with ctx.message.channel.typing():
             await process_setlist(ctx.message)
-            time.sleep(5)
 
     @bot.command(name='st')
     async def st_command(ctx):
         async with ctx.message.channel.typing():
             await process_setlist(ctx.message)
-            time.sleep(5)
 
 async def process_setlist(message):
     content_parts = message.content.split(' ', 1)
@@ -22,10 +20,10 @@ async def process_setlist(message):
         artist_name = content_parts[1]
     else:
         artist_name = get_lastfm_track(message.author.id, 'artist')
-        # Check if the user's last.fm username is stored
         if artist_name is None:
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
+    
     setlist = get_setlist(artist_name, config.setlist_api_key)
     if not setlist or 'error' in setlist:
         await message.channel.send('Artist not found or timeout. Try again.')
@@ -45,16 +43,15 @@ async def process_setlist(message):
 
     pages = [tracks_played[i:i + 10] for i in range(0, len(tracks_played), 10)]
 
+    embed_title = f"{artist_name} - {concert_name}"
+    embed_color = discord.Color.blue()
+
     embeds = []
-    embed_title = f"{artist_name} (Last Setlist)"
     for i, page in enumerate(pages):
-        embed_description = f"**{concert_name}, {city_name}, {country_name}**\n{concert_date}\n\n"
+        embed_description = f"**{city_name}, {country_name}**\n{concert_date}\n\n"
         embed_description += "\n".join(f" - {track}" for track in page)
-        embed_color = discord.Color.blue()
         embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
         embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(pages)}")
         embeds.append(embed)
 
-    sent_message = await message.channel.send(embed=embeds[0])
-    view = Paginator(embeds)
-    await sent_message.edit(embed=embeds[0], view=view)
+    await message.channel.send(embed=embeds[0], view=Paginator(embeds))
