@@ -144,10 +144,10 @@ def get_last_played(last_fm_username, api_key, data_type):
         artist_name = last_track['artist']['#text']
         album_name = clean_name(last_track['album']['#text'])
         if data_type == 'release':
-            return f'{artist_name} - {album_name}'
+            return f'{artist_name}-{album_name}'
         elif data_type == 'artist':
             return artist_name
         elif data_type == 'track':
-            return f'{artist_name} - {track_name}'
+            return f'{artist_name}-{track_name}'
     else:
         return None
