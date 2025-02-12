@@ -65,9 +65,9 @@ class RYMViewReleases(discord.ui.View):
         if album_wiki:
             buttons.append(AlbumInfoButton(album_wiki))
         if performers:
-            buttons.append(CreditsButton(self.performers))
+            buttons.append(CreditsButton(self.performers, custom_id='credits_button', action='releases'))
         if self.streaming_links:
-            buttons.append(StreamingButton(self.streaming_links))
+            buttons.append(StreamingButton(self.streaming_links, custom_id='streaming_button'))
         
         for button in buttons:
             self.add_item(button)
@@ -96,11 +96,52 @@ class RYMViewArtists(discord.ui.View):
         if self.similar_artists:
             buttons.append(SimilarArtistsButton(self.similar_artists))
         if self.streaming_links:
-            buttons.append(StreamingButton(self.streaming_links))
+            buttons.append(StreamingButton(self.streaming_links, custom_id='streaming_button'))
         
         for button in buttons:
             self.add_item(button)
 
+
+class RYMViewTracks(discord.ui.View):
+    def __init__(self, embed=None, wiki=None, credits=None, streaming_links=None):
+        super().__init__()
+        self.general_embed = embed
+        self.wiki = wiki
+        self.streaming_links = streaming_links or []
+        self.credits = credits
+
+        # Initialize buttons list
+        buttons = []
+
+        if self.credits:
+            buttons.append(CreditsButton(self.credits, custom_id='credits_button', action='tracks'))
+        
+        # Add streaming link buttons
+        buttons.extend([
+            discord.ui.Button(
+                label="",
+                emoji=self.get_valid_emoji(link),
+                url=link
+            ) for link in self.streaming_links
+        ])
+
+        for button in buttons:
+            self.add_item(button)
+
+    def get_valid_emoji(self, link):
+        if "spotify" in link:
+            return streaming_emojis["Spotify"]
+        elif "apple" in link:
+            return streaming_emojis["Apple"]
+        elif "bandcamp" in link:
+            return streaming_emojis["Bandcamp"]
+        elif "soundcloud" in link:
+            return streaming_emojis["Soundcloud"]
+        elif "youtube" in link or "music.youtube" in link:
+            return streaming_emojis["Youtube"]
+        else:
+            return '🔗'  # Default emoji
+        
 
 class LikeButton(discord.ui.Button):
     def __init__(self, action_type, likes, original_message_id, artist_name, release_name):
@@ -295,22 +336,26 @@ class SimilarArtistsButton(discord.ui.Button):
 
 
 class CreditsButton(discord.ui.Button):
-    def __init__(self, performers):
-        super().__init__(label='Credits', style=discord.ButtonStyle.primary, custom_id='credits_button')
+    def __init__(self, performers, custom_id, action):
+        super().__init__(label="Credits", style=discord.ButtonStyle.primary, custom_id=custom_id)
         self.performers = performers
-
+        self.action = action
     async def callback(self, interaction: discord.Interaction):
         new_embed = discord.Embed(title=interaction.message.embeds[0].title, description=self.performers, url=interaction.message.embeds[0].url)
         if interaction.message.embeds[0].thumbnail:
             new_embed.set_thumbnail(url=interaction.message.embeds[0].thumbnail.url)
         new_embed.set_footer(text=interaction.message.embeds[0].footer.text)
         self.view.clear_items()
-        self.view.add_item(BackButton(self.view))
+        if self.action == 'releases':
+            self.view.add_item(BackButton(self.view))
+        elif self.action == 'tracks':
+            self.view.add_item(BackButton(self.view, add_streaming_buttons=True))
         await interaction.response.edit_message(embed=new_embed, view=self.view)
 
+
 class StreamingButton(discord.ui.Button):
-    def __init__(self, streaming_links):
-        super().__init__(label='Streaming', style=discord.ButtonStyle.primary, custom_id='streaming_button')
+    def __init__(self, streaming_links, custom_id):
+        super().__init__(label="Streaming", style=discord.ButtonStyle.primary, custom_id=custom_id)
         self.streaming_links = streaming_links
         self.buttons = [
             discord.ui.Button(
@@ -350,28 +395,40 @@ class StreamingButton(discord.ui.Button):
 
 
 class BackButton(discord.ui.Button):
-    def __init__(self, view):
-        super().__init__(label='Back', style=discord.ButtonStyle.secondary, custom_id='back_button')
+    def __init__(self, view, add_streaming_buttons=False):
+        super().__init__(label='Back', style=discord.ButtonStyle.secondary, custom_id=f'back_button_{id(view)}')
         self._view = view
+        self.add_streaming_buttons = add_streaming_buttons
 
     async def callback(self, interaction: discord.Interaction):
         self._view.clear_items()
-        self._view.add_item(LikeButton(self._view.action_type, self._view.likes, self._view.original_message_id, self._view.artist_name, self._view.release_name))
-        self._view.add_item(DislikeButton(self._view.action_type, self._view.dislikes, self._view.original_message_id, self._view.artist_name, self._view.release_name))
+        if hasattr(self._view, 'credits'):
+            self._view.add_item(CreditsButton(self._view.credits, custom_id=f'credits_button_{id(self._view)}', action='tracks'))
+            for link in self._view.streaming_links:
+                self._view.add_item(discord.ui.Button(
+                    label="",
+                    emoji=self._view.get_valid_emoji(link),
+                    url=link
+                ))
 
-        if self._view.action_type == "release":
-            if self._view.album_wiki:
-                self._view.add_item(AlbumInfoButton(self._view.album_wiki))
-            if self._view.performers:
-                self._view.add_item(CreditsButton(self._view.performers))
-                
-        if self._view.action_type == "artist":
-            if self._view.similar_artists:
-                self._view.add_item(SimilarArtistsButton(self._view.similar_artists))
+        if hasattr(self._view, 'action_type'):
+            self._view.add_item(LikeButton(self._view.action_type, self._view.likes, self._view.original_message_id, self._view.artist_name, self._view.release_name))
+            self._view.add_item(DislikeButton(self._view.action_type, self._view.dislikes, self._view.original_message_id, self._view.artist_name, self._view.release_name))
 
-        if self._view.streaming_links:
-            self._view.add_item(StreamingButton(self._view.streaming_links))
+            if self._view.action_type == "release":
+                if self._view.album_wiki:
+                    self._view.add_item(AlbumInfoButton(self._view.album_wiki))
+                if self._view.performers:
+                    self._view.add_item(CreditsButton(self._view.performers, custom_id='credits_button', action='releases'))
+                    
+            if self._view.action_type == "artist":
+                if self._view.similar_artists:
+                    self._view.add_item(SimilarArtistsButton(self._view.similar_artists))
 
+            if self._view.streaming_links and not self.add_streaming_buttons:
+                self._view.add_item(StreamingButton(self._view.streaming_links, custom_id='streaming_button'))
+        if hasattr(self._view, 'credits'):
+            self._view.general_embed.description = self._view.wiki
         await interaction.response.edit_message(embed=self._view.general_embed, view=self._view)
 
 
