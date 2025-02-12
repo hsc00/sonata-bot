@@ -44,10 +44,10 @@ async def process_release_link_or_text(message):
     # perform a google search
     search_result = search_rym_release(release_query)
     if not search_result:
-        await message.channel.send('Release not found.')
+        await message.channel.send(f'**{release_query}** not found.')
         return
 
-    if search_result:
+    if search_result and search_result.get('artist_name'):
         artist_name = search_result['artist_name']
         release_name = search_result['release_name']
         release_year = search_result['release_year']
@@ -114,3 +114,5 @@ async def process_release_link_or_text(message):
         view.link = link
 
         await sent_message.edit(view=view)
+    else:
+        await message.channel.send(f'**{release_query}** not found.')
