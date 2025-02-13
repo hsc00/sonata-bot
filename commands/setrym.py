@@ -31,9 +31,9 @@ def setup(bot):
 
         # Create the hyperlink for the Last.fm username
         rym_profile_url = f"https://rateyourmusic.com/~{rym_username}"
-        await ctx.send(f"{ctx.author.mention} RYM has been set to [{rym_username}]({rym_profile_url})")
+        await ctx.reply(f"{ctx.author.mention} RYM has been set to [{rym_username}]({rym_profile_url})")
 
     @setrym.error
     async def setrym_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("You need to provide a RYM username. Usage: `!setrym <rym_username>`")
+            await ctx.reply("You need to provide a RYM username. Usage: `!setrym <rym_username>`")

@@ -32,9 +32,9 @@ def setup(bot):
 
         # Create the hyperlink for the Last.fm username
         last_fm_profile_url = f"https://www.last.fm/user/{last_fm_username}"
-        await ctx.send(f"{ctx.author.mention} last.fm has been set to [{last_fm_username}]({last_fm_profile_url})")
+        await ctx.reply(f"{ctx.author.mention} last.fm has been set to [{last_fm_username}]({last_fm_profile_url})")
 
     @setfm.error
     async def setfm_error(ctx, error):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send("You need to provide a last.fm username. Usage: `!setfm <last_fm_username>`")
+            await ctx.reply("You need to provide a last.fm username. Usage: `!setfm <last_fm_username>`")
