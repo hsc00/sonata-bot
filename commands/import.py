@@ -62,7 +62,7 @@ def import_ratings(url,user_id):
 
         if rating.rating > 4:
             update_cache(rating, user_id, "liked_users")
-        elif rating.rating < 2:
+        elif rating.rating < 2 and rating.rating > 0:
             update_cache(rating, user_id, "disliked_users")
 
 
