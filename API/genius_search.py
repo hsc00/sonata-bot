@@ -52,10 +52,15 @@ def get_track_samples(track_name):
     song_data = get_song_data(track_name)
     if not song_data:
         return {}
-
     return {
-        "samples": extract_related_titles(song_data, "samples"),
-        "sampled_in": extract_related_titles(song_data, "sampled_in")
+        "artist_name": song_data.get("details", {}).get("artist_name", ""),
+        "track_name": song_data.get("details", {}).get("track_name", ""),
+        "release_year": song_data.get("details", {}).get("release_year", ""),
+        "genius_url": song_data.get("details", {}).get("genius_url", ""),
+        "cover_url": song_data.get("details", {}).get("cover_url", ""),
+        "links": extract_links(song_data.get("full_response")),
+        "samples": extract_related_titles(song_data.get("full_response"), "samples"),
+        "sampled_in": extract_related_titles(song_data.get("full_response"), "sampled_in")
     }
 
 def get_track_interpolations(track_name):
@@ -122,7 +127,19 @@ def get_song_data(track_name):
         print(f"Failed to retrieve song details, status code: {song_response.status_code}")
         return None
 
-    return song_response.json()
+    song_data = song_response.json()
+    details = {
+        "artist_name": song_data.get("response", {}).get("song", {}).get("primary_artist", {}).get("name", ""),
+        "track_name": song_data.get("response", {}).get("song", {}).get("title", ""),
+        "release_year": song_data.get("response", {}).get("song", {}).get("release_date", "")[:4],
+        "genius_url": song_data.get("response", {}).get("song", {}).get("url", ""),
+        "cover_url": song_data.get("response", {}).get("song", {}).get("song_art_image_url", "")
+    }
+
+    return {
+        "details": details,
+        "full_response": song_data
+    }
 
 def extract_song_id(search_results):
     try:
@@ -138,6 +155,8 @@ def extract_related_titles(song_data, relationship_type):
             for related_song in relationship.get("songs", []):
                 full_title = related_song.get("full_title")
                 if full_title:
+                    # Replace non-breaking spaces with regular spaces
+                    full_title = full_title.replace('\xa0', ' ')
                     related_titles.append(f"[{full_title}]({related_song.get('url', '')})")
     return related_titles
 
@@ -160,7 +179,6 @@ def extract_credits(song_data):
     return '\n'.join(credits)
 
 def extract_wiki(song_data):
-    print()
     genius_url = 'https://genius.com' + song_data.get("response", {}).get("song", {}).get("api_path", {})
     description_dom = song_data.get("response", {}).get("song", {}).get("description", {}).get("dom", {})
     wiki = parse_description_children(description_dom.get("children", []))
