@@ -24,14 +24,14 @@ async def check_genius(message):
             return
 
     track_info = get_track_samples(track_name)
-    if track_info.get("samples") or track_info.get("sampled_in"):
+    if track_info.get("samples") or track_info.get("sampled_in") or track_info.get("interpolates") or track_info.get("interpolated_by"):
         artist_name = track_info.get("artist_name", "")
         track_name = track_info.get("track_name", "")
         release_year = track_info.get("release_year", "")
         genius_url = track_info.get("genius_url", "")
         cover_url = track_info.get("cover_url", "")
-        samples = track_info.get("samples", [])
-        sampled_in = track_info.get("sampled_in", [])
+        samples = track_info.get("samples", []) + track_info.get("interpolates", [])
+        sampled_in = track_info.get("sampled_in", []) + track_info.get("interpolated_by")
 
         samples_pages = [samples[i:i + 5] for i in range(0, len(samples), 5)]
         sampled_in_pages = [sampled_in[i:i + 5] for i in range(0, len(sampled_in), 5)]

@@ -11,17 +11,18 @@ class Paginator(discord.ui.View):
     def __init__(self, embeds, extra_info=None, action=None):
         super().__init__(timeout=180)
         self.embeds = embeds
+        self.original_embeds = embeds
         self.current_page = 0
         self.extra_info = extra_info
         self.action = action
 
-        if len(embeds) > 1:
-            self.previous_button = discord.ui.Button(label="Previous", style=discord.ButtonStyle.secondary, disabled=True)
-            self.previous_button.callback = self.previous_callback
-            self.add_item(self.previous_button)
+        self.previous_button = discord.ui.Button(label="Previous", style=discord.ButtonStyle.secondary, disabled=True)
+        self.previous_button.callback = self.previous_callback
+        self.next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.secondary, disabled=False)
+        self.next_button.callback = self.next_callback
 
-            self.next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.secondary, disabled=False)
-            self.next_button.callback = self.next_callback
+        if len(embeds) > 1:
+            self.add_item(self.previous_button)
             self.add_item(self.next_button)
 
         if action == 'samples':
@@ -57,65 +58,67 @@ class Paginator(discord.ui.View):
             self.next_button.disabled = self.current_page == len(self.embeds) - 1
 
     async def sampled_in_callback(self, interaction: discord.Interaction):
-        sampled_in_embeds = self.extra_info
-        sampled_in_embed = sampled_in_embeds[0]
+        self.embeds = self.extra_info
         self.action = 'sampled_in'
+        self.current_page = 0
+        self.update_buttons()
 
         return_button = discord.ui.Button(label="Samples", style=discord.ButtonStyle.primary, custom_id='samples_button')
         return_button.callback = self.samples_callback
         self.clear_items()
-        self.current_page = 0
 
-        if len(sampled_in_embeds) > 1:
-            self.add_item(self.previous_button)
-            self.add_item(self.next_button)
-            self.update_buttons()
-
-        self.add_item(return_button)
-
-        await interaction.response.edit_message(embed=sampled_in_embed, view=self)
-
-    async def samples_callback(self, interaction: discord.Interaction):
-        self.current_page = 0
-        current_embed = self.embeds[self.current_page]
-        self.clear_items()
         if len(self.embeds) > 1:
             self.add_item(self.previous_button)
             self.add_item(self.next_button)
-            self.update_buttons()
+
+        self.add_item(return_button)
+
+        await interaction.response.edit_message(embed=self.embeds[self.current_page], view=self)
+
+    async def samples_callback(self, interaction: discord.Interaction):
+        self.embeds = self.original_embeds
+        self.current_page = 0
+        self.action = 'samples'
+        self.update_buttons()
+        self.clear_items()
+
+        if len(self.embeds) > 1:
+            self.add_item(self.previous_button)
+            self.add_item(self.next_button)
+
         self.add_item(self.sampled_in_button)
             
-        await interaction.response.edit_message(embed=current_embed, view=self)
+        await interaction.response.edit_message(embed=self.embeds[self.current_page], view=self)
 
     async def cover_of_callback(self, interaction: discord.Interaction):
-        cover_of_embeds = self.extra_info
-        cover_of_embed = cover_of_embeds[0]
+        self.embeds = self.extra_info
         self.action = 'cover_of'
-
+        self.current_page = 0
+        self.update_buttons()
+        
         return_button = discord.ui.Button(label="Covers", style=discord.ButtonStyle.primary, custom_id='covers_button')
         return_button.callback = self.covers_callback
         self.clear_items()
-        self.current_page = 0
-
-        if len(cover_of_embeds) > 1:
+        if len(self.embeds) > 1:
             self.add_item(self.previous_button)
             self.add_item(self.next_button)
-            self.update_buttons()
         self.add_item(return_button)
 
-        await interaction.response.edit_message(embed=cover_of_embed, view=self)
+        await interaction.response.edit_message(embed=self.embeds[self.current_page], view=self)
 
     async def covers_callback(self, interaction: discord.Interaction):
+        self.embeds = self.original_embeds 
+        self.action = 'covers'
         self.current_page = 0
-        current_embed = self.embeds[self.current_page]
+        self.update_buttons()
+
         self.clear_items()
         if len(self.embeds) > 1:
             self.add_item(self.previous_button)
             self.add_item(self.next_button)
-            self.update_buttons()
         self.add_item(self.cover_of_button)
 
-        await interaction.response.edit_message(embed=current_embed, view=self)
+        await interaction.response.edit_message(embed=self.embeds[self.current_page], view=self)
     
 
 class RYMViewReleases(discord.ui.View):

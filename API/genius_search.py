@@ -59,18 +59,10 @@ def get_track_samples(track_name):
         "genius_url": song_data.get("details", {}).get("genius_url", ""),
         "cover_url": song_data.get("details", {}).get("cover_url", ""),
         "links": extract_links(song_data.get("full_response")),
+        "interpolates": extract_related_titles(song_data.get("full_response"), "interpolates"),
+        "interpolated_by": extract_related_titles(song_data.get("full_response"), "interpolated_by"),
         "samples": extract_related_titles(song_data.get("full_response"), "samples"),
         "sampled_in": extract_related_titles(song_data.get("full_response"), "sampled_in")
-    }
-
-def get_track_interpolations(track_name):
-    song_data = get_song_data(track_name)
-    if not song_data:
-        return {}
-
-    return {
-        "interpolates": extract_related_titles(song_data, "interpolates"),
-        "interpolated_by": extract_related_titles(song_data, "interpolated_by")
     }
 
 def get_track_covers(track_name):
@@ -162,7 +154,13 @@ def extract_related_titles(song_data, relationship_type):
                 if full_title:
                     # Replace non-breaking spaces with regular spaces
                     full_title = full_title.replace('\xa0', ' ')
-                    related_titles.append(f"[{full_title}]({related_song.get('url', '')})")
+                    title_link = f"[{full_title}]({related_song.get('url', '')})"
+                    if relationship_type in ["samples", "sampled_in"]:
+                        related_titles.append(f"{title_link} (sample)")
+                    elif relationship_type in ["interpolates", "interpolated_by"]:
+                        related_titles.append(f"{title_link} (interpolation)")
+                    else:
+                        related_titles.append(title_link)
     return related_titles
 
 def extract_credits(song_data):
