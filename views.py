@@ -1,26 +1,34 @@
 import discord
 import unicodedata
 import re
+
 from API.album_cache import get_album_from_cache, update_releases_likes_dislikes
 from API.artist_cache import get_artist_from_cache ,update_artist_likes_dislikes
 from emoji_links import streaming_emojis
 
 
 class Paginator(discord.ui.View):
-    def __init__(self, embeds):
+    def __init__(self, embeds, extra_info=None, action=None):
         super().__init__(timeout=180)
         self.embeds = embeds
         self.current_page = 0
-        
+        self.extra_info = extra_info
+        self.action = action
+
         if len(embeds) > 1:
-            self.previous_button = discord.ui.Button(label="Previous", style=discord.ButtonStyle.primary, disabled=True)
+            self.previous_button = discord.ui.Button(label="Previous", style=discord.ButtonStyle.secondary, disabled=True)
             self.previous_button.callback = self.previous_callback
             self.add_item(self.previous_button)
-            
-            self.next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.primary, disabled=False)
+
+            self.next_button = discord.ui.Button(label="Next", style=discord.ButtonStyle.secondary, disabled=False)
             self.next_button.callback = self.next_callback
             self.add_item(self.next_button)
-        
+
+        if action == 'samples':
+            self.sampled_in_button = discord.ui.Button(label="Sampled In", style=discord.ButtonStyle.primary, custom_id='sampled_in')
+            self.sampled_in_button.callback = self.sampled_in_callback
+            self.add_item(self.sampled_in_button)
+
         self.update_buttons()
 
     async def previous_callback(self, interaction: discord.Interaction):
@@ -33,12 +41,47 @@ class Paginator(discord.ui.View):
         await interaction.response.defer()
         self.current_page = max(0, min(self.current_page + increment, len(self.embeds) - 1))
         self.update_buttons()
-        await interaction.edit_original_response(embed=self.embeds[self.current_page], view=self)
+        embed_to_show = self.embeds[self.current_page]
+        if self.action == 'sampled_in':
+            embed_to_show.color = discord.Color.green()
+
+        await interaction.edit_original_response(embed=embed_to_show, view=self)
 
     def update_buttons(self):
         if len(self.embeds) > 1:
             self.previous_button.disabled = self.current_page == 0
             self.next_button.disabled = self.current_page == len(self.embeds) - 1
+
+    async def sampled_in_callback(self, interaction: discord.Interaction):
+        sampled_in_embeds = self.extra_info
+        sampled_in_embed = sampled_in_embeds[0]
+        self.action = 'sampled_in'
+
+        return_button = discord.ui.Button(label="Samples", style=discord.ButtonStyle.primary, custom_id='samples_button')
+        return_button.callback = self.samples_callback
+        self.clear_items()
+        self.current_page = 0
+
+        if len(sampled_in_embeds) > 1:
+            self.add_item(self.previous_button)
+            self.add_item(self.next_button)
+            self.update_buttons()
+
+        self.add_item(return_button)
+
+        await interaction.response.edit_message(embed=sampled_in_embed, view=self)
+
+    async def samples_callback(self, interaction: discord.Interaction):
+        self.current_page = 0
+        current_embed = self.embeds[self.current_page]
+        self.clear_items()
+        self.add_item(self.sampled_in_button)
+        if len(self.embeds) > 1:
+            self.add_item(self.previous_button)
+            self.add_item(self.next_button)
+            self.update_buttons()
+
+        await interaction.response.edit_message(embed=current_embed, view=self)
 
 
 class RYMViewReleases(discord.ui.View):
