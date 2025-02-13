@@ -168,3 +168,6 @@ cython_debug/
 #.idea/
 cache/lastfm-cache.json
 cache/ratings_cache.lzma
+
+# Direnv
+.direnv
