@@ -40,8 +40,8 @@ These are the Sonata bible commands:
 
 
 # Profile 
+- `users`: Check RYM users list.
 - `ratings`: Check your rating curve.
-
 
 
 
