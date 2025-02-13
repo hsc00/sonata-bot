@@ -33,7 +33,7 @@ async def process_release_link_or_text(ctx):
     # perform a google search
     search_result = search_rym_release(release_query)
     if not search_result:
-        await message.channel.send('Release not found.')
+        await message.channel.send(f'{release_query} not found.')
         return
 
     if search_result:
@@ -92,7 +92,7 @@ async def process_release_link_or_text(ctx):
         user_ratings = str()
         for user in ratings_cache.ratings_cache:
             for rating in ratings_cache.ratings_cache[user]:
-                if rating.artist_name == artist_name and rating.title == release_name and rating.release_year == int(release_year) and rating.rating:
+                if rating.artist_name == artist_name or rating.artist_name_localized == artist_name and rating.title == release_name and rating.release_year == int(release_year) and rating.rating:
                     if ctx.author.id == int(user):
                         user_ratings += "**"
                     average = (average[0] + rating.rating, average[1] + 1)
@@ -107,7 +107,7 @@ async def process_release_link_or_text(ctx):
                 average_str = str()
                 if average[1]:
                     average = average[0]/average[1]
-                    average_str = f"\n\nSótão average rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
+                    average_str = f"\n\nSótão Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
 
                 embed_description += average_str
 
@@ -135,6 +135,10 @@ async def process_release_link_or_text(ctx):
             user_ratings = str()
             embeds.append(embed)
 
-        sent_message = await message.channel.send(embed=embeds[0])
-        view = Paginator(embeds)
-        await sent_message.edit(view=view)
+            sent_message = await message.channel.send(embed=embeds[0])
+            view = Paginator(embeds)
+            await sent_message.edit(view=view)
+        else:
+            await message.channel.send(f'No ratings found for **{release_query}**.')
+    else:
+        await message.channel.send(f'**{release_query}** not found.')
