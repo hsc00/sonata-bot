@@ -58,10 +58,13 @@ async def process_release_link_or_text(message):
         all_time_album_position = search_result['all_time_album_position']
         performers = search_result['performers']
 
-        if search_result['album_cover_url']:
-            album_cover_url = search_result['album_cover_url']
+        if search_result.get('album_cover_url'):
+            album_cover_url = search_result.get('album_cover_url')
+        elif search_result.get('rym_cover_url'):
+            album_cover_url = search_result.get('rym_cover_url')
         else:
-            album_cover_url = search_result['rym_cover_url']
+            album_cover_url = None
+
 
         album_wiki = search_result['album_wiki']
         streaming_links = search_result['streaming_links']

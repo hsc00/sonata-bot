@@ -41,7 +41,7 @@ def search_rym_release(release_name):
     if 'rateyourmusic.com/release/' in release_name:
         release_name = rym_pattern.sub('', release_name).replace('/', ' ').replace('-', ' ').strip()
     else:
-        release_name = dash_pattern.sub(' ', release_name).strip()
+       release_name = re.sub(r'[-\s]+', ' ', release_name).strip()
 
     cached_album = get_album_from_cache(release_name)
     if cached_album and cached_album.get('release_name') and cached_album['request_count'] <= 5:
@@ -53,13 +53,15 @@ def search_rym_release(release_name):
         google_results = google_future.result()
 
     if google_results:
+        search_terms = release_name.lower().split()
         for result in google_results:
             link = result['link']
-            title = result['title']
-            if link.startswith('https://rateyourmusic.com/release/') and all(word.lower() in title.lower() for word in release_name.split()):
+            title = result['title'].lower()
+            if link.startswith('https://rateyourmusic.com/release/') and all(term in title for term in search_terms):
                 album_data = extract_album_info(result)
                 album_data['link'] = link
                 break
+
     if album_data:
         cached_album = get_album_from_cache(release_name)
         if cached_album and cached_album.get('release_name'):
@@ -125,17 +127,7 @@ def search_rym_artist(artist_query):
     return None
 
 
-def get_streaming_links(action_type, artist, album, year):
-    # Check if streaming links are already in cache
-    if action_type == "release" : 
-        cached_album = get_album_from_cache(f"{artist}-{album}", increment_request_count=False)
-        if cached_album and 'streaming_links' in cached_album:
-            return cached_album['streaming_links']
-    elif action_type == "artist" : 
-        cached_artist = get_artist_from_cache(f"{artist}", increment_request_count=False)
-        if cached_artist and 'streaming_links' in cached_artist:
-            return cached_artist['streaming_links']
-    
+def get_streaming_links(action_type, artist, album, year):    
     # Initial query and action
     if action_type == "release": query = f"{artist} - {album} album"
     elif action_type == "artist": query = artist
