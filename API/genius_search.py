@@ -79,8 +79,14 @@ def get_track_covers(track_name):
         return {}
 
     return {
-        "cover_of": extract_related_titles(song_data, "cover_of"),
-        "covered_by": extract_related_titles(song_data, "covered_by")
+        "artist_name": song_data.get("details", {}).get("artist_name", ""),
+        "track_name": song_data.get("details", {}).get("track_name", ""),
+        "release_year": song_data.get("details", {}).get("release_year", ""),
+        "genius_url": song_data.get("details", {}).get("genius_url", ""),
+        "cover_url": song_data.get("details", {}).get("cover_url", ""),
+        "links": extract_links(song_data.get("full_response")),
+        "cover_of": extract_related_titles(song_data.get("full_response"), "cover_of"),
+        "covered_by": extract_related_titles(song_data.get("full_response"), "covered_by"),
     }
 
 def get_track_remixes(track_name):
@@ -135,7 +141,6 @@ def get_song_data(track_name):
         "genius_url": song_data.get("response", {}).get("song", {}).get("url", ""),
         "cover_url": song_data.get("response", {}).get("song", {}).get("song_art_image_url", "")
     }
-
     return {
         "details": details,
         "full_response": song_data

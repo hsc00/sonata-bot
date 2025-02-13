@@ -28,6 +28,10 @@ class Paginator(discord.ui.View):
             self.sampled_in_button = discord.ui.Button(label="Sampled In", style=discord.ButtonStyle.primary, custom_id='sampled_in')
             self.sampled_in_button.callback = self.sampled_in_callback
             self.add_item(self.sampled_in_button)
+        if action == 'covers':
+            self.cover_of_button = discord.ui.Button(label="Cover Of", style=discord.ButtonStyle.primary, custom_id='cover_of')
+            self.cover_of_button.callback = self.cover_of_callback
+            self.add_item(self.cover_of_button)
 
         self.update_buttons()
 
@@ -42,7 +46,7 @@ class Paginator(discord.ui.View):
         self.current_page = max(0, min(self.current_page + increment, len(self.embeds) - 1))
         self.update_buttons()
         embed_to_show = self.embeds[self.current_page]
-        if self.action == 'sampled_in':
+        if self.action == 'sampled_in' or self.action == 'cover_of':
             embed_to_show.color = discord.Color.green()
 
         await interaction.edit_original_response(embed=embed_to_show, view=self)
@@ -75,14 +79,44 @@ class Paginator(discord.ui.View):
         self.current_page = 0
         current_embed = self.embeds[self.current_page]
         self.clear_items()
-        self.add_item(self.sampled_in_button)
         if len(self.embeds) > 1:
             self.add_item(self.previous_button)
             self.add_item(self.next_button)
             self.update_buttons()
-
+        self.add_item(self.sampled_in_button)
+            
         await interaction.response.edit_message(embed=current_embed, view=self)
 
+    async def cover_of_callback(self, interaction: discord.Interaction):
+        cover_of_embeds = self.extra_info
+        cover_of_embed = cover_of_embeds[0]
+        self.action = 'cover_of'
+
+        return_button = discord.ui.Button(label="Covers", style=discord.ButtonStyle.primary, custom_id='covers_button')
+        return_button.callback = self.covers_callback
+        self.clear_items()
+        self.current_page = 0
+
+        if len(cover_of_embeds) > 1:
+            self.add_item(self.previous_button)
+            self.add_item(self.next_button)
+            self.update_buttons()
+        self.add_item(return_button)
+
+        await interaction.response.edit_message(embed=cover_of_embed, view=self)
+
+    async def covers_callback(self, interaction: discord.Interaction):
+        self.current_page = 0
+        current_embed = self.embeds[self.current_page]
+        self.clear_items()
+        if len(self.embeds) > 1:
+            self.add_item(self.previous_button)
+            self.add_item(self.next_button)
+            self.update_buttons()
+        self.add_item(self.cover_of_button)
+
+        await interaction.response.edit_message(embed=current_embed, view=self)
+    
 
 class RYMViewReleases(discord.ui.View):
     def __init__(self, album_wiki=None, general_embed=None, likes=None, dislikes=None, original_message_id=None, artist_name=None, release_name=None, streaming_links=None, performers=None):
