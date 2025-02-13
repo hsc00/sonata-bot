@@ -11,12 +11,12 @@ These are the Sonata bible commands:
 # Albums
 - `!ab or !album`: Check RYM info for an album or release.
 - `!wa or !whoknowsalbum`: Check who rated a release
+- `!ratingchanges or !rc`: Check the rating changes for a release.
+- `!rdr or !randomrating`: Check a random rating from available users.
 - `!wlr or !wholikesrelease`: Check who likes a release.
 - `!mlr or !mostlovedreleases`: Check the most loved releases.
 - `!wdr or !whodislikesrelease`: Check who dislikes a release.
 - `!mhr or !mosthatedreleases`: Check the most hated releases.
-- `!ratingchanges or !rc`: Check the rating changes for a release.
-- `!rdr or !randomrating`: Check a random rating from available users.
 
 # Artists
 - `!a or !artist`: Check RYM and last.fm info for an artist.
@@ -30,7 +30,7 @@ These are the Sonata bible commands:
 - `!mha or !mosthatedartists`: Check the most hated artists.
 # Tracks
 - `!tr` or `trackinfo`: Check a track info.
-- `samples`: Check a track samples used/being used in.
+- `!samples`: Check a track samples used/being used in.
 
 
 
@@ -40,9 +40,9 @@ These are the Sonata bible commands:
 
 
 # Profile 
-- `users`: Check RYM users list.
-- `ratings`: Check your rating curve.
-
+- `!profile`: Check your own or another person's profile.
+- `!users`: Check RYM users list.
+- `!ratings`: Check your rating curve.
 
 
 
