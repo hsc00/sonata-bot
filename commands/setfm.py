@@ -21,6 +21,9 @@ def setup(bot):
             except json.JSONDecodeError:
                 data = {}
         else:
+            # Create the file if it doesn't exist
+            with open(cache_file, 'w') as f:
+                json.dump({}, f) 
             data = {}
 
         # Update the data with the new user information
