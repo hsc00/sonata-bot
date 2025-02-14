@@ -1,7 +1,7 @@
 import config
 from views import *
 from API.setlist_search import *
-from API.search_lastfm import get_lastfm_track, get_last_played
+from API.search_lastfm import get_lastfm_track
 
 def setup(bot):
     @bot.command(name='setlist')
