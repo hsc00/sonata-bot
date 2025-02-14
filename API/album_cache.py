@@ -3,7 +3,6 @@ import os
 import unicodedata
 import re
 import datetime
-import urllib.parse
 
 CACHE_FILE = 'cache/album-cache.json'
 
@@ -23,7 +22,9 @@ def load_cache():
         with open(CACHE_FILE, 'r') as file:
             return json.load(file)
     else:
-        return {}
+        # Create the file if it doesn't exist
+        with open(CACHE_FILE, 'w') as f:
+            json.dump({}, f) 
 
 def save_cache(cache):
     with open(CACHE_FILE, 'w') as file:

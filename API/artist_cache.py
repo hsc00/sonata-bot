@@ -17,7 +17,9 @@ def load_cache():
         with open(ARTIST_CACHE_FILE, 'r') as file:
             return json.load(file)
     else:
-        return {}
+        # Create the file if it doesn't exist
+        with open(ARTIST_CACHE_FILE, 'w') as f:
+            json.dump({}, f) 
 
 def save_cache(cache):
     with open(ARTIST_CACHE_FILE, 'w') as file:
