@@ -2,9 +2,9 @@ These are the Sonata bible commands:
 # Setup
 - `!setfm <username>`: Set your last.fm username.
 - `!setrym <username>`: Set your RYM username.
+- `!setspotify`: Set your connection between Spotify and Sonata bot.
 - `!i or !import`: Import your RYM ratings to the bot. Check instructions [here].
 - `!pingsonata`: Check if the bot is online.
-
 
 
 
@@ -29,10 +29,10 @@ These are the Sonata bible commands:
 - `!wda or !whodislikesartist`: Check who dislikes an artist.
 - `!mha or !mosthatedartists`: Check the most hated artists.
 # Tracks
-- `!tr` or `trackinfo`: Check track info.
+- `!tr` or `!trackinfo`: Check track info.
 - `!samples`: Check samples and interpolations used/being used in a track.
 - `!covers`: Check if a track is a cover or has covers.
-
+- `!lyrics` or `!lr`: Check the current lyrics for the current or a specific track, you can input a timestamp.
 
 
 
@@ -51,4 +51,3 @@ These are the Sonata bible commands:
 
 # Coming Soon
 - `!listenerschanges or !lc`: Coming soon
-- `!currentlyrics`: Conceptual
