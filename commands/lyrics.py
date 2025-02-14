@@ -20,6 +20,8 @@ def setup(bot):
 async def check_lyrics(ctx, track_name: str):
     user_id = ctx.author.id
     timestamp = "00:00:00"
+    if track_name is None: track_name = ""
+    
     match = re.search(r'(\d{2}:\d{2}:\d{2}|\d{2}:\d{2})$', track_name)
     if match:
         timestamp = match.group()
