@@ -1,11 +1,5 @@
 #cache
-cache/album-cache.json
-cache/artist-cache.json
-cache/influences-cache.json
-cache/lastfm-cache.json
-cache/ratings_cache.lzma
-cache/spotify-tokens.lzma
-cache/rym-cache.json
+/cache
 
 # tests file
 teste.py
