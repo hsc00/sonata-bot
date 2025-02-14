@@ -52,7 +52,6 @@ class TokenManager:
         file_path = os.path.join(cache_dir, 'spotify-tokens.lzma')
         with lzma.open(file_path, 'wt') as file:
             json.dump(self.tokens, file)
-        print(f"Tokens saved to {file_path}")
 
     def load_tokens(self):
         file_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'cache', 'spotify-tokens.lzma'))
