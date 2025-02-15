@@ -31,7 +31,7 @@ async def get_rating(message):
         release_name = f'{release["artist_name"]} - {release["release_name"]}'
         link = release['link']
         release_rating_history = get_rym_rating(release_name)
-        if len(release_rating_history['rating_history']) > 2:
+        if len(release_rating_history['rating_history']) > 1:
             release_changes = format_release_changes(release_rating_history)
             if release_changes:
                 pages = [release_changes[i:i + 10] for i in range(0, len(release_changes), 10)]
@@ -73,10 +73,12 @@ def format_release_changes(release_changes):
         year_position = release_changes['year_position_history'][idx].get('position', 'N/A')
         all_time_position = release_changes['all_time_position_history'][idx].get('position', 'N/A')
 
-        formatted_data = f"{date}\n**{rating_value}** ⭐ from **{rating_count}** ratings\n**#{year_position}** of [{release_year}](https://rateyourmusic.com/charts/top/album/{release_year})"
+        formatted_data = f"{date}\n**{rating_value}** ⭐ from **{rating_count}** ratings\n"
+        if year_position:
+            formatted_data += f"**#{year_position}** of [{release_year}](https://rateyourmusic.com/charts/top/album/{release_year})"
         if all_time_position:
             formatted_data += f", **#{all_time_position}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)"
-        formatted_output.append('')
+            formatted_output.append('')
         formatted_output.append(formatted_data)
 
     return formatted_output

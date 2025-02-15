@@ -53,7 +53,7 @@ def add_album_to_cache(release_name, album_data):
 def update_album_in_cache(release_name, album_data):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
-    existing_data = cache[normalized_name]
+    existing_data = cache.get(normalized_name)
     if existing_data:
         album_data['liked_users'] = existing_data.get('liked_users', [])
         album_data['disliked_users'] = existing_data.get('disliked_users', [])
