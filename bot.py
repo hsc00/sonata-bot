@@ -15,7 +15,21 @@ intents.message_content = True  # Enable the intent to read message content
 
 # Initialize the bot
 bot = commands.Bot(command_prefix='!', intents=intents)
+tree = bot.tree
 
+@tree.error
+async def on_app_command_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError) -> None:
+    if isinstance(error, discord.app_commands.errors.CommandNotFound):
+        pass  # Suppress the warning for CommandNotFound
+    else:
+        raise error
+@bot.event
+async def on_command_error(ctx: commands.Context, error: commands.CommandError):
+    if isinstance(error, commands.CommandNotFound):
+        pass  # Suppress the warning for CommandNotFound
+    else:
+        raise error
+    
 # Import and setup events
 events.setup(bot)
 
