@@ -1,4 +1,3 @@
-import config
 from views import *
 from API.setlist_search import *
 from API.search_lastfm import get_lastfm_track
@@ -24,7 +23,7 @@ async def process_setlist(message):
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
     
-    setlist = get_setlist(artist_name, config.setlist_api_key)
+    setlist = get_setlist(artist_name)
     if not setlist or 'error' in setlist:
         await message.channel.send('Artist not found or timeout. Try again.')
         return

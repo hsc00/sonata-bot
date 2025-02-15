@@ -24,7 +24,7 @@ async def process_setlists(message):
             await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
             return
 
-    setlists = get_setlists(artist_name, config.setlist_api_key)
+    setlists = get_setlists(artist_name)
     if not setlists or 'error' in setlists:
         await message.channel.send('Artist not found or timeout. Try again.')
         return

@@ -2,9 +2,12 @@ import requests
 import time
 from datetime import datetime
 
+from config import setlist_api_key
+
+
 base_url = 'https://api.setlist.fm/rest/1.0'
 
-def get_artist_id(query, setlist_api_key):
+def get_artist_id(query):
     headers = {
         'Accept': 'application/json',
         'x-api-key': setlist_api_key
@@ -23,8 +26,8 @@ def get_artist_id(query, setlist_api_key):
     return artist
 
 
-def get_setlist(query, setlist_api_key):
-    artist_info = get_artist_id(query, setlist_api_key)
+def get_setlist(query):
+    artist_info = get_artist_id(query)
     if not artist_info:
         return None
     
@@ -72,8 +75,8 @@ def get_setlist(query, setlist_api_key):
     }
 
 
-def get_setlists(query, setlist_api_key):
-    artist_info = get_artist_id(query, setlist_api_key)
+def get_setlists(query):
+    artist_info = get_artist_id(query)
     if not artist_info or 'error' in artist_info:
         return artist_info if artist_info else None
 
