@@ -25,7 +25,7 @@ async def process_setlist(message):
     
     setlist = get_setlist(artist_name)
     if not setlist or 'error' in setlist:
-        await message.channel.send('Artist not found or timeout. Try again.')
+        await message.channel.send(setlist.get('error', 'Artist not found or timeout. Try again.'))
         return
 
     artist_name = setlist['artist_name']

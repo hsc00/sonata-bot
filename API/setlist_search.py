@@ -6,21 +6,20 @@ from config import setlist_api_key
 
 
 base_url = 'https://api.setlist.fm/rest/1.0'
+headers = {
+    'Accept': 'application/json',
+    'x-api-key': setlist_api_key
+}
 
 def get_artist_id(query):
-    headers = {
-        'Accept': 'application/json',
-        'x-api-key': setlist_api_key
-    }
-    
     response = requests.get(f'{base_url}/search/artists', headers=headers, params={'artistName': query})
     if response.status_code != 200:
-        return {'error': 'Failed to search for artist'}
+        return {'error': 'Failed to search for artist 😞'}
     
     data = response.json()
     artist = next((a for a in data.get('artist', []) if a['name'].lower() == query.lower()), None)
     if not artist:
-        return {'error': 'Artist not found.'}
+        return {'error': 'Artist not found 😞'}
     
     time.sleep(0.7)
     return artist
@@ -36,19 +35,15 @@ def get_setlist(query):
 
     artist_mbid = artist_info['mbid']
     url = f"{base_url}/artist/{artist_mbid}/setlists"
-    headers = {
-        'Accept': 'application/json',
-        'x-api-key': setlist_api_key
-    }
-    
+
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
         print(response)
-        return {'error': 'Failed to retrieve setlists'}
+        return {'error': 'Failed to get setlists 😷'}
     
     data = response.json()
     if 'setlist' not in data or not data['setlist']:
-        return {'error': 'No setlists found for the artist.'}
+        return {'error': f'No setlists found for the artist. You can be the **first** adding one [here]({data["url"]})'}
     
     # Filter setlists to only include those before today's date
     today = datetime.now().date()
@@ -58,7 +53,7 @@ def get_setlist(query):
     ]
     
     if not past_setlists:
-        return {'error': 'No past setlists found for the artist.'}
+        return {'error': f'No past setlists found for the artist. You can be the **first** adding one [here]({data["url"]})'}
     
     last_setlist = past_setlists[0]
     venue = last_setlist['venue']
@@ -82,14 +77,10 @@ def get_setlists(query):
 
     artist_mbid = artist_info['mbid']
     url = f"{base_url}/artist/{artist_mbid}/setlists"
-    headers = {
-        'Accept': 'application/json',
-        'x-api-key': setlist_api_key
-    }
-    
+
     response = requests.get(url, headers=headers)
     if response.status_code != 200:
-        return {'error': 'Failed to retrieve setlists'}
+        return {'error': 'Failed to get setlists 😷'}
     
     data = response.json()
     setlist_details = [
@@ -104,4 +95,4 @@ def get_setlists(query):
         }
         for setlist in data.get('setlist', [])[:10]
     ]
-    return setlist_details if setlist_details else {'error': 'No setlists found for the artist.'}
+    return setlist_details if setlist_details else {'error': 'No setlists found for the artist. You can be the **first** adding one [here]({data["url"]})'}

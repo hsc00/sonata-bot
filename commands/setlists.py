@@ -26,7 +26,7 @@ async def process_setlists(message):
 
     setlists = get_setlists(artist_name)
     if not setlists or 'error' in setlists:
-        await message.channel.send('Artist not found or timeout. Try again.')
+        await message.channel.send(setlist.get('error', 'Artist not found or timeout. Try again.'))
         return
 
     embed_color = discord.Color.blue()
