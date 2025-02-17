@@ -26,7 +26,7 @@ def setup(bot):
 
 async def process_release_link_or_text(message):
     release_query = message.content
-    if release_query.startswith('!album') or release_query.startswith('!ab'):
+    if 'https://rateyourmusic.com/release/' not in release_query:
         content_parts = release_query.split(' ', 1)
         if len(content_parts) > 1:
             release_query = content_parts[1]
@@ -40,7 +40,6 @@ async def process_release_link_or_text(message):
         #clean message to get only the link
         match = re.search(r'(https?://)?(www\.)?rateyourmusic.com/.+', release_query)
         release_query = match.group(0)
-
     # perform a google search
     search_result = search_rym_release(release_query)
     if not search_result:
