@@ -74,7 +74,7 @@ async def periodic_tasks(channel):
         
         ctx = await bot.get_context(bot_message, cls=commands.Context)
         async with ctx.channel.typing():
-            await get_random_rating(ctx)
+            await get_random_rating()
 
 bot.add_listener(on_ready)
 bot.run(discord_bot_token)
