@@ -125,7 +125,7 @@ def get_rating_by_action(action, user=None):
         return {'error': "No ratings found 🤓"}
 
     if action == 'roast':
-        valid_ratings = [rating for rating in all_ratings if rating[1].rating < 2.5]
+        valid_ratings = [rating for rating in all_ratings if 0 < rating[1].rating < 2.5]
     elif action == 'glaze':
         valid_ratings = [rating for rating in all_ratings if rating[1].rating > 4.0]
     else:
