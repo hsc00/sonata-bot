@@ -12,7 +12,7 @@ These are the Sonata bible commands:
 - `!ab or !album`: Check RYM info for an album or release.
 - `!wa or !whoknowsalbum`: Check who rated a release
 - `!ratingchanges or !rc`: Check the rating changes for a release.
-- `!rdr or !randomrating`: Check a random rating from available users.
+- `!rdr [roast/glaze] or !randomrating` [roast/glaze]: Check a random rating/roast/glaze from available users.
 - `!wlr or !wholikesrelease`: Check who likes a release.
 - `!mlr or !mostlovedreleases`: Check the most loved releases.
 - `!wdr or !whodislikesrelease`: Check who dislikes a release.
