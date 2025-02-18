@@ -15,7 +15,7 @@ class TokenManager:
             'refresh_token': refresh_token,
             'token_expiry': expiry_time
         }
-        print(f"Tokens Updated for {user_id}: {self.tokens[user_id]}")
+        print(f"Tokens Updated for {user_id}")
         self.save_tokens()
 
     def get_access_token(self, user_id):
@@ -23,7 +23,6 @@ class TokenManager:
         current_time = time.time()
         token_info = self.tokens.get(str(user_id))
         if not token_info:
-            print(f"No token entry found for user {user_id}.")
             return None
         token_expiry = token_info.get('token_expiry')
         if token_expiry is None:

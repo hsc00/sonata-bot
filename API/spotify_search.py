@@ -34,7 +34,6 @@ async def get_currently_playing(user_id):
         refresh_token = token_manager.get_refresh_token(user_id)
 
         if not refresh_token:
-            print(f"No refresh token available for user {user_id}.")
             return {'error': 'You need to setup your spotify permissions. Type `!setspotify`, follow the instructions and try again ^_^'}
         
         token_url = 'https://accounts.spotify.com/api/token'
