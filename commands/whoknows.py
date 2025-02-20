@@ -4,7 +4,7 @@ import discord
 from API.search_lastfm import get_lastfm_track
 from API.rym_search import search_rym_release
 from views import *
-import API.ratings_cache as ratings_cache
+from API.ratings_cache import ratings_cache
 
 def setup(bot):
     @bot.command(name='whoknowsalbum')
@@ -86,44 +86,54 @@ async def process_release_link_or_text(ctx):
         if release_year != "Unknown Year" and int(release_year) == datetime.now().year:
             embed_color = discord.Color.green()
 
-        average = (0,0)
+        average = (0, 0)
         ratings_count = 0
         embeds = list()
         user_ratings = str()
-        for user in ratings_cache.ratings_cache:
-            for rating in ratings_cache.ratings_cache[user]:
-                if rating.artist_name == artist_name or rating.artist_name_localized == artist_name and rating.title == release_name and rating.release_year == int(release_year) and rating.rating:
+
+        for user, ratings in ratings_cache.items():
+            for rating in ratings:
+                if (
+                    (rating.artist_name == artist_name or rating.artist_name_localized == artist_name)
+                    and rating.title == release_name
+                    and rating.release_year == int(release_year)
+                    and rating.rating
+                ):
                     if ctx.author.id == int(user):
                         user_ratings += "**"
+                    
                     average = (average[0] + rating.rating, average[1] + 1)
-                    star_rating = "<:star:1338267791639445564>" * int(rating.rating) + "<:half:1338267704959828069> "  * (1 if rating.rating != int(rating.rating) else 0)
+                    star_rating = "<:star:1338267791639445564>" * int(rating.rating) + \
+                                "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
+                    
                     user_ratings += f"◦ <@{user}> - {star_rating}"
                     if ctx.author.id == int(user):
                         user_ratings += "**"
                     user_ratings += "\n"
                     ratings_count += 1
-                    break
+                    break  # Stop checking after finding the rating for the chosen album
+
             if ratings_count >= 10:
                 average_str = str()
                 if average[1]:
-                    average = average[0]/average[1]
+                    average = average[0] / average[1]
                     average_str = f"\n\nSótão Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
-
+                
                 embed_description += average_str
-
                 embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
                 if album_cover_url:
                     embed.set_thumbnail(url=album_cover_url)
-
                 embed.set_footer(text=f"Requested by {message.author.name}")
+
                 user_ratings = str()
                 embeds.append(embed)
                 ratings_count = 0
+                average = (0, 0)
         
         if ratings_count:
             if average[1]:
                 average = average[0]/average[1]
-                average_str = f"\n\nSótão average rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
+                average_str = f"\n\nSótão rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
 
             embed_description += average_str
             embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)

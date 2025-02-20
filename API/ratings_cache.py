@@ -3,7 +3,6 @@ import pickle
 import shutil
 import random
 
-global ratings_cache
 ratings_cache = dict()
 
 def load():
