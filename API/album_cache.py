@@ -149,7 +149,8 @@ def get_album_from_cache(release_name, increment_request_count=True):
     cache = load_cache()
     normalized_name = normalize_name(release_name)
     for key in cache:
-        if normalized_name in key:
+        decoded_key = key.encode('utf-8').decode('unicode_escape')
+        if normalized_name in decoded_key:
             album_data = cache[key]
             if increment_request_count:
                 album_data.setdefault('request_count', 0)
