@@ -43,7 +43,10 @@ async def process_release_link_or_text(message):
     # perform a google search
     search_result = search_rym_release(release_query)
     if not search_result:
-        await message.channel.send(f'**{release_query}** not found.')
+        if "rateyourmusic.com" in release_query.lower():
+            await message.reply(f'Release link not found :/')
+        else:
+            await message.reply(f'**{release_query}** not found :/')
         return
 
     if search_result and search_result.get('artist_name'):
@@ -117,4 +120,7 @@ async def process_release_link_or_text(message):
 
         await sent_message.edit(view=view)
     else:
-        await message.channel.send(f'**{release_query}** not found.')
+        if "rateyourmusic.com" in release_query.lower():
+            await message.reply(f'Release link retrieved a weird error :/')
+        else:
+            await message.reply(f'Search for **{release_query}** retrieved a weird error :/')
