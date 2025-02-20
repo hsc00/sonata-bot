@@ -33,7 +33,7 @@ async def process_release_link_or_text(ctx):
     # perform a google search
     search_result = search_rym_release(release_query)
     if not search_result:
-        await message.channel.send(f'{release_query} not found.')
+        await message.channel.send(f'**{release_query}** not found.')
         return
 
     if search_result:
@@ -103,15 +103,18 @@ async def process_release_link_or_text(ctx):
                         user_ratings += "**"
                     
                     average = (average[0] + rating.rating, average[1] + 1)
-                    star_rating = "<:star:1338267791639445564>" * int(rating.rating) + \
-                                "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
+                    if rating.rating == "0":
+                        star_rating = "📝"
+                    else:
+                        star_rating = "<:star:1338267791639445564>" * int(rating.rating) + \
+                                    "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
                     
-                    user_ratings += f"◦ <@{user}> - {star_rating}"
+                    user_ratings += f"<@{user}> - {star_rating}"
                     if ctx.author.id == int(user):
                         user_ratings += "**"
                     user_ratings += "\n"
                     ratings_count += 1
-                    break  # Stop checking after finding the rating for the chosen album
+                    break
 
             if ratings_count >= 10:
                 average_str = str()
@@ -133,7 +136,7 @@ async def process_release_link_or_text(ctx):
         if ratings_count:
             if average[1]:
                 average = average[0]/average[1]
-                average_str = f"\n\nSótão rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
+                average_str = f"\n\nSótão Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
 
             embed_description += average_str
             embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
