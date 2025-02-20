@@ -63,7 +63,7 @@ def search_rym_release(release_name):
                 break
 
     if album_data:
-        cached_album = get_album_from_cache(release_name)
+        cached_album = get_album_from_cache(album_data['release_name'])
         if cached_album and cached_album.get('release_name'):
             if cached_album['request_count'] > 5: 
                 cached_album['request_count'] = 1
