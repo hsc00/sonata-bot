@@ -18,6 +18,7 @@ def setup(bot):
             time.sleep(5)
 
 async def check_lyrics(ctx, track_name: str):
+    source = "spotify"
     user_id = ctx.author.id
     timestamp = "00:00:00"
     if track_name is None: track_name = ""
@@ -41,6 +42,7 @@ async def check_lyrics(ctx, track_name: str):
         # Last.fm check
         else:
             track_name = get_lastfm_track(user_id, 'track')
+            source = "last.fm"
             if track_name is None:
                 # Show Spotify error
                 await ctx.reply(currently_playing.get('error', 'Weird exception, report to the owner 🚒'))
@@ -62,12 +64,15 @@ async def check_lyrics(ctx, track_name: str):
     # Find the closest timestamp
     closest_index = find_closest_timestamp(timestamps, input_timestamp)
     if closest_index is None:
-        await ctx.reply(f"No matching timestamp found for **{track_name}** 🤓☝️")
+        await ctx.reply(f"No matching timestamp found for **{track_name.title()}** 🤓☝️")
         return
 
     # Collect and send the lyrics around the closest timestamp
     current_lyrics = collect_lyrics(timestamps, closest_index)
-    await ctx.send(f'**{track_name.title()}**\n\n{current_lyrics.strip()}')
+    if source == 'last.fm':
+        await ctx.send(f'**{track_name.title()}**\n\n{current_lyrics.strip()}\n\n *using last.fm as source*')
+    else:
+        await ctx.send(f'**{track_name.title()}**\n\n{current_lyrics.strip()}')
 
 def convert_timestamp_to_seconds(timestamp: str) -> int:
     """Convert a timestamp in hh:mm:ss format to total seconds."""
