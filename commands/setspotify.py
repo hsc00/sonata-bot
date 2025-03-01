@@ -8,7 +8,7 @@ import time
 
 client_id = config.spotify_id
 client_secret = config.spotify_secret
-redirect_uri = 'https://maeva.garden/'
+redirect_uri = 'https://sotao.maeva.garden/'
 
 # Initialize the TokenManager globally
 from classes.token_manager import TokenManager
