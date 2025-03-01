@@ -59,7 +59,7 @@ async def get_global_top_artists(ctx):
                 for index, (artist, position_change) in enumerate(page)
             )
             embed_color = discord.Color.blue()
-            embed = discord.Embed(title=embed_title, description=embed_description, color=embed_color)
+            embed = discord.Embed(title=embed_title, description=embed_description, color=embed_color, url='https://kworb.net/itunes/')
             embed.set_footer(text=f"Requested by {ctx.author.display_name} • Page {(i // 10) + 1}/{len(top_artists) // 10}")
             embeds.append(embed)
         sent_message = await ctx.channel.send(embed=embeds[0])
