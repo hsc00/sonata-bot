@@ -6,7 +6,7 @@ import importlib
 import events
 from config import *
 from discord.ext.commands import Context
-from commands.randomrating import get_random_rating
+from commands.randomrating import get_random_rating_from_cache
 import API.ratings_cache as ratings_cache
 
 # Define the intents
@@ -74,7 +74,7 @@ async def periodic_tasks(channel):
         
         ctx = await bot.get_context(bot_message, cls=commands.Context)
         async with ctx.channel.typing():
-            await get_random_rating()
+            await get_random_rating_from_cache(ctx, None, None)
 
 bot.add_listener(on_ready)
 bot.run(discord_bot_token)
