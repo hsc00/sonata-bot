@@ -28,9 +28,9 @@ async def get_global_top_artists(ctx):
     position_changes = []
 
     # Check if the bot has the emojis
-    emoji_increase = discord.utils.get(ctx.guild.emojis, name='increase')
-    emoji_decrease = discord.utils.get(ctx.guild.emojis, name='decrease')
-    emoji_equal = discord.utils.get(ctx.guild.emojis, name='equal')
+    emoji_increase = discord.utils.get(ctx.bot.emojis, name='increase')
+    emoji_decrease = discord.utils.get(ctx.bot.emojis, name='decrease')
+    emoji_equal = discord.utils.get(ctx.bot.emojis, name='equal')
 
     rows = soup.find_all('tr')[1:101]
     for row in rows:
