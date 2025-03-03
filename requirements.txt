@@ -1,6 +1,7 @@
 beautifulsoup4
-discordpy
+discord.py
 python-dotenv
 requests
 spotipy
+syncedlyrics
 PyNaCl
