@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import discord
+from urllib.parse import quote
 from views import *
 
 def setup(bot):
@@ -22,6 +23,7 @@ async def get_global_top_artists(ctx):
     }
 
     response = requests.get(url, headers=headers)
+    response.encoding = 'utf-8'  # Ensure the correct encoding
     soup = BeautifulSoup(response.text, 'html.parser')
 
     artists = []
@@ -55,7 +57,7 @@ async def get_global_top_artists(ctx):
         for i in range(0, len(top_artists), 10):
             page = top_artists[i:i + 10]
             embed_description = "\n".join(
-                f"{i + index + 1}. ({position_change}) [{artist}](https://rateyourmusic.com/artist/{artist.replace(' ', '-').lower()})"
+                f"{i + index + 1}. ({position_change}) [{artist}](https://rateyourmusic.com/artist/{quote(artist)})"
                 for index, (artist, position_change) in enumerate(page)
             )
             embed_color = discord.Color.blue()
