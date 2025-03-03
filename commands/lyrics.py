@@ -38,7 +38,7 @@ async def check_lyrics(ctx, track_name: str):
         currently_playing = await get_currently_playing(user_id)
         if currently_playing.get('timestamp'):
             timestamp = currently_playing.get('timestamp')
-            track_name = currently_playing.get('artists') + " " + currently_playing.get('track_name')
+            track_name = currently_playing.get('artists') + " - " + currently_playing.get('track_name')
         # Last.fm check
         else:
             track_name = get_lastfm_track(user_id, 'track')
@@ -51,7 +51,7 @@ async def check_lyrics(ctx, track_name: str):
     # Fetch synchronized lyrics
     synced_lyrics = search(track_name)
     if not synced_lyrics:
-        await ctx.send("No synchronized lyrics found 🤓☝️")
+        await ctx.lyrics("No synchronized lyrics found 🤓☝️")
         return
     
     # Parse the timestamp (expected format: hh:mm:ss)
