@@ -17,7 +17,7 @@ These are the Sonata bible commands:
 - `!mlr or !mostlovedreleases`: Check the most loved releases.
 - `!wdr or !whodislikesrelease`: Check who dislikes a release.
 - `!mhr or !mosthatedreleases`: Check the most hated releases.
-
+- `!new or !newreleases` : Searches for new releases.
 # Artists
 - `!a or !artist`: Check RYM and last.fm info for an artist.
 - `!st or !setlist`: Check an artist last concert setlist.
