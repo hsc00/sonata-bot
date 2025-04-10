@@ -23,6 +23,17 @@ def setup(bot):
             await process_release_link_or_text(ctx.message)
         time.sleep(5)
 
+def extract_rym_info_from_link(url):
+    parts = url.split('/')
+    if len(parts) >= 5 and parts[3] == "release":
+        if len(parts) >= 6:
+            release_name_with_hyphens = parts[-2]
+            artist_name_with_hyphens = parts[-3]
+            return {
+                "artist_name": artist_name_with_hyphens.replace("-", " "),
+                "release_name": release_name_with_hyphens.replace("-", " ")
+            }
+    return None
 
 async def process_release_link_or_text(message):
     release_query = message.content
@@ -42,11 +53,31 @@ async def process_release_link_or_text(message):
         release_query = match.group(0)
     # perform a google search
     search_result = search_rym_release(release_query)
+    
+    embed_color = discord.Color.blue()
+
     if not search_result:
         if "rateyourmusic.com" in release_query.lower():
-            await message.reply(f'Release link not found :/')
+            rym_info = extract_rym_info_from_link(release_query)
+            if rym_info:
+                artist_name = rym_info['artist_name'].title()
+                release_name = rym_info['release_name'].title()
+                embed_title = f"{artist_name} - {release_name}"
+                link = release_query
+            else:
+                await message.reply(f'Release link not found :/')
         else:
-            await message.reply(f'**{release_query}** not found :/')
+            embed_title = release_query.title()
+            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={release_query}"
+
+        embed = discord.Embed(title=embed_title, url=link, color=embed_color)
+        embed.set_footer(text=f"Requested by {message.author.name}")
+        sent_message = await message.channel.send(embed=embed)
+ 
+        view = RYMViewReleases(embed, original_message_id=sent_message.id, artist_name=artist_name, release_name=release_name)
+        view.link = link
+
+        await sent_message.edit(view=view)
         return
 
     if search_result and search_result.get('artist_name'):
@@ -75,8 +106,10 @@ async def process_release_link_or_text(message):
         dislikes = len(search_result.get('disliked_users', []))
 
         embed_title = f"{artist_name} - {release_name} ({release_year})"
-        embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
-        embed_color = discord.Color.blue()
+        if rating_value == "No Rating" or formatted_rating_count == "No Ratings":
+            embed_description = ""
+        else:    
+            embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
 
         if best_album_position:
             if not best_album_position.isdigit():
@@ -103,7 +136,9 @@ async def process_release_link_or_text(message):
                 discord.Color.from_rgb(151, 117, 71) if all_time_album_number > 1000 else
                 embed_color
             )
-        if float(rating_value) < 2.50:
+        if rating_value == "No Rating":
+            embed_color = discord.Color.default()
+        elif float(rating_value) < 2.50:
             embed_color = discord.Color.red()
         if release_year != "Unknown Year" and int(release_year) == datetime.now().year:
             embed_color = discord.Color.green()
