@@ -174,3 +174,5 @@ cache/ratings_cache.lzma
 # Direnv
 .direnv
 >>>>>>> nix
+old/allmusic-script.py
+start-sonata-bot.bat
