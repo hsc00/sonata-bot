@@ -5,8 +5,7 @@ import os
 import importlib
 import events
 from config import *
-from discord.ext.commands import Context
-from commands.randomrating import get_random_rating_from_cache
+from cronjobs import *
 import API.ratings_cache as ratings_cache
 
 # Define the intents
@@ -53,9 +52,10 @@ discord_bot_token = os.getenv('DISCORD_SONATA_TOKEN')
 async def on_ready():
     print(f'Logged in as {bot.user}')
     if discord_bot_token[-1] == 'E':
-        channel = bot.get_channel(1039885578155597854)
-        await channel.send('I am back online!')
-        asyncio.create_task(periodic_tasks(channel))
+        music_channel = bot.get_channel(1039885578155597854)
+        new_releases_channel = bot.get_channel(1245325666900115517)
+        await music_channel.send('I am back online! Hopefully Skelozard fed me some new updates 👀')
+        asyncio.create_task(periodic_tasks(music_channel, new_releases_channel))
 
 class BotMessage:
     def __init__(self, channel, author, content):
@@ -66,15 +66,12 @@ class BotMessage:
         self._state = channel._state
         self.id = 1
 
-async def periodic_tasks(channel):
+async def periodic_tasks(music_channel, new_releases_channel):
     while True:
-        await asyncio.sleep(21600) # Sends a random rating every 6 hours
-        author = bot.user
-        bot_message = BotMessage(channel, author, '!randomrating')
+        random_rating_task = asyncio.create_task(random_rating_cronjob(music_channel, bot, BotMessage))
+        new_releases_task = asyncio.create_task(new_releases_friday(new_releases_channel, bot, BotMessage))
         
-        ctx = await bot.get_context(bot_message, cls=commands.Context)
-        async with ctx.channel.typing():
-            await get_random_rating_from_cache(ctx, None, None)
+        await asyncio.gather(random_rating_task, new_releases_task)
 
 bot.add_listener(on_ready)
 bot.run(discord_bot_token)
