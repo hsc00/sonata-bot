@@ -70,7 +70,7 @@ async def check_lyrics(ctx, track_name: str):
     # Collect and send the lyrics around the closest timestamp
     current_lyrics = collect_lyrics(timestamps, closest_index)
     if source == 'last.fm':
-        await ctx.send(f'**{track_name.title()}**\n\n{current_lyrics.strip()}\n\n *using last.fm as source*')
+        await ctx.send(f'**{track_name.title()}**\n\n{current_lyrics.strip()}\n\n *using last.fm as source for currently playing*')
     else:
         await ctx.send(f'**{track_name.title()}**\n\n{current_lyrics.strip()}')
 
