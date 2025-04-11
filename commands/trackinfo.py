@@ -41,7 +41,11 @@ async def check_genius(message):
         streaming_links = track_info.get("links", "")
 
         embed_title = f"{artist_name} - {track_name} ({release_year})"
-        embed_description = wiki
+        if wiki == '?':
+            embed_description = ""
+        else:
+            embed_description = wiki
+
         embed_color = discord.Color.blue()
 
         embed = discord.Embed(title=embed_title, description=embed_description, url=genius_url, color=embed_color)
