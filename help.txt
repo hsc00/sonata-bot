@@ -28,6 +28,16 @@ These are the Sonata bible commands:
 - `!mla or !mostlovedartists`: Check the most loved artists.
 - `!wda or !whodislikesartist`: Check who dislikes an artist.
 - `!mha or !mosthatedartists`: Check the most hated artists.
+- `!ar or !artistratings` : Checks artist ratings.
+
+
+
+
+
+
+
+
+
 # Tracks
 - `!tr` or `!trackinfo`: Check track info.
 - `!samples`: Check samples and interpolations used/being used in a track.
