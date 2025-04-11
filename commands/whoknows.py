@@ -74,19 +74,25 @@ def build_embed(ctx, search_result):
         embed_description += f", #**{all_time_album_number}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)"
         embed_color = determine_all_time_color(embed_color, all_time_album_number)
 
-    average, ratings_count, embeds, user_ratings = (0, 0), 0, [], ""
+    average, ratings_count, embeds, user_ratings = (0, 0), 0, [], []
 
     for user, ratings in ratings_cache.items():
         for rating in ratings:
             if (rating.artist_name in artist_name or rating.artist_name_localized in artist_name) and rating.title in release_name and rating.release_year == int(release_year) and rating.rating:
-                average, user_ratings, ratings_count = update_ratings(ctx, user, rating, average, user_ratings, ratings_count)
+                average, user_ratings, ratings_count = send_ratings(ctx, user, rating, average, user_ratings, ratings_count)
     
         if ratings_count > 10:
-            embeds.append(create_embed(embed_title, embed_description, user_ratings, average, link, embed_color, album_cover_url, ctx.author.name))
-            user_ratings, ratings_count, average = "", 0, (0, 0)
+            # Split user_ratings into chunks of 10 entries
+            paginated_ratings = [user_ratings[i:i+10] for i in range(0, len(user_ratings), 10)]
+            for rating_pages in paginated_ratings:
+                embed_content = "".join(rating_pages)  # Combine the list into a single string
+                embeds.append(create_embed(embed_title, paginated_ratings, embed_description, embed_content, average, link, embed_color, album_cover_url, ctx.author.name))
+            user_ratings, ratings_count, average = [], 0, (0, 0)
     
     if ratings_count:
-        embeds.append(create_embed(embed_title, embed_description, user_ratings, average, link, embed_color, album_cover_url, ctx.author.name))
+        # Handle remaining ratings
+        embed_content = "".join(user_ratings)
+        embeds.append(create_embed(embed_title, paginated_ratings, embed_description, embed_content, average, link, embed_color, album_cover_url, ctx.author.name))
 
     return None, embeds
 
@@ -114,24 +120,25 @@ def extract_album_number(position):
         return int(match.group(1)) if match else None
     return int(position)
 
-def update_ratings(ctx, user, rating, average, user_ratings, ratings_count):
-    if ctx.author.id == int(user):
-        user_ratings += "**"
+def send_ratings(ctx, user, rating, average, user_ratings, ratings_count):
+    rating_entry = "**" if ctx.author.id == int(user) else ""
     average = (average[0] + rating.rating, average[1] + 1)
     star_rating = "📝" if rating.rating == "0" else "<:star:1338267791639445564>" * int(rating.rating) + "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
-    user_ratings += f"<@{user}> - {star_rating}"
+    rating_entry += f"<@{user}> • {star_rating}"
     if ctx.author.id == int(user):
-        user_ratings += "**"
-    user_ratings += "\n"
+        rating_entry += "**"
+    rating_entry += "\n"
+    user_ratings.append(rating_entry)  # Add the rating entry to the list
     ratings_count += 1
     return average, user_ratings, ratings_count
 
-def create_embed(embed_title, embed_description, user_ratings, average, link, embed_color, album_cover_url, author_name):
+
+def create_embed(embed_title, paginated_ratings, embed_description, user_ratings, average, link, embed_color, album_cover_url, author_name):
     if average[1]:
         average = average[0] / average[1]
         embed_description += f"\n\nSótão Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
     embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
     if album_cover_url:
         embed.set_thumbnail(url=album_cover_url)
-    embed.set_footer(text=f"Requested by {author_name}")
+    embed.set_footer(text=f"Requested by {author_name} • Page 1/{len(paginated_ratings)}")
     return embed
