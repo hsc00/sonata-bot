@@ -28,14 +28,15 @@ def get_track_info(track_name):
     song_data = song_response.json()
 
     # Extract the required information
-    cover_url = song_data.get("response", {}).get("song", {}).get("song_art_image_url", "")
     credits = extract_credits(song_data)
     wiki = extract_wiki(song_data)
     links = extract_links(song_data)
-    genius_url = song_data.get("response", {}).get("song", {}).get("url", "")
-    artist_name = song_data.get("response", {}).get("song", {}).get("primary_artist", {}).get("name", "")
-    track_name = song_data.get("response", {}).get("song", {}).get("title", "")
-    release_year = song_data.get("response", {}).get("song", {}).get("release_date", "")[:4]
+    track_info = song_data.get("response", {}).get("song", {})
+    cover_url = track_info.get("song_art_image_url", "")
+    genius_url = track_info.get("url", "")
+    artist_name = track_info.get("primary_artist", {}).get("name", "")
+    track_name = track_info.get("title", "")
+    release_year = track_info.get("release_date", "")[:4]
 
     return {
         "artist_name": artist_name,
