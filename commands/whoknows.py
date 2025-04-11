@@ -22,7 +22,7 @@ async def process_release_link_or_text(ctx):
     release_query = get_release_query(message)
     
     if not release_query:
-        await message.channel.send('Please provide an artist or use `!setfm` to set your last.fm account.')
+        await message.channel.send('Please provide an album or use `!setfm` to set your last.fm account.')
         return
 
     search_result = search_rym_release(release_query)
@@ -59,7 +59,10 @@ def build_embed(ctx, search_result):
     link = search_result['link']
 
     embed_title = f"{artist_name} - {release_name} ({release_year})"
-    embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
+    if rating_value != "No Rating" or formatted_rating_count != "No Ratings":
+        embed_description = f"*{genres}*\n\n**{rating_value}** ⭐ from **{formatted_rating_count}** ratings"
+    else:
+        embed_description = ""
     embed_color = determine_embed_color(rating_value, release_year)
 
     if best_album_position:
@@ -75,10 +78,10 @@ def build_embed(ctx, search_result):
 
     for user, ratings in ratings_cache.items():
         for rating in ratings:
-            if (rating.artist_name == artist_name or rating.artist_name_localized == artist_name) and rating.title == release_name and rating.release_year == int(release_year) and rating.rating:
+            if (rating.artist_name in artist_name or rating.artist_name_localized in artist_name) and rating.title in release_name and rating.release_year == int(release_year) and rating.rating:
                 average, user_ratings, ratings_count = update_ratings(ctx, user, rating, average, user_ratings, ratings_count)
-                
-        if ratings_count >= 10:
+    
+        if ratings_count > 10:
             embeds.append(create_embed(embed_title, embed_description, user_ratings, average, link, embed_color, album_cover_url, ctx.author.name))
             user_ratings, ratings_count, average = "", 0, (0, 0)
     
@@ -89,8 +92,9 @@ def build_embed(ctx, search_result):
 
 def determine_embed_color(rating_value, release_year):
     embed_color = discord.Color.blue()
-    if float(rating_value) < 2.50:
-        embed_color = discord.Color.red()
+    if rating_value != "No Rating":
+        if float(rating_value) < 2.50:
+            embed_color = discord.Color.red()
     if release_year != "Unknown Year" and int(release_year) == datetime.now().year:
         embed_color = discord.Color.green()
     return embed_color
