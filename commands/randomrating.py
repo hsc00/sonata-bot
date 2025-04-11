@@ -1,4 +1,5 @@
 from datetime import datetime
+import html
 import json
 import discord
 from views import *
@@ -37,8 +38,8 @@ async def get_random_rating_from_cache(ctx, user, extra):
             return
 
     user_id = rating.get('user_id')
-    artist_name = rating.get('artist_name')
-    release_name = rating.get('title')
+    artist_name = html.unescape(rating.get('artist_name'))
+    release_name = html.unescape(rating.get('title'))
     release_year = rating.get('release_year')
     rating_value = rating.get('rating')
     ownership = rating.get('ownership')
