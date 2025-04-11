@@ -30,15 +30,19 @@ async def check_genius(message):
         release_year = track_info.get("release_year", "")
         genius_url = track_info.get("genius_url", "")
         cover_url = track_info.get("cover_url", "")
-        samples = track_info.get("samples", []) + track_info.get("interpolates", [])
-        sampled_in = track_info.get("sampled_in", []) + track_info.get("interpolated_by")
-
-        samples_pages = [samples[i:i + 5] for i in range(0, len(samples), 5)]
-        sampled_in_pages = [sampled_in[i:i + 5] for i in range(0, len(sampled_in), 5)]
 
         embed_title = f"{artist_name} - {track_name} ({release_year})"
         embed_color = discord.Color.blue()
         embeds = []
+        sample_in_embeds = []
+
+        if len(track_info.get("samples")) > 0 or len(track_info.get("interpolates")) > 0:
+            samples = track_info.get("samples", []) + track_info.get("interpolates", [])
+        else:
+            samples = ['No samples or interpolations found.']
+        
+        samples_pages = [samples[i:i + 5] for i in range(0, len(samples), 5)]
+
         for i, page in enumerate(samples_pages):
             embed_description = "\n".join(f" - {track}" for track in page)
             embed = discord.Embed(title=embed_title, description=embed_description, url=genius_url, color=embed_color)
@@ -47,15 +51,18 @@ async def check_genius(message):
                 embed.set_thumbnail(url=cover_url)
             embeds.append(embed)
 
-        sample_in_embeds = []
-        embed_color = discord.Color.green()
-        for i, page in enumerate(sampled_in_pages):
-            embed_description = "\n".join(f" - {track}" for track in page)
-            embed = discord.Embed(title=embed_title, description=embed_description, url=genius_url, color=embed_color)
-            embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(sampled_in_pages)}")
-            if cover_url:
-                embed.set_thumbnail(url=cover_url)
-            sample_in_embeds.append(embed)
+        if track_info.get("sampled_in") or track_info.get("interpolated_by"):
+            sampled_in = track_info.get("sampled_in", []) + track_info.get("interpolated_by")
+            sampled_in_pages = [sampled_in[i:i + 5] for i in range(0, len(sampled_in), 5)]
+
+            embed_color = discord.Color.green()
+            for i, page in enumerate(sampled_in_pages):
+                embed_description = "\n".join(f" - {track}" for track in page)
+                embed = discord.Embed(title=embed_title, description=embed_description, url=genius_url, color=embed_color)
+                embed.set_footer(text=f"Requested by {message.author.display_name} • Page {i + 1}/{len(sampled_in_pages)}")
+                if cover_url:
+                    embed.set_thumbnail(url=cover_url)
+                sample_in_embeds.append(embed)
 
         await message.channel.send(embed=embeds[0], view=Paginator(embeds, sample_in_embeds, action='samples'))
     else:

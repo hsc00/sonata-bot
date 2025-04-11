@@ -3,7 +3,7 @@ import unicodedata
 import re
 
 from API.album_cache import get_album_from_cache, update_releases_likes_dislikes
-from API.artist_cache import get_artist_from_cache ,update_artist_likes_dislikes
+from API.artist_cache import get_artist_from_cache, update_artist_likes_dislikes
 from emoji_links import streaming_emojis
 
 
@@ -24,12 +24,12 @@ class Paginator(discord.ui.View):
         if len(embeds) > 1:
             self.add_item(self.previous_button)
             self.add_item(self.next_button)
-
-        if action == 'samples':
+            
+        if action == 'samples' and len(extra_info) != 0:
             self.sampled_in_button = discord.ui.Button(label="Sampled In", style=discord.ButtonStyle.primary, custom_id='sampled_in')
             self.sampled_in_button.callback = self.sampled_in_callback
             self.add_item(self.sampled_in_button)
-        if action == 'covers':
+        if action == 'covers' and len(extra_info) != 0:
             self.cover_of_button = discord.ui.Button(label="Cover Of", style=discord.ButtonStyle.primary, custom_id='cover_of')
             self.cover_of_button.callback = self.cover_of_callback
             self.add_item(self.cover_of_button)
