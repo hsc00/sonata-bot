@@ -76,7 +76,7 @@ def build_embed(ctx, search_result):
 
     if ratings_count:
         user_ratings = "".join(user_ratings)
-        embeds.append(create_embed(ctx, paginated_ratings, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, ctx.author.name))
+        embeds.append(create_embed(ctx, None, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, ctx.author.name))
 
     return None, embeds
 
@@ -101,5 +101,8 @@ def create_embed(ctx, paginated_ratings, embed_title, embed_description, user_ra
     embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
     if artist_img_url:
         embed.set_thumbnail(url=artist_img_url)
-    embed.set_footer(text=f"Requested by {author_name} • Page 1/{len(paginated_ratings)}")
+    if paginated_ratings:
+        embed.set_footer(text=f"Requested by {author_name} • Page {len(paginated_ratings)}")
+    else:
+        embed.set_footer(text=f"Requested by {author_name}")
     return embed
