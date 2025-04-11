@@ -115,7 +115,7 @@ async def get_new_releases(ctx):
                             await sent_message.edit(view=view)
                         else:
                             embed_title = f"{artist_name} - {release_name} ({datetime.now().year})"
-                            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={artist_name.replace(' ', '+')}+{release_name.replace(' ', '+')}"
+                            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={artist_name.replace(' ', '+')}+{release_name.replace(' ', '+')}&searchtype="
                             embed = discord.Embed(title=embed_title, url=link, color=embed_color)
 
                             embed.set_footer(text=f"Source: Sputnikmusic")
@@ -126,8 +126,6 @@ async def get_new_releases(ctx):
                             await sent_message.edit(view=view)
 
                         time.sleep(5) # Rate limit
-                if releases_number == 0:
-                            await ctx.channel.send("No new releases found 😢")
             else:
                 await print(f"Failed to fetch the webpage. HTTP Status Code: {response.status_code}")
     except Exception as e:

@@ -26,10 +26,11 @@ async def new_releases_friday(channel, bot, BotMessage):
 
         # Execute your task
         async with channel.typing():
-            await channel.send("This week's new releases are out!")
+            await channel.send("# This week's new releases are out! 🎉🎉")
             author = bot.user
             bot_message = BotMessage(channel, author, '!newreleases')
 
+            await asyncio.sleep(36000) # Waits until 10 AM to send the message so Sputnik has already updated their list
             ctx = await bot.get_context(bot_message, cls=commands.Context)
             async with ctx.channel.typing():
                 await get_new_releases(ctx)
