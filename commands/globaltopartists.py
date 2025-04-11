@@ -23,16 +23,15 @@ async def get_global_top_artists(ctx):
     }
 
     response = requests.get(url, headers=headers)
-    response.encoding = 'utf-8'  # Ensure the correct encoding
+    response.encoding = 'utf-8'
     soup = BeautifulSoup(response.text, 'html.parser')
 
     artists = []
     position_changes = []
 
-    # Check if the bot has the emojis
-    emoji_increase = discord.utils.get(ctx.bot.emojis, name='increase')
-    emoji_decrease = discord.utils.get(ctx.bot.emojis, name='decrease')
-    emoji_equal = discord.utils.get(ctx.bot.emojis, name='equal')
+    emoji_increase = "<:increase:1345361877387182180> "
+    emoji_decrease = "<:decrease:1345361857313243197> "
+    emoji_equal = "<:equal:1345361899226927124> "
 
     rows = soup.find_all('tr')[1:101]
     for row in rows:
@@ -40,11 +39,11 @@ async def get_global_top_artists(ctx):
         position_change = row.find_all('td')[1].text.strip()
 
         if emoji_increase:
-            position_change = position_change.replace('+', f'<:{emoji_increase.name}:{emoji_increase.id}>')
+            position_change = position_change.replace('+', emoji_increase)
         if emoji_decrease:
-            position_change = position_change.replace('-', f'<:{emoji_decrease.name}:{emoji_decrease.id}>')
+            position_change = position_change.replace('-', emoji_decrease)
         if emoji_equal:
-            position_change = position_change.replace('=', f'<:{emoji_equal.name}:{emoji_equal.id}>')
+            position_change = position_change.replace('=', emoji_equal)
 
         artists.append(artist)
         position_changes.append(position_change)
@@ -57,7 +56,7 @@ async def get_global_top_artists(ctx):
         for i in range(0, len(top_artists), 10):
             page = top_artists[i:i + 10]
             embed_description = "\n".join(
-                f"{i + index + 1}. ({position_change}) [{artist}](https://rateyourmusic.com/artist/{quote(artist)})"
+                f"{i + index + 1}. [{artist}](https://rateyourmusic.com/artist/{quote(artist)}) {position_change}"
                 for index, (artist, position_change) in enumerate(page)
             )
             embed_color = discord.Color.blue()
