@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import urllib
 
 from config import *
 
@@ -7,7 +8,8 @@ def google_search(query):
     with requests.Session() as session:
         for token in google_tokens:
             try:
-                search_url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={token}&cx={cse_id}"
+                encoded_query = urllib.parse.quote(query)
+                search_url = f"https://www.googleapis.com/customsearch/v1?q={encoded_query}&key={token}&cx={cse_id}"
                 response = session.get(search_url)
                 if response.status_code == 429:
                     print(f"Rate limit exceeded for token {token}, retrying with next token.")
