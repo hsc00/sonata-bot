@@ -39,7 +39,7 @@ async def get_artist_ratings(ctx):
 
 def get_release_query(message):
     content_parts = message.content.split(' ', 1)
-    return content_parts[1] if len(content_parts) > 1 else get_lastfm_track(message.author.id, 'release')
+    return content_parts[1] if len(content_parts) > 1 else get_lastfm_track(message.author.id, 'artist')
 
 def build_embed(ctx, search_result):
     artist_name = search_result['artist_name']
@@ -86,7 +86,7 @@ def send_rating(rating, average, user_ratings, ratings_count):
     average = (average[0] + rating.rating, average[1] + 1)
 
     star_rating = "📝" if rating.rating == "0" else "<:star:1338267791639445564>" * int(rating.rating) + "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
-    rating_entry += f"**[{add_newline_limit(html.unescape(rating.title))}](https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(rating.title)}&searchtype=)** • {star_rating}\n"
+    rating_entry += f"**[{add_newline_limit(html.unescape(rating.title))}](https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(rating.title)}&searchtype=)** • {'Unrated' if star_rating == 0.0 else star_rating}\n"
 
     user_ratings.append(rating_entry)  # Append the rating_entry string to the list
     ratings_count += 1

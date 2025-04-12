@@ -1,4 +1,4 @@
-def add_newline_limit(text, limit=50):
+def add_newline_limit(text, limit=45):
     if len(text) <= limit:
         return text  # If text is within the limit, return as is
     
