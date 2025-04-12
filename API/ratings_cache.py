@@ -2,6 +2,7 @@ import lzma
 import pickle
 import shutil
 import random
+import urllib
 
 ratings_cache = dict()
 
@@ -158,6 +159,42 @@ def get_rating_by_action(action, user=None):
             }
 
     return rating_details
+
+def get_most_rated_releases():
+    # Dictionary to hold aggregated release data
+    all_ratings = {}
+
+    # Loop through the ratings_cache to aggregate release information
+    for user_ratings in ratings_cache.values():  # Only focus on user_ratings
+        for rating in user_ratings:
+            artist_name = getattr(rating, 'artist_name', None)  # Safely retrieve artist name
+            release_name = getattr(rating, 'title', None)  # Retrieve release title
+            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype="
+
+            if release_name and artist_name:
+                if release_name not in all_ratings:
+                    all_ratings[release_name] = {
+                        'artist_name': artist_name,
+                        'release_name': release_name,
+                        'link': link,
+                        'rating_count': 0 
+                    }
+                
+                # Increment the rating count for this release
+                all_ratings[release_name]['rating_count'] += 1
+
+    # Check if there are any rated releases
+    if not all_ratings:
+        return "No rated releases found."
+
+    # Sort releases by the number of ratings in descending order
+    sorted_releases = sorted(all_ratings.values(), key=lambda x: x['rating_count'], reverse=True)
+
+    # Limit the results to the top 100 releases
+    top_releases = sorted_releases[:100]
+
+    return top_releases
+
 
 def save():
     with lzma.open('cache/ratings_cache_tmp.lzma', 'wb') as file:
