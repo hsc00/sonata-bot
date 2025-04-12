@@ -1,34 +1,34 @@
 These are the Sonata bible commands:
 # Setup
-- `!setfm <username>`: Set your last.fm username.
-- `!setrym <username>`: Set your RYM username.
-- `!setspotify`: Set your connection between Spotify and Sonata bot.
-- `!i or !import`: Import your RYM ratings to the bot. Check instructions [here].
-- `!pingsonata`: Check if the bot is online.
+- `setfm <username>`: Set your last.fm username.
+- `setrym <username>`: Set your RYM username.
+- `setspotify`: Set your connection between Spotify and Sonata bot.
+- `i or import`: Import your RYM ratings to the bot. Check instructions [here].
+- `pingsonata`: Check if the bot is online.
 
 
 
 # Albums
-- `!ab or !album`: Check RYM info for an album or release.
-- `!wa or !whoknowsalbum`: Check who rated a release
-- `!ratingchanges or !rc`: Check the rating changes for a release.
-- `!rdr (roast/glaze) or !randomrating` (roast/glaze): Check a random rating/roast/glaze from available users.
-- `!wlr or !wholikesrelease`: Check who likes a release.
-- `!mlr or !mostlovedreleases`: Check the most loved releases.
-- `!wdr or !whodislikesrelease`: Check who dislikes a release.
-- `!mhr or !mosthatedreleases`: Check the most hated releases.
-- `!new or !newreleases` : Searches for new releases.
+- `ab or album`: Check RYM info for an album or release.
+- `wa or whoknowsalbum`: Check who rated a release
+- `ratingchanges or rc`: Check the rating changes for a release.
+- `rdr (roast/glaze) or randomrating` (roast/glaze): Check a random rating/roast/glaze from available users.
+- `wlr or wholikesrelease`: Check who likes a release.
+- `mlr or mostlovedreleases`: Check the most loved releases.
+- `wdr or whodislikesrelease`: Check who dislikes a release.
+- `mhr or mosthatedreleases`: Check the most hated releases.
+- `new or newreleases` : Searches for new releases.
 # Artists
-- `!a or !artist`: Check RYM and last.fm info for an artist.
-- `!st or !setlist`: Check an artist last concert setlist.
-- `!sts or !setlists`: Get the info and links to an artist latest concerts setlists.
-- `!inf` or `!influences`: Check an artist influences.
-- `!fl` or `!followers`: Check artists influenced by an artist.
-- `!wla or !wholikesartist`: Check who likes an artist.
-- `!mla or !mostlovedartists`: Check the most loved artists.
-- `!wda or !whodislikesartist`: Check who dislikes an artist.
-- `!mha or !mosthatedartists`: Check the most hated artists.
-- `!ar or !artistratings` : Checks artist ratings.
+- `a or artist`: Check RYM and last.fm info for an artist.
+- `st or setlist`: Check an artist last concert setlist.
+- `sts or setlists`: Get the info and links to an artist latest concerts setlists.
+- `inf` or `influences`: Check an artist influences.
+- `fl` or `followers`: Check artists influenced by an artist.
+- `wla or wholikesartist`: Check who likes an artist.
+- `mla or mostlovedartists`: Check the most loved artists.
+- `wda or whodislikesartist`: Check who dislikes an artist.
+- `mha or mosthatedartists`: Check the most hated artists.
+- `ar or artistratings` : Checks artist ratings.
 
 
 
@@ -39,10 +39,10 @@ These are the Sonata bible commands:
 
 
 # Tracks
-- `!tr` or `!trackinfo`: Check track info.
-- `!samples`: Check samples and interpolations used/being used in a track.
-- `!covers`: Check if a track is a cover or has covers.
-- `!lyrics` or `!lr`: Check the current lyrics for the current or a specific track, you can input a timestamp.
+- `tr` or `trackinfo`: Check track info.
+- `samples`: Check samples and interpolations used/being used in a track.
+- `covers`: Check if a track is a cover or has covers.
+- `lyrics` or `lr`: Check the current lyrics for the current or a specific track, you can input a timestamp.
 
 
 
@@ -50,9 +50,9 @@ These are the Sonata bible commands:
 
 
 # Profile 
-- `!profile`: Check your own or another person's profile.
-- `!users`: Check RYM users list.
-- `!ratings`: Check your rating curve.
+- `profile`: Check your own or another person's profile.
+- `users`: Check RYM users list.
+- `ratings`: Check your rating curve.
 
 
 
@@ -60,4 +60,4 @@ These are the Sonata bible commands:
 
 
 # Coming Soon
-- `!listenerschanges or !lc`: Coming soon
+- `listenerschanges or lc`: Coming soon
