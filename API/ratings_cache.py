@@ -1,4 +1,5 @@
 import lzma
+import math
 import pickle
 import shutil
 import random
@@ -199,7 +200,7 @@ def get_most_rated_artists():
     for user_ratings in ratings_cache.values():
         for rating in user_ratings:
             artist_name = getattr(rating, 'artist_name', None) 
-            link = f"https://rateyourmusic.com/artist/{urllib.parse.quote(artist_name)}"
+            link = f"https://rateyourmusic.com/artist/{artist_name.lower().replace(' ', '-')}"
 
             if artist_name: 
                 if artist_name not in all_artists:
@@ -217,6 +218,67 @@ def get_most_rated_artists():
 
     # Sort artists by the number of ratings in descending order
     sorted_artists = sorted(all_artists.values(), key=lambda x: x['rating_count'], reverse=True)
+
+    # Limit the results to the top 100 artists
+    top_artists = sorted_artists[:100]
+
+    return top_artists
+
+
+def get_best_rated_artists():
+    all_artists = {}
+    for user_ratings in ratings_cache.values():
+        for rating in user_ratings:
+            artist_name = getattr(rating, 'artist_name', None)
+            album_rating = getattr(rating, 'rating', None)
+            release_title = getattr(rating, 'title', None) 
+            if artist_name == "Various Artists":
+                continue
+            link = f"https://rateyourmusic.com/artist/{artist_name.lower().replace(' ', '-')}"
+
+            if artist_name and album_rating and release_title: 
+                if artist_name not in all_artists:
+                    all_artists[artist_name] = {
+                        'artist_name': artist_name,
+                        'link': link,
+                        'total_ratings': 0,
+                        'rating_sum': 0,
+                        'average_rating': 0,
+                        'unique_releases': set(), 
+                        'weighted_rating': 0
+                    }
+                
+                # Aggregate ratings and add release title
+                all_artists[artist_name]['total_ratings'] += 1
+                all_artists[artist_name]['rating_sum'] += album_rating
+                all_artists[artist_name]['unique_releases'].add(release_title)
+
+     # Remove artists with fewer than 5 ratings
+    filtered_artists = {
+        name: artist for name, artist in all_artists.items() if artist['total_ratings'] >= 5
+    }
+
+    # Compute average rating and weighted rating for each artist
+    W1, W2, W3 = 13, 0.07, 0.05
+    for artist in filtered_artists.values():
+        artist['average_rating'] = artist['rating_sum'] / artist['total_ratings']
+        avg_ratings_per_release = artist['total_ratings'] / len(artist['unique_releases']) if len(artist['unique_releases']) > 0 else 0
+        artist['weighted_rating'] = (
+            (artist['average_rating'] * W1) + 
+            (artist['total_ratings'] * W2) + 
+            (len(artist['unique_releases']) * W3 * avg_ratings_per_release)
+        )
+
+
+    # Format average rating for output
+    for artist in filtered_artists.values():
+        artist['average_rating'] = f"{artist['average_rating']:.2f}"
+
+    if not filtered_artists:
+        return "No rated artists found."
+
+    # Sort artists by their weighted rating in descending order
+    sorted_artists = sorted(filtered_artists.values(), key=lambda x: x['weighted_rating'], reverse=True)
 
     # Limit the results to the top 100 artists
     top_artists = sorted_artists[:100]
