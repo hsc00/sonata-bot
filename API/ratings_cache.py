@@ -180,10 +180,8 @@ def get_most_rated_releases():
                         'rating_count': 0 
                     }
                 
-                # Increment the rating count for this release
                 all_ratings[release_name]['rating_count'] += 1
 
-    # Check if there are any rated releases
     if not all_ratings:
         return "No rated releases found."
 
@@ -194,6 +192,36 @@ def get_most_rated_releases():
     top_releases = sorted_releases[:100]
 
     return top_releases
+
+def get_most_rated_artists():
+    all_artists = {}
+
+    for user_ratings in ratings_cache.values():
+        for rating in user_ratings:
+            artist_name = getattr(rating, 'artist_name', None) 
+            link = f"https://rateyourmusic.com/artist/{urllib.parse.quote(artist_name)}"
+
+            if artist_name: 
+                if artist_name not in all_artists:
+                    all_artists[artist_name] = {
+                        'artist_name': artist_name,
+                        'link': link,
+                        'rating_count': 0 
+                    }
+                
+                # Increment the rating count for this artist
+                all_artists[artist_name]['rating_count'] += 1
+
+    if not all_artists:
+        return "No rated artists found."
+
+    # Sort artists by the number of ratings in descending order
+    sorted_artists = sorted(all_artists.values(), key=lambda x: x['rating_count'], reverse=True)
+
+    # Limit the results to the top 100 artists
+    top_artists = sorted_artists[:100]
+
+    return top_artists
 
 
 def save():
