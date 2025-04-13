@@ -2,7 +2,6 @@ import discord
 import time
 from datetime import datetime
 import re
-
 import urllib
 
 from views import *
@@ -11,6 +10,7 @@ from API.rym_search import search_rym_release
 from API.rympy_rating import *
 from API.setlist_search import *
 from API.search_lastfm import get_lastfm_track
+
 
 def setup(bot):
     @bot.command(name='album')
