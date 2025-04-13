@@ -18,8 +18,8 @@ These are the Sonata bible commands:
 - `wdr or whodislikesrelease`: Check who dislikes a release.
 - `mhr or mosthatedreleases`: Check the most hated releases.
 - `new or newreleases` : Searches for new releases.
-- `mrab or mostratedalbums` : Checks the server most rated albums.
-
+- `mrr or mostratedreleases` : Checks the server most rated albums.
+- `brr or bestratedreleases` : Checks the server best rated albums.
 
 
 
