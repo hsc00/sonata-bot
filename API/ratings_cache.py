@@ -225,9 +225,11 @@ def get_most_rated_artists():
     return top_artists
 
 
-def get_best_rated_artists():
+def get_best_rated_artists(user_id):
     all_artists = {}
-    for user_ratings in ratings_cache.values():
+    for user, user_ratings in ratings_cache.items():
+        if user_id is not None and user != int(user_id):
+            continue
         for rating in user_ratings:
             artist_name = getattr(rating, 'artist_name', None)
             album_rating = getattr(rating, 'rating', None)
@@ -253,13 +255,13 @@ def get_best_rated_artists():
                 all_artists[artist_name]['rating_sum'] += album_rating
                 all_artists[artist_name]['unique_releases'].add(release_title)
 
-     # Remove artists with fewer than 5 ratings
+    # Remove artists with fewer than 5 ratings
     filtered_artists = {
         name: artist for name, artist in all_artists.items() if artist['total_ratings'] >= 5
     }
 
     # Compute average rating and weighted rating for each artist
-    W1, W2, W3 = 13, 0.07, 0.05
+    W1, W2, W3 = 14, 0.07, 0.05
     for artist in filtered_artists.values():
         artist['average_rating'] = artist['rating_sum'] / artist['total_ratings']
         avg_ratings_per_release = artist['total_ratings'] / len(artist['unique_releases']) if len(artist['unique_releases']) > 0 else 0
