@@ -162,26 +162,29 @@ def get_rating_by_action(action, user=None):
     return rating_details
 
 def get_most_rated_releases():
-    # Dictionary to hold aggregated release data
     all_ratings = {}
 
-    # Loop through the ratings_cache to aggregate release information
-    for user_ratings in ratings_cache.values():  # Only focus on user_ratings
+    for user_ratings in ratings_cache.values():
         for rating in user_ratings:
-            artist_name = getattr(rating, 'artist_name', None)  # Safely retrieve artist name
-            release_name = getattr(rating, 'title', None)  # Retrieve release title
+            artist_name = getattr(rating, 'artist_name', None)
+            release_name = getattr(rating, 'title', None)
+            release_year = getattr(rating, 'release_year', None)
             link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype="
 
-            if release_name and artist_name:
-                if release_name not in all_ratings:
-                    all_ratings[release_name] = {
+            if release_name and artist_name and release_year:
+                # Use a tuple of release_name and release_year as a unique key
+                unique_key = (release_name, release_year)
+
+                if unique_key not in all_ratings:
+                    all_ratings[unique_key] = {
                         'artist_name': artist_name,
                         'release_name': release_name,
+                        'release_year': release_year,
                         'link': link,
                         'rating_count': 0 
                     }
                 
-                all_ratings[release_name]['rating_count'] += 1
+                all_ratings[unique_key]['rating_count'] += 1
 
     if not all_ratings:
         return "No rated releases found."
@@ -193,6 +196,7 @@ def get_most_rated_releases():
     top_releases = sorted_releases[:100]
 
     return top_releases
+
 
 def get_most_rated_artists():
     all_artists = {}
@@ -223,6 +227,78 @@ def get_most_rated_artists():
     top_artists = sorted_artists[:100]
 
     return top_artists
+
+
+def get_best_rated_releases(user_id):
+    all_releases = {}
+    
+    # Loop through the ratings_cache to aggregate release information
+    for user, user_ratings in ratings_cache.items():
+        if user_id is not None and user != int(user_id):
+            continue
+        
+        for rating in user_ratings:
+            artist_name = getattr(rating, 'artist_name', None)
+            release_name = getattr(rating, 'title', None)
+            release_year = getattr(rating, 'release_year', None)
+            album_rating = getattr(rating, 'rating', None)
+            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype="
+
+            if release_name and album_rating:
+                # Use a tuple of release_name and release_year as a unique key
+                unique_key = (release_name, release_year)
+
+                if unique_key not in all_releases:
+                    all_releases[unique_key] = {
+                        'artist_name': artist_name,
+                        'release_name': release_name,
+                        'release_year': release_year,
+                        'rating': album_rating,
+                        'link': link,
+                        'rating_sum': 0,
+                        'total_ratings': 0,
+                        'average_rating': 0,
+                        'weighted_rating': 0
+                    }
+
+                # Aggregate ratings
+                all_releases[unique_key]['rating_sum'] += album_rating
+                all_releases[unique_key]['total_ratings'] += 1
+
+    # Remove releases with fewer than 3 ratings
+    if user_id == None:
+        filtered_releases = {
+            name: release for name, release in all_releases.items() if release['total_ratings'] >= 3
+        }
+    else:
+        filtered_releases = all_releases
+
+    # Compute average rating and weighted rating for each release
+    W1, W2 = 7, 0.4
+    for release in filtered_releases.values():
+        release['average_rating'] = release['rating_sum'] / release['total_ratings']
+        release['weighted_rating'] = (
+            (release['average_rating'] * W1) + 
+            (release['total_ratings'] * W2)
+        )
+
+    # Format average rating for output
+    for release in filtered_releases.values():
+        release['average_rating'] = f"{release['average_rating']:.2f}"
+
+    if not filtered_releases:
+        return "No rated releases found."
+
+    # Sort releases by their weighted rating in descending order
+    sorted_releases = sorted(
+        filtered_releases.values(),
+        key=lambda x: (x['weighted_rating'], x['average_rating'], x['total_ratings'], x['release_name']),
+        reverse=True
+    )
+
+    top_releases = sorted_releases[:100]
+
+    return top_releases
 
 
 def get_best_rated_artists(user_id):
