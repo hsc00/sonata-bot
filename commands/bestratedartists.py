@@ -34,11 +34,26 @@ async def best_rated_artists(ctx):
     pages = [leaderboard[i:i + 10] for i in range(0, len(leaderboard), 10)]
     embeds = []
 
+    cache_file = 'cache/rym-cache.json'
+
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, 'r') as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            data = {}
+
+    if user_id in data:
+        rym_username = data[user_id]
+        link = f"https://rateyourmusic.com/~{rym_username}"
+    else:
+        link = ""
+
     for i, page in enumerate(pages):
         embed_description = "\n".join(page)
         embed_color = discord.Color.green()
         if user_checked:
-            embed = discord.Embed(title=f"Best Rated {user_checked.name} Artists", description=embed_description, color=embed_color)
+            embed = discord.Embed(title=f"Best Rated {user_checked.name} Artists", url=link, description=embed_description, color=embed_color)
         else:
             embed = discord.Embed(title="Best Rated Artists", description=embed_description, color=embed_color)
         embed.set_footer(text=f"Requested by {ctx.author.display_name} • Page {i + 1}/{len(pages)}")
