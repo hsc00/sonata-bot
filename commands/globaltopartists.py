@@ -43,7 +43,7 @@ async def get_global_top_artists(ctx):
         if emoji_decrease:
             position_change = position_change.replace('-', emoji_decrease)
         if emoji_equal:
-            position_change = position_change.replace('=', emoji_equal)
+            position_change = position_change.replace('=', '')
 
         artists.append(artist)
         position_changes.append(position_change)
