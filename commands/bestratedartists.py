@@ -1,3 +1,4 @@
+import html
 import time
 import discord
 from API.ratings_cache import get_best_rated_artists
@@ -11,7 +12,8 @@ def setup(bot):
     async def bestratedartists(ctx):
         async with ctx.message.channel.typing():
             await best_rated_artists(ctx)
-            time.sleep(5)
+            time.sleep(2)
+
 
 async def best_rated_artists(ctx):
     release_query, user_id = get_user_id(ctx.message.content)
@@ -21,11 +23,10 @@ async def best_rated_artists(ctx):
 
     for idx, album in enumerate(best_rated, start=1):
         if isinstance(album, dict) and album.get('artist_name') is not None:
-            artist_name = album.get('artist_name')
+            artist_name = html.unescape(album.get('artist_name'))
             link = album.get('link')
             average_rating = album.get('average_rating', 0)
             unique_releases = len(album.get('unique_releases', 0))
-            total_ratings = album.get('total_ratings', 0)
             leaderboard.append(f"{idx}. [{artist_name}]({link}) (**{average_rating}** from **{unique_releases}** releases)")
         else:
             await ctx.channel.send(f"<@{user_id}> ratings not found.")
@@ -53,9 +54,9 @@ async def best_rated_artists(ctx):
         embed_description = "\n".join(page)
         embed_color = discord.Color.green()
         if user_checked:
-            embed = discord.Embed(title=f"Best Rated {user_checked.name} Artists", url=link, description=embed_description, color=embed_color)
+            embed = discord.Embed(title=f"{user_checked.name} Best Rated Artists", url=link, description=embed_description, color=embed_color)
         else:
-            embed = discord.Embed(title="Best Rated Artists", description=embed_description, color=embed_color)
+            embed = discord.Embed(title="Sótão Best Rated Artists", description=embed_description, color=embed_color)
         embed.set_footer(text=f"Requested by {ctx.author.display_name} • Page {i + 1}/{len(pages)}")
         embeds.append(embed)
 
