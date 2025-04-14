@@ -4,7 +4,7 @@ import shutil
 import random
 import urllib
 
-from utils.text_formatters import rym_artist_url_creator
+from utils.text_formatters import format_count, rating_to_emoji, rym_artist_url_creator
 
 ratings_cache = dict()
 
@@ -415,25 +415,27 @@ def generate_ratings_chart(ratings):
     for rating in ratings:
         rating_counts[rating] = rating_counts.get(rating, 0) + 1
 
-    rating_display = []
-    for rating in sorted(rating_counts.keys(), reverse=True):
+    max_count = max(rating_counts.values())
+    bar_length = 6
+
+    sorted_ratings = sorted(rating_counts.keys(), reverse=True)
+
+    lines = []
+    for rating in sorted_ratings:
         count = rating_counts[rating]
-        # Determine how many full stars and half stars to display.
-        full = int(rating)              # e.g. for 4.5, full = 4
-        half = 1 if (rating - full) >= 0.5 else 0
-        empty = 5 - full - half         # Fill the rest up to 5 slots
 
-        full_star = "⭐"
-        half_star = "<:half:1338267704959828069>"
-        empty_star = "\u00A0\u00A0\u00A0"
+        formatted_number = format_count(count)
 
-        # Build the star bar string in exactly 5 slots:
-        star_bar = (full_star * full) + (half_star if half else "") + (empty_star * empty)
-        
-        line = f"**{rating}** {star_bar} (**{count}**)"
-        rating_display.append(line)
+        # Determine the filled portion of the bar scaled to the current count.
+        filled_length = int(round((count / max_count) * bar_length))
+        bar_str = "█" * filled_length + " " * (bar_length - filled_length)
+        bar = "".join(bar_str)
 
-    return "\n".join(rating_display)
+        label = rating_to_emoji(rating)
+        line = f"{label} {bar} (**{formatted_number}**)"
+        lines.append(line)
+
+    return "\n".join(lines)
 
 
 def save():

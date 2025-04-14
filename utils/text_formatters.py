@@ -31,6 +31,29 @@ def rm_special_chars(string):
 
     return cleaned_text.strip()
 
+def rating_to_emoji(rating):
+    digit_to_emoji = {
+        0: "0️⃣",
+        1: "1️⃣",
+        2: "2️⃣",
+        3: "3️⃣",
+        4: "4️⃣",
+        5: "5️⃣"
+    }
+    integer_part = int(rating)
+    remainder = rating - integer_part
+    emoji_label = digit_to_emoji.get(integer_part, str(integer_part))
+    if remainder >= 0.5:
+        emoji_label += "." + digit_to_emoji[5]
+    else:
+        emoji_label += "." + digit_to_emoji[0]
+    return emoji_label
+
+def format_count(count):
+    if count >= 1000:
+        return f"{count/1000:.1f}k".rstrip('0').rstrip('.')
+    return str(count)
+
 def rym_artist_url_creator(string):
     cleaned_artist_name = rm_special_chars(string).lower()
     cleaned_url = cleaned_artist_name.replace(' ', '-')
