@@ -1,10 +1,10 @@
 import html
 import time
 import discord
-from API.ratings_cache import get_best_rated_releases
+from API.ratings_cache import get_best_worst_rated_releases
 from views import Paginator
 from API.album_cache import *
-from utils.text_formatters import get_user_id
+from utils.text_formatters import get_user_id, rym_user_url_creator
 
 
 def setup(bot):
@@ -17,7 +17,7 @@ def setup(bot):
 
 async def best_rated_releases(ctx):
     release_query, user_id = get_user_id(ctx.message.content)
-    best_rated = get_best_rated_releases(user_id)
+    best_rated = get_best_worst_rated_releases('best', user_id)
     user_checked = await ctx.guild.fetch_member(user_id) if user_id else None
     leaderboard = []
 
@@ -30,7 +30,7 @@ async def best_rated_releases(ctx):
             rating = album.get('rating', 0)
             total_ratings = album.get('total_ratings', 0)
             if user_id == None:
-                leaderboard.append(f"{idx}. [{artist_name} - {release_name}]({link}) (**{average_rating}** from **{total_ratings}** ratings)")
+                leaderboard.append(f"{idx}. [{artist_name} - {release_name}]({link}) (**{average_rating}** ⭐ from **{total_ratings}** ratings)")
             else:
                 leaderboard.append(f"{idx}. [{artist_name} - {release_name}]({link}) • **{rating}** ⭐")
         else:
@@ -40,20 +40,7 @@ async def best_rated_releases(ctx):
     pages = [leaderboard[i:i + 10] for i in range(0, len(leaderboard), 10)]
     embeds = []
 
-    cache_file = 'cache/rym-cache.json'
-
-    if os.path.exists(cache_file):
-        try:
-            with open(cache_file, 'r') as f:
-                data = json.load(f)
-        except json.JSONDecodeError:
-            data = {}
-
-    if user_id in data:
-        rym_username = data[user_id]
-        link = f"https://rateyourmusic.com/~{rym_username}"
-    else:
-        link = ""
+    link = rym_user_url_creator(user_id if user_id else None)
 
     for i, page in enumerate(pages):
         embed_description = "\n".join(page)
