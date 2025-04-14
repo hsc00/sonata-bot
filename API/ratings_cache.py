@@ -117,6 +117,7 @@ def get_rating_by_number_or_user_id(user_id, number=None):
         else:
             return {'error': 'User not found in cache 🤓'}
 
+
 def get_rating_by_action(action, user=None):
     all_ratings = []
     for user_id, user_ratings in ratings_cache.items():
@@ -382,6 +383,57 @@ def get_best_worst_rated_artists(action_type, user_id):
     top_artists = sorted_artists[:100]
 
     return top_artists
+
+
+def get_rym_user_info(ctx, user_id):
+    user_id = int(user_id)
+
+    if user_id in ratings_cache:
+        user_ratings = ratings_cache[user_id]
+        
+        if not user_ratings:
+            ctx.send("No ratings found for this user.")
+        
+        # Filter out ratings with a rating of 0.0
+        valid_ratings = [getattr(rating, 'rating', 0.0) for rating in user_ratings if getattr(rating, 'rating', 0.0) != 0.0]
+        
+        if not valid_ratings:
+            ctx.send("No valid ratings found for this user. 🤓")
+        
+        # Calculate the average rating
+        average_rating = sum(valid_ratings) / len(valid_ratings)
+
+        ratings_chart = generate_ratings_chart(valid_ratings)
+
+        return round(average_rating, 2), len(valid_ratings), ratings_chart
+    else:
+        ctx.send("User not found :O")
+
+
+def generate_ratings_chart(ratings):
+    rating_counts = {}
+    for rating in ratings:
+        rating_counts[rating] = rating_counts.get(rating, 0) + 1
+
+    rating_display = []
+    for rating in sorted(rating_counts.keys(), reverse=True):
+        count = rating_counts[rating]
+        # Determine how many full stars and half stars to display.
+        full = int(rating)              # e.g. for 4.5, full = 4
+        half = 1 if (rating - full) >= 0.5 else 0
+        empty = 5 - full - half         # Fill the rest up to 5 slots
+
+        full_star = "⭐"
+        half_star = "<:half:1338267704959828069>"
+        empty_star = "\u00A0\u00A0\u00A0"
+
+        # Build the star bar string in exactly 5 slots:
+        star_bar = (full_star * full) + (half_star if half else "") + (empty_star * empty)
+        
+        line = f"**{rating}** {star_bar} (**{count}**)"
+        rating_display.append(line)
+
+    return "\n".join(rating_display)
 
 
 def save():
