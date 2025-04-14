@@ -61,7 +61,7 @@ async def best_rated_releases(ctx):
         if user_checked:
             embed = discord.Embed(title=f"{user_checked.name} Best Rated Releases", url=link, description=embed_description, color=embed_color)
         else:
-            embed = discord.Embed(title="Sótão Best Rated Releases", description=embed_description, color=embed_color)
+            embed = discord.Embed(title=f"{ctx.guild.name} Best Rated Releases", description=embed_description, color=embed_color)
         embed.set_footer(text=f"Requested by {ctx.author.display_name} • Page {i + 1}/{len(pages)}")
         embeds.append(embed)
 

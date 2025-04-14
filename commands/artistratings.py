@@ -61,7 +61,7 @@ def build_embed(ctx, search_result, user_id):
     average, ratings_count, embeds, user_ratings = (0, 0), 0, [], []  # Initialize user_ratings as a list
 
     for user, ratings in ratings_cache.items():
-        if user == user_id:
+        if user == int(user_id):
             # Sort by higher rating
             sorted_ratings = sorted(ratings, key=lambda x: x.rating, reverse=True)
             
@@ -74,12 +74,12 @@ def build_embed(ctx, search_result, user_id):
                 paginated_ratings = [user_ratings[i:i+10] for i in range(0, len(user_ratings), 10)]
                 for ratings_page in paginated_ratings:
                     user_ratings = "".join(ratings_page)
-                    embeds.append(create_embed(ctx, user_id, paginated_ratings, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, ctx.author.name))
+                    embeds.append(create_embed(user_id, paginated_ratings, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, ctx.author.name))
                 user_ratings, ratings_count, average = [], 0, (0, 0)  # Reset user_ratings as a list
 
     if ratings_count:
         user_ratings = "".join(user_ratings)
-        embeds.append(create_embed(ctx, user_id, None, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, ctx.author.name))
+        embeds.append(create_embed(user_id, None, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, ctx.author.name))
 
     return None, embeds
 
@@ -97,7 +97,7 @@ def send_rating(rating, average, user_ratings, ratings_count):
     return average, user_ratings, ratings_count
 
 
-def create_embed(ctx, user_id, paginated_ratings, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, author_name):
+def create_embed(user_id, paginated_ratings, embed_title, embed_description, user_ratings, average, link, embed_color, artist_img_url, author_name):
     if average[1]:
         average = average[0] / average[1]
         embed_description += f"\n\n<@{user_id}>\n Average Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"

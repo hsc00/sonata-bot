@@ -86,13 +86,13 @@ def build_embed(ctx, search_result):
             paginated_ratings = [user_ratings[i:i+10] for i in range(0, len(user_ratings), 10)]
             for rating_pages in paginated_ratings:
                 embed_content = "".join(rating_pages)  # Combine the list into a single string
-                embeds.append(create_embed(embed_title, paginated_ratings, embed_description, embed_content, average, link, embed_color, album_cover_url, ctx.author.name))
+                embeds.append(create_embed(ctx, embed_title, paginated_ratings, embed_description, embed_content, average, link, embed_color, album_cover_url, ctx.author.name))
             user_ratings, ratings_count, average = [], 0, (0, 0)
     
     if ratings_count:
         # Handle remaining ratings
         embed_content = "".join(user_ratings)
-        embeds.append(create_embed(embed_title, None, embed_description, embed_content, average, link, embed_color, album_cover_url, ctx.author.name))
+        embeds.append(create_embed(ctx, embed_title, None, embed_description, embed_content, average, link, embed_color, album_cover_url, ctx.author.name))
 
     return None, embeds
 
@@ -133,10 +133,10 @@ def send_ratings(ctx, user, rating, average, user_ratings, ratings_count):
     return average, user_ratings, ratings_count
 
 
-def create_embed(embed_title, paginated_ratings, embed_description, user_ratings, average, link, embed_color, album_cover_url, author_name):
+def create_embed(ctx, embed_title, paginated_ratings, embed_description, user_ratings, average, link, embed_color, album_cover_url, author_name):
     if average[1]:
         average = average[0] / average[1]
-        embed_description += f"\n\nSótão Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
+        embed_description += f"\n\n{ctx.guild.name} Rating: **{round(average, 2)}** ⭐\n\n{user_ratings}"
     embed = discord.Embed(title=embed_title, description=embed_description, url=link, color=embed_color)
     if album_cover_url:
         embed.set_thumbnail(url=album_cover_url)

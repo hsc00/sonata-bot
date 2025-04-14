@@ -1,7 +1,7 @@
 import html
 import time
 import discord
-from API.ratings_cache import get_best_rated_artists
+from API.ratings_cache import get_best_worst_rated_artists
 from views import Paginator
 from API.album_cache import *
 from utils.text_formatters import get_user_id
@@ -17,7 +17,7 @@ def setup(bot):
 
 async def best_rated_artists(ctx):
     release_query, user_id = get_user_id(ctx.message.content)
-    best_rated = get_best_rated_artists(user_id)
+    best_rated = get_best_worst_rated_artists('best', user_id)
     user_checked = await ctx.guild.fetch_member(user_id) if user_id else None
     leaderboard = []
 
@@ -56,7 +56,7 @@ async def best_rated_artists(ctx):
         if user_checked:
             embed = discord.Embed(title=f"{user_checked.name} Best Rated Artists", url=link, description=embed_description, color=embed_color)
         else:
-            embed = discord.Embed(title="Sótão Best Rated Artists", description=embed_description, color=embed_color)
+            embed = discord.Embed(title=f"{ctx.guild.name} Best Rated Artists", description=embed_description, color=embed_color)
         embed.set_footer(text=f"Requested by {ctx.author.display_name} • Page {i + 1}/{len(pages)}")
         embeds.append(embed)
 

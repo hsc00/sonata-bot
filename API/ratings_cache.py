@@ -1,9 +1,10 @@
 import lzma
-import math
 import pickle
 import shutil
 import random
 import urllib
+
+from utils.text_formatters import rym_artist_url_creator
 
 ratings_cache = dict()
 
@@ -41,17 +42,17 @@ def get_random_rating():
 
     # Format the random rating into a readable string
     rating_details = {
-                'user_id': random_user_id,
-                'artist_name': getattr(random_rating, 'artist_name'),
-                'title': getattr(random_rating, 'title'),
-                'release_year': getattr(random_rating, 'release_year'),
-                'rating': getattr(random_rating, 'rating'),
-                'ownership': getattr(random_rating, 'ownership'),
-                'media_type': getattr(random_rating, 'media_type'),
-                'review': getattr(random_rating, 'review'),
-                'url': getattr(random_rating, 'url'),
-                'release': getattr(random_rating, 'release')
-            }
+        'user_id': random_user_id,
+        'artist_name': getattr(random_rating, 'artist_name'),
+        'title': getattr(random_rating, 'title'),
+        'release_year': getattr(random_rating, 'release_year'),
+        'rating': getattr(random_rating, 'rating'),
+        'ownership': getattr(random_rating, 'ownership'),
+        'media_type': getattr(random_rating, 'media_type'),
+        'review': getattr(random_rating, 'review'),
+        'url': getattr(random_rating, 'url'),
+        'release': getattr(random_rating, 'release')
+    }
     
     return rating_details
 
@@ -198,10 +199,12 @@ def get_most_rated_releases():
     return top_releases
 
 
-def get_most_rated_artists():
+def get_most_rated_artists(user_id):
     all_artists = {}
 
-    for user_ratings in ratings_cache.values():
+    for user, user_ratings in ratings_cache.items():
+        if user_id is not None and user != int(user_id):
+            continue
         for rating in user_ratings:
             artist_name = getattr(rating, 'artist_name', None) 
             link = f"https://rateyourmusic.com/artist/{artist_name.lower().replace(' ', '-')}"
@@ -301,7 +304,7 @@ def get_best_rated_releases(user_id):
     return top_releases
 
 
-def get_best_rated_artists(user_id):
+def get_best_worst_rated_artists(action_type, user_id):
     all_artists = {}
     for user, user_ratings in ratings_cache.items():
         if user_id is not None and user != int(user_id):
@@ -312,7 +315,7 @@ def get_best_rated_artists(user_id):
             release_title = getattr(rating, 'title', None) 
             if artist_name == "Various Artists":
                 continue
-            link = f"https://rateyourmusic.com/artist/{artist_name.lower().replace(' ', '-')}"
+            link = f"https://rateyourmusic.com/artist/{rym_artist_url_creator(artist_name)}"
 
             if artist_name and album_rating and release_title: 
                 if artist_name not in all_artists:
@@ -331,9 +334,10 @@ def get_best_rated_artists(user_id):
                 all_artists[artist_name]['rating_sum'] += album_rating
                 all_artists[artist_name]['unique_releases'].add(release_title)
 
-    # Remove artists with fewer than 5 ratings
+    # Remove artists with fewer than 5 ratings if user_id is None otherwise 3 is the limit
     filtered_artists = {
-        name: artist for name, artist in all_artists.items() if artist['total_ratings'] >= 5
+        name: artist for name, artist in all_artists.items() 
+        if (artist['total_ratings'] >= 5 if user_id is None else artist['total_ratings'] >= 3)
     }
 
     # Compute average rating and weighted rating for each artist
@@ -355,8 +359,16 @@ def get_best_rated_artists(user_id):
     if not filtered_artists:
         return "No rated artists found."
 
-    # Sort artists by their weighted rating in descending order
-    sorted_artists = sorted(filtered_artists.values(), key=lambda x: x['weighted_rating'], reverse=True)
+    if action_type == 'best':
+        # Sort artists by their weighted rating in descending order
+        sorted_artists = sorted(filtered_artists.values(), key=lambda x: x['weighted_rating'], reverse=True)
+    else:
+        # Sort artists by their weighted rating in ascending order
+        sorted_artists = sorted(
+            (artist for artist in filtered_artists.values() if float(artist['average_rating']) <= 3),
+            key=lambda x: x['weighted_rating']
+        )
+
 
     # Limit the results to the top 100 artists
     top_artists = sorted_artists[:100]

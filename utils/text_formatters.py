@@ -1,9 +1,11 @@
+import json
+import os
 import re
 
 
 def add_newline_limit(text, limit=45):
     if len(text) <= limit:
-        return text  # If text is within the limit, return as is
+        return text
     
     # Find the last space within the limit
     cut_off = text[:limit].rfind(" ")
@@ -23,3 +25,32 @@ def get_user_id(string):
         return release_query, user_id  # Return the modified string and user_id separately
     
     return string, None  # Return original string and None if no mention is found
+
+def rm_special_chars(string):
+    cleaned_text = re.sub(r'[^a-zA-Z0-9\s]', '', string)
+
+    return cleaned_text.strip()
+
+def rym_artist_url_creator(string):
+    cleaned_artist_name = rm_special_chars(string).lower()
+    cleaned_url = cleaned_artist_name.replace(' ', '-')
+
+    return cleaned_url
+
+def rym_user_url_creator(user_id):
+    cache_file = 'cache/rym-cache.json'
+
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, 'r') as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            data = {}
+
+    if user_id in data:
+        rym_username = data[user_id]
+        url = f"https://rateyourmusic.com/~{rym_username}"
+    else:
+        url = None
+
+    return url
