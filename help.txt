@@ -60,7 +60,7 @@ These are the Sonata bible commands:
 
 
 # Profile 
-- `profile`: Check your own or another person's profile.
+- `sonataprofile` or `sprofile`: Check your own or another person's profile.
 - `users`: Check RYM users list.
 - `ratings`: Check your rating curve.
 
