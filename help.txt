@@ -38,10 +38,10 @@ These are the Sonata bible commands:
 - `mla or mostlovedartists`: Check the most loved artists.
 - `wda or whodislikesartist`: Check who dislikes an artist.
 - `mha or mosthatedartists`: Check the most hated artists.
-- `ar or artistratings (user)` : Checks artist ratings.
+- `ar or artistratings (user)` : Checks your artist ratings.
 - `mra or mostratedartists` : Checks the server most rated artists.
-- `bra or bestratedartists` : Checks the best rated artists.
-
+- `bra or bestratedartists (user)` : Checks the best rated artists.
+- `wra or worstratedartists (user)` : Checks the worst rated artists.
 
 
 
