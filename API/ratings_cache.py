@@ -398,16 +398,71 @@ def get_rym_user_info(ctx, user_id):
         valid_ratings = [getattr(rating, 'rating', 0.0) for rating in user_ratings if getattr(rating, 'rating', 0.0) != 0.0]
         
         if not valid_ratings:
-            ctx.send("No valid ratings found for this user. 🤓")
+            ctx.send("No valid ratings found for this user 🤓")
         
         # Calculate the average rating
         average_rating = sum(valid_ratings) / len(valid_ratings)
 
         ratings_chart = generate_ratings_chart(valid_ratings)
 
-        return round(average_rating, 2), len(valid_ratings), ratings_chart
+        most_rated_decade, most_rated_year, best_rated_decade, best_rated_year = get_user_rating_periods(user_ratings)
+
+        return round(average_rating, 2), len(valid_ratings), ratings_chart, most_rated_decade, most_rated_year, best_rated_decade, best_rated_year
     else:
         ctx.send("User not found :O")
+
+
+def get_user_rating_periods(user_ratings):
+    decade_counts = {}
+    year_counts = {}
+    decade_sums = {}
+    year_sums = {}
+    decade_weighted = {}
+    year_weighted = {}
+
+    for rating in user_ratings:
+        release_year = getattr(rating, "release_year", None)
+        user_rating = getattr(rating, "rating", 0.0) 
+        if not release_year or user_rating == 0.0:
+            continue
+
+        try:
+            decade = (release_year // 10) * 10  
+
+            # Track counts (for most rated)
+            year_counts[release_year] = year_counts.get(release_year, 0) + 1
+            decade_counts[decade] = decade_counts.get(decade, 0) + 1
+
+            # Track rating sums (for weighted calculation)
+            year_sums[release_year] = year_sums.get(release_year, 0) + user_rating
+            decade_sums[decade] = decade_sums.get(decade, 0) + user_rating
+        except ValueError:
+            continue  
+
+    W1, W2 = 100, 0.05
+    
+    # Remove years/decades with fewer than 10 ratings
+    filtered_years = {y: year_counts[y] for y in year_counts if year_counts[y] >= 10}
+    filtered_decades = {d: decade_counts[d] for d in decade_counts if decade_counts[d] >= 10}
+
+    # Compute best-rated periods using weighted formula only for filtered years/decades
+    for year in filtered_years.keys():
+        avg_rating = year_sums[year] / year_counts[year]
+        year_weighted[year] = (avg_rating * W1) + (year_counts[year] * W2)
+
+    for decade in filtered_decades.keys():
+        avg_rating = decade_sums[decade] / decade_counts[decade]
+        decade_weighted[decade] = (avg_rating * W1) + (decade_counts[decade] * W2)
+
+    # Get most-rated year & decade
+    most_rated_decade = max(filtered_decades, key=filtered_decades.get, default=None)
+    most_rated_year = max(filtered_years, key=filtered_years.get, default=None)
+
+    # Get best-rated year & decade (weighted) from filtered data
+    best_rated_decade = max(decade_weighted, key=decade_weighted.get, default=None)
+    best_rated_year = max(year_weighted, key=year_weighted.get, default=None)
+
+    return most_rated_decade, most_rated_year, best_rated_decade, best_rated_year
 
 
 def generate_ratings_chart(ratings):
@@ -415,24 +470,41 @@ def generate_ratings_chart(ratings):
     for rating in ratings:
         rating_counts[rating] = rating_counts.get(rating, 0) + 1
 
+    total_ratings = sum(rating_counts.values())
+    low_threshold = max(2, total_ratings * 0.01)
+
     max_count = max(rating_counts.values())
-    bar_length = 6
+    bar_length = 5
+    fixed_width = 18
 
     sorted_ratings = sorted(rating_counts.keys(), reverse=True)
-
     lines = []
+
     for rating in sorted_ratings:
         count = rating_counts[rating]
-
         formatted_number = format_count(count)
 
-        # Determine the filled portion of the bar scaled to the current count.
-        filled_length = int(round((count / max_count) * bar_length))
-        bar_str = "█" * filled_length + " " * (bar_length - filled_length)
-        bar = "".join(bar_str)
+        # Ensure correct width for low counts
+        if 0 < count < low_threshold:
+            bar = "|".ljust(bar_length, " ")
+        else:
+            filled_length = max(1, int(round((count / max_count) * bar_length))) if count > low_threshold else 0
+            bar = "█" * filled_length + " " * (bar_length - filled_length)
 
         label = rating_to_emoji(rating)
-        line = f"{label} {bar} (**{formatted_number}**)"
+        left_part = f"{label} {bar}"
+
+        num_blocks = left_part.count("█")
+
+        current_length = len(left_part) + num_blocks
+
+        missing_chars = max(0, fixed_width - current_length)
+
+        # Append non-breaking spaces to maintain the width
+        padding = ' \u00A0 ' * missing_chars
+        left_padded = left_part + padding
+
+        line = f"{left_padded} (**{formatted_number}**)"
         lines.append(line)
 
     return "\n".join(lines)
