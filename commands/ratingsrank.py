@@ -1,5 +1,4 @@
 import discord
-from discord.ext import commands
 from API.ratings_cache import get_ratings_ranking
 from utils.discord_data_functions import get_user_avatar
 from views import Paginator
