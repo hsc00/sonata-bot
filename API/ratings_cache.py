@@ -1,4 +1,5 @@
 import lzma
+import math
 import pickle
 import shutil
 import random
@@ -533,24 +534,61 @@ def get_ratings_ranking(ctx):
 
 
 def get_users_by_average_rating(action_type):
-    user_avg_ratings = []
+    user_ratings_data = []
+    all_ratings = []
+
+    for user_ratings in ratings_cache.values():
+        valid_ratings = [
+            r.rating for r in user_ratings
+            if hasattr(r, 'rating') and isinstance(r.rating, (int, float)) and r.rating != 0.0
+        ]
+        all_ratings.extend(valid_ratings)
+
+    global_avg_rating = round(sum(all_ratings) / len(all_ratings), 2) if all_ratings else 0.0
+    m = max(10, min(45, len(all_ratings) // 125)) if all_ratings else 10
+    C_volume_boost = 0.05
 
     for user_id, user_ratings in ratings_cache.items():
-        # Filter out ratings with a rating of 0.0
+        # remove 0.0 ratings
         valid_ratings = [getattr(rating, 'rating', 0.0) for rating in user_ratings if getattr(rating, 'rating', 0.0) != 0.0]
-        
-        if valid_ratings:
-            avg_rating = sum(valid_ratings) / len(valid_ratings)
-            user_avg_ratings.append((user_id, round(avg_rating, 2)))
 
-    if not user_avg_ratings:
-        return []
+        if not valid_ratings:
+            continue
 
-    # Sort based on action type
+        avg_rating = sum(valid_ratings) / len(valid_ratings)
+        total_ratings = len(valid_ratings)
+
+        # Bayesian calculation 
+        weighted_n = math.pow(total_ratings + 1, 0.6)
+        dampening_factor = 1.0
+        bayesian_rating = ((avg_rating * weighted_n * dampening_factor) + (global_avg_rating * m)) / (weighted_n + m)
+
+        # Calculate Hybrid Score
+        volume_bonus = C_volume_boost * math.log(total_ratings + 1)
+        hybrid_score = bayesian_rating + volume_bonus
+
+        user_ratings_data.append((
+            user_id,
+            round(hybrid_score, 2),      # Index 1: The final Hybrid Score for ranking
+            round(bayesian_rating, 2),   # Index 2: The Bayesian score component
+            round(avg_rating, 2),        # Index 3: The simple raw average rating
+            total_ratings                # Index 4: The total number of valid ratings
+        ))
+
+    if not user_ratings_data:
+        return [], global_avg_rating
+
     reverse_sort = action_type == "best"
-    user_avg_ratings.sort(key=lambda x: x[1], reverse=reverse_sort)
+    user_ratings_data.sort(key=lambda x: x[1], reverse=reverse_sort)
 
-    return user_avg_ratings
+    if action_type == "best":
+        # Keep only users where raw average (index 3) is > 3.5
+        filtered_users = [user_data for user_data in user_ratings_data if user_data[3] > 3.5]
+    else: # action_type is not "best" (e.g., "worst")
+        # Keep only users where raw average (index 3) is < 3.3
+        filtered_users = [user_data for user_data in user_ratings_data if user_data[3] < 3.3]
+
+    return filtered_users, global_avg_rating
 
 
 def save():

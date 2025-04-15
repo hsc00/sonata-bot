@@ -64,3 +64,5 @@ These are the Sonata bible commands:
 - `users`: Check RYM users list.
 - `ratings`: Check your rating curve.
 - `rr` or `ratingsrank`: Checks the ratings rank.
+- `rg` or `ratingsglazers`: Checks the ratings glazers rank.
+- `rh` or `ratingshaters`: Checks the ratings haters rank.
