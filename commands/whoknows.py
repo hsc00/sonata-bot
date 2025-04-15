@@ -22,7 +22,7 @@ async def process_release_link_or_text(ctx):
     release_query = get_release_query(message)
     
     if not release_query:
-        await message.channel.send('Please provide an album or use `!setfm` to set your last.fm account.')
+        await message.channel.reply('Please provide an album or use `!setfm` to set your last.fm account.')
         return
 
     search_result = search_rym_release(release_query)
