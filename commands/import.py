@@ -70,13 +70,13 @@ def import_ratings(url,user_id):
             
 
 async def process_ratings_command(message):
-    processed_message = message.content.split(' ')
     user_id = message.author.id
-    await message.reply("I'll try to import your ratings!")
-    if len(processed_message) == 2:
-        ratings_cache.ratings_cache[user_id] = import_ratings(processed_message[1],user_id)
+    if message.attachments:
+        await message.reply("I'll try to import your ratings!")
+        ratings_cache.ratings_cache[user_id] = import_ratings(message.attachments[0].url, user_id)
     else:
-        ratings_cache.ratings_cache[user_id] = import_ratings(message.attachments[0].url,user_id)
-    await message.reply("Your ratings have been imported successfully.")
+        await message.reply("I can't import as there is no attachment with your ratings in your message")
+        return
 
+    await message.reply("Your ratings have been imported successfully.")
     ratings_cache.save()
