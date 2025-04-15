@@ -510,6 +510,49 @@ def generate_ratings_chart(ratings):
     return "\n".join(lines)
 
 
+def get_ratings_ranking(ctx):
+    user_rating_counts = []
+
+    for user_id, user_ratings in ratings_cache.items():
+        valid_ratings = [getattr(rating, 'rating', 0.0) for rating in user_ratings if getattr(rating, 'rating', 0.0) != 0.0]
+        rating_count = len(valid_ratings)
+        if rating_count > 0:
+            user_rating_counts.append((user_id, rating_count))
+
+    if not user_rating_counts:
+        ctx.send("No valid ratings found for any user 🤓")
+        return []
+
+    # Sort users by total number of valid ratings in descending order
+    user_rating_counts.sort(key=lambda x: x[1], reverse=True)
+
+    # Limit the list to 100 results
+    top_users = user_rating_counts[:100]
+
+    return top_users
+
+
+def get_users_by_average_rating(action_type):
+    user_avg_ratings = []
+
+    for user_id, user_ratings in ratings_cache.items():
+        # Filter out ratings with a rating of 0.0
+        valid_ratings = [getattr(rating, 'rating', 0.0) for rating in user_ratings if getattr(rating, 'rating', 0.0) != 0.0]
+        
+        if valid_ratings:
+            avg_rating = sum(valid_ratings) / len(valid_ratings)
+            user_avg_ratings.append((user_id, round(avg_rating, 2)))
+
+    if not user_avg_ratings:
+        return []
+
+    # Sort based on action type
+    reverse_sort = action_type == "best"
+    user_avg_ratings.sort(key=lambda x: x[1], reverse=reverse_sort)
+
+    return user_avg_ratings
+
+
 def save():
     with lzma.open('cache/ratings_cache_tmp.lzma', 'wb') as file:
         pickle.dump(ratings_cache, file)

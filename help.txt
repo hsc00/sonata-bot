@@ -18,9 +18,9 @@ These are the Sonata bible commands:
 - `wdr or whodislikesrelease`: Check who dislikes a release.
 - `mhr or mosthatedreleases`: Check the most hated releases.
 - `new or newreleases` : Searches for new releases.
+# Albums
 - `mrr or mostratedreleases` : Checks the server most rated albums.
 - `brr or bestratedreleases` : Checks the server best rated albums.
-
 
 
 
@@ -38,11 +38,11 @@ These are the Sonata bible commands:
 - `mla or mostlovedartists`: Check the most loved artists.
 - `wda or whodislikesartist`: Check who dislikes an artist.
 - `mha or mosthatedartists`: Check the most hated artists.
+# Artists
 - `ar or artistratings (user)` : Checks your artist ratings.
 - `mra or mostratedartists` : Checks the server most rated artists.
 - `bra or bestratedartists (user)` : Checks the best rated artists.
 - `wra or worstratedartists (user)` : Checks the worst rated artists.
-
 
 
 
@@ -59,15 +59,8 @@ These are the Sonata bible commands:
 
 
 
-# Profile 
-- `sonataprofile` or `spr`: Check your own or another person's profile.
+# User Stats 
+- `spr` or `sonataprofile`: Check your own or another person's profile.
 - `users`: Check RYM users list.
 - `ratings`: Check your rating curve.
-
-
-
-
-
-
-# Coming Soon
-- `listenerschanges or lc`: Coming soon
+- `rr` or `ratingsrank`: Checks the ratings rank.
