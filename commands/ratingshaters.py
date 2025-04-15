@@ -26,7 +26,7 @@ async def get_ratings_haters(ctx):
         chunk = user_weighted_ratings[i:i+10]
         embed_description = "\n".join([f"{i+index+1}. <@{user[0]}> {user[3]} ⭐ ({format_count(user[4])})" for index, user in enumerate(chunk)])
         
-        embed = discord.Embed(title=f"{ctx.guild.name} Haters Ranking", description=embed_description, color=discord.Color.green())
+        embed = discord.Embed(title=f"{ctx.guild.name} Haters Ranking", description=embed_description, color=discord.Color.red())
         avatar_url = await get_user_avatar(ctx, chunk[0][0]) if chunk else None
         if avatar_url:
             embed.set_thumbnail(url=avatar_url)
