@@ -28,6 +28,9 @@ def get_user_id(string):
     
     return string, None  # Return original string and None if no mention is found
 
+def format_user_id(string):
+    return string.replace("<", "").replace("@", "").replace(">", "")
+
 def rm_special_chars(string):
     cleaned_text = re.sub(r'[^a-zA-Z0-9\s]', '', string)
 
