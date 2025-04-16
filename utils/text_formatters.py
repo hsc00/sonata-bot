@@ -63,7 +63,7 @@ def rym_artist_url_creator(string):
     return cleaned_url
 
 def rym_release_url_creator(artist_name, release_name):
-    link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype=release"
+    link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype="
     
     return link
 
