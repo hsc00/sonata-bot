@@ -408,9 +408,9 @@ def get_rym_user_info(ctx, user_id):
 
         ratings_chart = generate_ratings_chart(valid_ratings)
 
-        most_rated_decade, most_rated_year, best_rated_decade, best_rated_year = get_user_rating_periods(user_ratings)
+        most_rated_decade, most_rated_year, best_rated_decade, best_rated_year, worst_rated_decade, worst_rated_year = get_user_rating_periods(user_ratings)
 
-        return round(average_rating, 2), len(valid_ratings), ratings_chart, most_rated_decade, most_rated_year, best_rated_decade, best_rated_year
+        return round(average_rating, 2), len(valid_ratings), ratings_chart, most_rated_decade, most_rated_year, best_rated_decade, best_rated_year, worst_rated_decade, worst_rated_year
     else:
         ctx.send("User not found :O")
 
@@ -422,6 +422,8 @@ def get_user_rating_periods(user_ratings):
     year_sums = {}
     decade_weighted = {}
     year_weighted = {}
+    decade_worst_weighted = {}
+    year_worst_weighted = {}
 
     for rating in user_ratings:
         release_year = getattr(rating, "release_year", None)
@@ -457,6 +459,15 @@ def get_user_rating_periods(user_ratings):
         avg_rating = decade_sums[decade] / decade_counts[decade]
         decade_weighted[decade] = (avg_rating * W1) + (decade_counts[decade] * W2)
 
+    # Compute worst-rated periods (inverse of best-rated logic)
+    for year in filtered_years.keys():
+        avg_rating = year_sums[year] / year_counts[year]
+        year_worst_weighted[year] = (avg_rating * W1) - (year_counts[year] * W2)
+
+    for decade in filtered_decades.keys():
+        avg_rating = decade_sums[decade] / decade_counts[decade]
+        decade_worst_weighted[decade] = (avg_rating * W1) - (decade_counts[decade] * W2)
+
     # Get most-rated year & decade
     most_rated_decade = max(filtered_decades, key=filtered_decades.get, default=None)
     most_rated_year = max(filtered_years, key=filtered_years.get, default=None)
@@ -465,7 +476,11 @@ def get_user_rating_periods(user_ratings):
     best_rated_decade = max(decade_weighted, key=decade_weighted.get, default=None)
     best_rated_year = max(year_weighted, key=year_weighted.get, default=None)
 
-    return most_rated_decade, most_rated_year, best_rated_decade, best_rated_year
+    # Get worst-rated year & decade (weighted) from filtered data
+    worst_rated_decade = min(decade_worst_weighted, key=decade_worst_weighted.get, default=None)
+    worst_rated_year = min(year_worst_weighted, key=year_worst_weighted.get, default=None)
+
+    return most_rated_decade, most_rated_year, best_rated_decade, best_rated_year, worst_rated_decade, worst_rated_year
 
 
 def generate_ratings_chart(ratings):
