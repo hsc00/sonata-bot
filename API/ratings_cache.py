@@ -593,49 +593,46 @@ def get_users_by_average_rating(action_type):
     return filtered_users, global_avg_rating
 
 
-def get_rym_aoty(ctx, user_id, year=None, action_type="best"):
+async def get_rym_aoty(ctx, user_id: int, year: int, action_type: str):
     if user_id not in ratings_cache:
-        ctx.reply("User not found. Import some ratings first :D")
-        return None, None
+        return [], None, None, "User not found. Import some ratings first :D"
 
     user_ratings = ratings_cache[user_id]
     current_year = datetime.now().year
-    target_year = year if year is not None else current_year
+    target_year = int(year) if year else current_year 
 
-    # Filter ratings for the specified year and exclude 0.0 ratings
+    # Filter valid ratings
     yearly_ratings_objects = [
         rating for rating in user_ratings
-        if hasattr(rating, 'release_year') and rating.release_year == target_year
-        and getattr(rating, 'rating', None) is not None and getattr(rating, 'rating', 0.0) != 0.0
-        and getattr(rating, 'artist_name', None) is not None
-        and getattr(rating, 'title', None) is not None
-        and isinstance(getattr(rating, 'rating'), (int, float))
+        if getattr(rating, 'release_year', None) == target_year
+        and isinstance(getattr(rating, 'rating', None), (int, float))
+        and rating.rating > 0.0  # Ensure valid numerical ratings
+        and rating.artist_name and rating.title
     ]
 
     if not yearly_ratings_objects:
-        return [], None
+        return [], None, None, f"No ratings from {target_year} found"
 
-    # Calculate the average rating for the user in the specified year
+    # Calculate the average rating
     total_rating = sum(rating.rating for rating in yearly_ratings_objects)
-    rating_count = len(yearly_ratings_objects)
-    average_rating_for_year = total_rating / rating_count if rating_count > 0 else 0.0
+    avg_rating = round(total_rating / len(yearly_ratings_objects), 2) if yearly_ratings_objects else 0.0
 
-    formatted_ratings = []
-    for rating in yearly_ratings_objects:
-        formatted_ratings.append({
-            "artist_name": html.unescape(rating.artist_name),
-            "release_name": html.unescape(rating.title),
-            "year": rating.release_year,
-            "release_rating": rating.rating,
-            "link": rym_release_url_creator(html.unescape(rating.artist_name), html.unescape(rating.title))
-        })
+    # Format ratings
+    formatted_ratings = [{
+        "artist_name": html.unescape(rating.artist_name),
+        "release_name": html.unescape(rating.title),
+        "year": rating.release_year,
+        "release_rating": rating.rating,
+        "link": rym_release_url_creator(html.unescape(rating.artist_name), html.unescape(rating.title))
+    } for rating in yearly_ratings_objects]
 
+    # Sort albums based on rating & filter
     if action_type == "best":
-        sorted_albums_info = sorted(formatted_ratings, key=lambda item: item["release_rating"], reverse=True)
+        sorted_albums_info = sorted([album for album in formatted_ratings if album["release_rating"] > 3], key=lambda x: x["release_rating"], reverse=True)
     else:
-        sorted_albums_info = sorted(formatted_ratings, key=lambda item: item["release_rating"])
+        sorted_albums_info = sorted([album for album in formatted_ratings if album["release_rating"] < 3], key=lambda x: x["release_rating"])
 
-    return sorted_albums_info, target_year, round(average_rating_for_year, 2)
+    return sorted_albums_info, target_year, avg_rating, ""
 
 
 def save():

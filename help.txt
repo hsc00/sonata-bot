@@ -66,3 +66,5 @@ These are the Sonata bible commands:
 - `rr` or `ratingsrank`: Checks the ratings rank.
 - `rg` or `ratingsglazers`: Checks the ratings glazers rank.
 - `rh` or `ratingshaters`: Checks the ratings haters rank.
+- `aoty (year) (user)`: Checks the highest rated releases from a year.
+- `aotyl (year) (user)`: Checks the lowest rated releases from a year.
