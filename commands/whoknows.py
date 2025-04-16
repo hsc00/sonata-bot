@@ -121,12 +121,12 @@ def extract_album_number(position):
     return int(position)
 
 def send_ratings(ctx, user, rating, average, user_ratings, ratings_count):
-    rating_entry = "**" if ctx.author.id == int(user) else ""
     average = (average[0] + rating.rating, average[1] + 1)
-    star_rating = "📝" if rating.rating == "0" else "<:star:1338267791639445564>" * int(rating.rating) + "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
-    rating_entry += f"<@{user}> • {star_rating}"
+    star_rating = f"{rating.rating}"
     if ctx.author.id == int(user):
-        rating_entry += "**"
+        rating_entry = f"**<@{user}> • {star_rating}** ⭐"
+    else:
+        rating_entry = f"<@{user}> • **{star_rating}** ⭐"
     rating_entry += "\n"
     user_ratings.append(rating_entry)  # Add the rating entry to the list
     ratings_count += 1
