@@ -1,3 +1,5 @@
+from datetime import datetime
+import html
 import lzma
 import math
 import pickle
@@ -5,7 +7,7 @@ import shutil
 import random
 import urllib
 
-from utils.text_formatters import format_count, rating_to_emoji, rym_artist_url_creator
+from utils.text_formatters import *
 
 ratings_cache = dict()
 
@@ -172,7 +174,7 @@ def get_most_rated_releases():
             artist_name = getattr(rating, 'artist_name', None)
             release_name = getattr(rating, 'title', None)
             release_year = getattr(rating, 'release_year', None)
-            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype="
+            link = rym_release_url_creator(html.unescape(artist_name), html.unescape(release_name))
 
             if release_name and artist_name and release_year:
                 # Use a tuple of release_name and release_year as a unique key
@@ -247,7 +249,7 @@ def get_best_worst_rated_releases(action_type, user_id):
             release_name = getattr(rating, 'title', None)
             release_year = getattr(rating, 'release_year', None)
             album_rating = getattr(rating, 'rating', None)
-            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype="
+            link = rym_release_url_creator(html.unescape(artist_name), html.unescape(release_name))
 
             if release_name and album_rating:
                 # Use a tuple of release_name and release_year as a unique key
@@ -589,6 +591,51 @@ def get_users_by_average_rating(action_type):
         filtered_users = [user_data for user_data in user_ratings_data if user_data[3] < 3.3]
 
     return filtered_users, global_avg_rating
+
+
+def get_rym_aoty(ctx, user_id, year=None, action_type="best"):
+    if user_id not in ratings_cache:
+        ctx.reply("User not found. Import some ratings first :D")
+        return None, None
+
+    user_ratings = ratings_cache[user_id]
+    current_year = datetime.now().year
+    target_year = year if year is not None else current_year
+
+    # Filter ratings for the specified year and exclude 0.0 ratings
+    yearly_ratings_objects = [
+        rating for rating in user_ratings
+        if hasattr(rating, 'release_year') and rating.release_year == target_year
+        and getattr(rating, 'rating', None) is not None and getattr(rating, 'rating', 0.0) != 0.0
+        and getattr(rating, 'artist_name', None) is not None
+        and getattr(rating, 'title', None) is not None
+        and isinstance(getattr(rating, 'rating'), (int, float))
+    ]
+
+    if not yearly_ratings_objects:
+        return [], None
+
+    # Calculate the average rating for the user in the specified year
+    total_rating = sum(rating.rating for rating in yearly_ratings_objects)
+    rating_count = len(yearly_ratings_objects)
+    average_rating_for_year = total_rating / rating_count if rating_count > 0 else 0.0
+
+    formatted_ratings = []
+    for rating in yearly_ratings_objects:
+        formatted_ratings.append({
+            "artist_name": html.unescape(rating.artist_name),
+            "release_name": html.unescape(rating.title),
+            "year": rating.release_year,
+            "release_rating": rating.rating,
+            "link": rym_release_url_creator(html.unescape(rating.artist_name), html.unescape(rating.title))
+        })
+
+    if action_type == "best":
+        sorted_albums_info = sorted(formatted_ratings, key=lambda item: item["release_rating"], reverse=True)
+    else:
+        sorted_albums_info = sorted(formatted_ratings, key=lambda item: item["release_rating"])
+
+    return sorted_albums_info, target_year, round(average_rating_for_year, 2)
 
 
 def save():

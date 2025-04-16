@@ -89,7 +89,7 @@ def send_rating(rating, average, user_ratings, ratings_count):
     average = (average[0] + rating.rating, average[1] + 1)
 
     star_rating = "📝" if rating.rating == "0" else "<:star:1338267791639445564>" * int(rating.rating) + "<:half:1338267704959828069> " * (1 if rating.rating != int(rating.rating) else 0)
-    rating_entry += f"**[{add_newline_limit(html.unescape(rating.title))}](https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(rating.title)}&searchtype=)** • {star_rating}\n"
+    rating_entry += f"**[{add_newline_limit(html.unescape(rating.title))}]({rym_release_url_creator(rating.artist_name, rating.title)})** • {star_rating}\n"
 
     user_ratings.append(rating_entry)  # Append the rating_entry string to the list
     ratings_count += 1

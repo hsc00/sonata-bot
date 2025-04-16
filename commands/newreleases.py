@@ -3,6 +3,7 @@ import os
 import requests
 import time
 from datetime import datetime
+from utils.text_formatters import rym_release_url_creator
 from views import *
 from bs4 import BeautifulSoup
 from API.rym_search import search_rym_release
@@ -115,7 +116,7 @@ async def get_new_releases(ctx):
                             await sent_message.edit(view=view)
                         else:
                             embed_title = f"{artist_name} - {release_name} ({datetime.now().year})"
-                            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={artist_name.replace(' ', '+')}+{release_name.replace(' ', '+')}&searchtype="
+                            link = rym_release_url_creator(artist_name, release_name)
                             embed = discord.Embed(title=embed_title, url=link, color=embed_color)
 
                             embed.set_footer(text=f"Source: Sputnikmusic")

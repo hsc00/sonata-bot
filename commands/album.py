@@ -1,9 +1,11 @@
+import html
 import discord
 import time
 from datetime import datetime
 import re
 import urllib
 
+from utils.text_formatters import rym_release_url_creator
 from views import *
 from config import *
 from API.rym_search import search_rym_release
@@ -71,7 +73,7 @@ async def process_release_link_or_text(message):
         else:
             embed_title = release_query.title()
             encoded_query = urllib.parse.quote(release_query)
-            link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={encoded_query}&searchtype="
+            link = rym_release_url_creator(html.unescape(artist_name), html.unescape(release_name))
 
         embed = discord.Embed(title=embed_title, url=link, color=embed_color)
         embed.set_footer(text=f"Requested by {message.author.name}")

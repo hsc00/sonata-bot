@@ -2,6 +2,8 @@ import json
 import os
 import re
 
+import urllib
+
 
 def add_newline_limit(text, limit=45):
     if len(text) <= limit:
@@ -59,6 +61,16 @@ def rym_artist_url_creator(string):
     cleaned_url = cleaned_artist_name.replace(' ', '-')
 
     return cleaned_url
+
+def rym_release_url_creator(artist_name, release_name):
+    link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name + ' ' + release_name)}&searchtype=release"
+    
+    return link
+
+def rym_artist_url_creator(artist_name):
+    link = f"https://rateyourmusic.com/search?searchtype=a&searchterm={urllib.parse.quote(artist_name)}&searchtype=artist"
+    
+    return link
 
 def rym_user_url_creator(user_id):
     cache_file = 'cache/rym-cache.json'
