@@ -13,8 +13,7 @@ import discord
 def setup(bot):
     @bot.command(name='new', aliases=['newreleases'])
     async def newreleases(ctx):
-        async with ctx.channel.typing():
-            await get_new_releases(ctx)
+        await get_new_releases(ctx)
 
 
 def check_new_releases_cache(artist_name, release_name):
