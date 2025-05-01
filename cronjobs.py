@@ -6,62 +6,49 @@ from commands.randomrating import get_random_rating_from_cache
 
 async def new_releases_friday(channel, bot, BotMessage):
     while True:
-        # Get the current time
         now = datetime.now()
 
         # Calculate the next Wednesday at 00:00
-        next_wednesday = now + timedelta((2 - now.weekday()) % 7)  # 2 = Wednesday (Monday is 0)
+        next_wednesday = now + timedelta((2 - now.weekday()) % 7)
         next_wednesday_midnight = next_wednesday.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        # If it's already past 00:00 on Wednesday, skip to the following Wednesday
-        if now >= next_wednesday_midnight:
-            next_wednesday_midnight += timedelta(days=7)
-
-        # Calculate the remaining time until the next Wednesday at 00:00
-        time_until_next_wednesday = (next_wednesday_midnight - now).total_seconds()
-        
-        # Sleep until the next Wednesday at 00:00
-        await asyncio.sleep(time_until_next_wednesday)
-
-        # Mid-week check at 00:00 (Wednesday)
-        author = bot.user
-        bot_message = BotMessage(channel, author, '!newreleases')
-
-        ctx = await bot.get_context(bot_message, cls=commands.Context)
-        await get_new_releases(ctx)
-
-        # Get the current time again for Friday calculations
-        now = datetime.now()
-
         # Calculate the next Friday at 00:00
-        next_friday = now + timedelta((4 - now.weekday()) % 7)  # 4 = Friday (Monday is 0)
+        next_friday = now + timedelta((4 - now.weekday()) % 7)
         next_friday_midnight = next_friday.replace(hour=0, minute=0, second=0, microsecond=0)
 
-        # If it's already past 00:00 on Friday, skip to the following Friday
-        if now >= next_friday_midnight:
-            next_friday_midnight += timedelta(days=7)
+        # Determine which event should come first
+        if now.weekday() in [2, 4]:  # If today is Wednesday or Friday, run immediately
+            time_until_next_event = 0
+        elif now < next_wednesday_midnight:
+            time_until_next_event = (next_wednesday_midnight - now).total_seconds()
+        elif now < next_friday_midnight:
+            time_until_next_event = (next_friday_midnight - now).total_seconds()
+        else:
+            # If already past Friday midnight, skip to the next week
+            time_until_next_event = (next_wednesday_midnight + timedelta(days=7) - now).total_seconds()
 
-        # Calculate the remaining time until the next Friday at 00:00
-        time_until_next_friday = (next_friday_midnight - now).total_seconds()
-        
-        # Sleep until the next Friday at 00:00
-        await asyncio.sleep(time_until_next_friday)
+        # Sleep until the next relevant event
+        await asyncio.sleep(time_until_next_event)
 
-        # First send at 00:00 (Friday)
-        await channel.send("# This week's new releases are out 🎉🎉")
-        bot_message = BotMessage(channel, bot.user, '!newreleases')
-        ctx = await bot.get_context(bot_message, cls=commands.Context)
-        await get_new_releases(ctx)
+        if now.weekday() == 2:  # Wednesday check
+            author = bot.user
+            bot_message = BotMessage(channel, author, '!newreleases')
+            ctx = await bot.get_context(bot_message, cls=commands.Context)
+            await get_new_releases(ctx)
 
-        # Wait until 12:00 (Friday)
-        await asyncio.sleep(43200)  # 12 hours
-        ctx = await bot.get_context(bot_message, cls=commands.Context)
-        await get_new_releases(ctx)
+        if now.weekday() == 4:  # Friday release announcements
+            await channel.send("# This week's new releases are out 🎉🎉")
+            bot_message = BotMessage(channel, bot.user, '!newreleases')
+            ctx = await bot.get_context(bot_message, cls=commands.Context)
+            await get_new_releases(ctx)
 
-        # Wait until 00:00 (transition to Saturday)
-        await asyncio.sleep(43200)  # Another 12 hours
-        ctx = await bot.get_context(bot_message, cls=commands.Context)
-        await get_new_releases(ctx)
+            # Wait until 12:00 PM Friday
+            await asyncio.sleep(43200)
+            await get_new_releases(ctx)
+
+            # Wait until 12:00 AM Saturday
+            await asyncio.sleep(43200)
+            await get_new_releases(ctx)
 
 
 async def random_rating_cronjob(channel, bot, BotMessage):

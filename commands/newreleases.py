@@ -129,4 +129,4 @@ async def get_new_releases(ctx):
             else:
                 await print(f"Failed to fetch the webpage. HTTP Status Code: {response.status_code}")
     except Exception as e:
-        await print(f"An error occurred: {e}")
+        print(f"An error occurred: {e}")
