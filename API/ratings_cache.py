@@ -305,10 +305,11 @@ def get_best_worst_rated_releases(action_type, user_id):
         )
     else:
         sorted_releases = sorted(
-            (release for release in filtered_releases.values() if release['average_rating'] < 3),
+            (release for release in filtered_releases.values() if float(release['average_rating']) < 3),
             key=lambda x: (x['weighted_rating'], x['average_rating'], x['total_ratings'], x['release_name']),
             reverse=False
         )
+
 
         
     top_releases = sorted_releases[:100]
