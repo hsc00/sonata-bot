@@ -69,7 +69,7 @@ class BotMessage:
 async def periodic_tasks(music_channel, new_releases_channel):
     while True:
         random_rating_task = asyncio.create_task(random_rating_cronjob(music_channel, bot, BotMessage))
-        new_releases_task = asyncio.create_task(new_releases_friday(new_releases_channel, bot, BotMessage))
+        new_releases_task = asyncio.create_task(new_releases_cronjob(new_releases_channel, bot, BotMessage))
         
         await asyncio.gather(random_rating_task, new_releases_task)
 
