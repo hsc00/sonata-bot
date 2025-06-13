@@ -1,8 +1,9 @@
 beautifulsoup4
 discord.py
+pandas
 python-dotenv
+peewee
 requests
+rich
 spotipy
-syncedlyrics
 PyNaCl
-unidecode
