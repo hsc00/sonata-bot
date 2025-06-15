@@ -1,17 +1,14 @@
 import logging
 import re
 from datetime import datetime
-from typing import Optional
 
 from discord.ext import commands
+from discord import Message
 
-from database import Album, Rating
 from peewee import fn
 
-from utils import fetch_album
-from utils.embeds import make_album_embed, make_who_rated_album_embed, make_best_rated_albums_embed, make_rating_embed, \
-    make_album_of_the_year_embed, make_most_rated_releases_embed
-from utils.views import PaginatorView
+from utils import fetch_album, paginate_embeds
+from utils.embeds import *
 
 logger = logging.getLogger(__name__)
 
@@ -20,20 +17,35 @@ class ReleasesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_message(self, message: Message):
+        # Prevent bot from responding to itself
+        if message.author == self.bot.user:
+            return
+
+        url_pattern = re.compile(r"https?://(?:www\.)?rateyourmusic\.com/release/.+?/(.+)?/\S*")
+
+        if matches := url_pattern.search(message.content):
+            album, artist = map(lambda x: x.replace("-", " "), matches.groups()[0].split("/"))
+
+            ctx = await self.bot.get_context(message)
+
+            await self.who_rated_release.callback(self, ctx, query=f"{artist} {album}")
+
     @commands.command(aliases=["r"])
-    async def album(self, ctx: commands.Context, *, query: Optional[str] = None) -> None:
+    async def release(self, ctx: commands.Context, *, query: Optional[str] = None) -> None:
         """
-        Get information about a given album.
+        Get information about a given release.
         """
 
-        album = await fetch_album(str(ctx.author.id), query)
+        release = await fetch_album(str(ctx.author.id), query)
 
-        if album is None:
+        if release is None:
             logger.error("No album found for %s", query)
 
             return
 
-        embed = make_album_embed(album)
+        embed = make_album_embed(release)
 
         await ctx.send(embed=embed)
 
@@ -115,17 +127,14 @@ class ReleasesCog(commands.Cog):
 
         top_releases = sorted_releases[:100]
 
-        pages = []
-        num_pages = 10
+        # TODO: Include number of ratings
 
-        for i in range(num_pages):
-            page_releases = top_releases[i * 10:(i + 1) * 10]
-            page = make_best_rated_albums_embed(page_releases, ctx.guild.name)
-            page.set_footer(text=f"Page {i + 1}/{num_pages}")
-
-            pages.append(page)
-
-        view = PaginatorView(pages)
+        view, pages = paginate_embeds(
+            top_releases,
+            make_best_rated_albums_embed,
+            per_page=10,
+            server_name=ctx.guild.name
+        )
 
         await ctx.send(embed=pages[0], view=view)
 
@@ -142,7 +151,7 @@ class ReleasesCog(commands.Cog):
             .join(Rating)
             .group_by(Album)
             .order_by(fn.COUNT(Rating.id).desc())
-            .limit(10)
+            .limit(100)
         )
 
         if query:
@@ -162,9 +171,13 @@ class ReleasesCog(commands.Cog):
 
             return
 
-        embed = make_most_rated_releases_embed(most_rated_releases)
+        view, pages = paginate_embeds(
+            most_rated_releases,
+            make_most_rated_releases_embed,
+            per_page=10,
+        )
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=pages[0], view=view)
 
     @commands.command(aliases=["rdr"])
     async def random_rating(self, ctx: commands.Context, *, query: Optional[str]) -> None:
@@ -172,7 +185,18 @@ class ReleasesCog(commands.Cog):
         Get a random rating.
         """
 
-        rating = Rating.select().order_by(fn.Random()).first()
+        if query == "roast":
+            rating = Rating.select().where(
+                Rating.score <= 2.0,
+            ).order_by(fn.Random()).first()
+
+        elif query == "glaze":
+            rating = Rating.select().where(
+                Rating.score >= 3.0,
+            ).order_by(fn.Random()).first()
+
+        else:
+            rating = Rating.select().order_by(fn.Random()).first()
 
         if rating is None:
             await ctx.send("No ratings found.")
@@ -202,7 +226,7 @@ class ReleasesCog(commands.Cog):
                     raise ValueError
 
             except ValueError:
-                await ctx.send("Please provide a valid year.")
+                await ctx.send("❌ Please provide a valid year.")
 
                 return
 
@@ -223,6 +247,12 @@ class ReleasesCog(commands.Cog):
 
             return
 
-        embed = make_album_of_the_year_embed(ratings, ctx.message.author, year)
+        view, pages = paginate_embeds(
+            ratings,
+            make_album_of_the_year_embed,
+            per_page=10,
+            user=ctx.message.author,
+            year=year,
+        )
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=pages[0], view=view)

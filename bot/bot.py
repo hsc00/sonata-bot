@@ -1,6 +1,5 @@
 import asyncio
 import discord
-import events
 
 from discord.ext import commands
 
@@ -23,9 +22,6 @@ class BotMessage:
 class SonataBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(command_prefix="!", *args, **kwargs)
-        self.initial_extensions = [
-            "cogs.album",
-        ]
 
 
 # Define the intents
@@ -35,13 +31,10 @@ intents.message_content = True  # Enable the intent to read message content
 # Initialize the bot
 bot = SonataBot(intents=intents)
 
-# Import and setup events
-events.setup(bot)
-
 initial_extensions = [
     "cogs.artists",
-    "cogs.ratings",
     "cogs.releases",
+    "cogs.tracks",
     "cogs.users"
 ]
 

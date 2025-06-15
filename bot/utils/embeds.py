@@ -153,7 +153,9 @@ def make_who_rated_album_embed(
 
 
 def make_best_rated_albums_embed(
-        top_releases: list[tuple[Album, int, int]], server_name: str
+        top_releases: list[tuple[Album, int, int]],
+        server_name: str,
+        start: int = 1
 ) -> discord.Embed:
     """
     Create an embed for the album ratings.
@@ -161,7 +163,7 @@ def make_best_rated_albums_embed(
 
     lines = []
 
-    for i, (album, average_score, _) in enumerate(top_releases):
+    for i, (album, average_score, rating_count) in enumerate(top_releases, start=start):
         lines.append(
             f"{i}. {album.artist} - {album.title} (**{(average_score / 2):.2f}** ⭐)"
         )
@@ -181,6 +183,7 @@ def make_album_of_the_year_embed(
         ratings: list[Rating],
         user: discord.user.User,
         year: int,
+        start: int = 1
 ) -> discord.Embed:
     """
     Create an embed for the album ratings.
@@ -188,7 +191,7 @@ def make_album_of_the_year_embed(
 
     lines = []
 
-    for i, rating in enumerate(ratings[:10], start=1):
+    for i, rating in enumerate(ratings[:10], start=start):
         lines.append(
             f"{i}. {rating.album.artist} - {rating.album.title} \\- **{(rating.score / 2):.2f}** ⭐"
         )
@@ -240,7 +243,7 @@ def make_artist_ratings_embed(ratings: list[Rating], artist: str, user: discord.
 
     title = f"Top {artist} albums for {user.display_name}"
 
-    description = f"Average Score: **{(sum(rating.score for rating in ratings) / len(ratings) / 2):.2f}** ⭐\n\n"
+    description = f"Average score: **{(sum(rating.score for rating in ratings) / len(ratings) / 2):.2f}** ⭐\n\n"
     description += "\n".join(lines)
 
     return (
@@ -282,17 +285,14 @@ def make_ratings_rank_view(server_name: str, ratings: list[Rating]) -> Paginator
     return PaginatorView(pages)
 
 
-def make_most_rated_releases_embed(albums) -> discord.Embed:
+def make_most_rated_releases_embed(albums, start: int = 1) -> discord.Embed:
     """
     Create an embed for the most rated releases.
     """
 
-    pages = []
-    num_pages = 10
-
     description = "\n".join(
         f"{i}. {row.artist} \\- {row.title} (**{row.rating_count}** ratings)"
-        for i, row in enumerate(albums, start=1)
+        for i, row in enumerate(albums, start=start)
     )
 
     return (
@@ -307,9 +307,6 @@ def make_best_rated_artists_embed(server_name: str, best_rated_artists) -> disco
     """
     Create an embed for the best rated artists.
     """
-
-    pages = []
-    num_pages = 10
 
     title = f"Best rated artists in {server_name}"
     description = "\n".join(

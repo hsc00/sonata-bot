@@ -5,9 +5,10 @@ from urllib.parse import quote
 from api.last_fm import get_last_played
 from api.google_search import search_album as search_google
 from database import Album, AlbumIndex, UserInfo
-from typing import Optional
+from typing import Optional, Callable, Any
 
 from utils.constants import *
+from utils.views import PaginatorView
 
 
 def score_to_stars(score: int) -> str:
@@ -34,10 +35,12 @@ def store_album(album: Album) -> None:
 
 
 def search_album(album_name: str, artist_name: str = "") -> Album:
+    query = f'{album_name} {artist_name}'.strip()
+
     return (
         Album.select()
         .join(AlbumIndex, on=(Album.id == AlbumIndex.rowid))
-        .where(AlbumIndex.match(album_name))
+        .where(AlbumIndex.match(query))
         .order_by(AlbumIndex.bm25())
         .first()
     )
@@ -48,28 +51,21 @@ async def fetch_album(user_id: str, query: str) -> Optional[Album]:
 
     # Get last played album if no query is provided
     if query is None:
-        last_fm_username = UserInfo.get_or_none(user_id).lastfm_username
+        last_fm_username = UserInfo.get_or_none(
+            UserInfo.user_id == user_id,
+        ).lastfm_username
 
         if last_fm_username is None:
-            # TODO: Throw exception
-            # await ctx.send(
-            #    "Could not retrieve the last played album. Please provide a search term."
-            # )
-            # await ctx.send(
-            #    "No last.fm username set. Please provide a search term or set your last.fm username."
-            # )
-
-            return None
+            raise Exception(
+                "No last.fm username set. Please provide a search term or set your last.fm username."
+            )
 
         last_played = get_last_played(last_fm_username, "release")
 
         if not last_played:
-            # TODO: Throw exception
-            # await ctx.send(
-            #    "Could not retrieve the last played album. Please provide a search term."
-            # )
-
-            return None
+            raise Exception(
+                "Could not retrieve the last played album. Please provide a search term."
+            )
 
         album_name, artist_name = last_played
 
@@ -89,10 +85,9 @@ async def fetch_album(user_id: str, query: str) -> Optional[Album]:
         result = search_google(album_name)
 
         if result is None:
-            # TODO: Throw exception
-            # await ctx.send(f'No results found for "{query}".')
-
-            return None
+            raise Exception(
+                f'No results found for "{query}".'
+            )
 
         # Search again with the result name
         album = search_album(result["pagemap"]["musicalbum"][0]["name"])
@@ -179,9 +174,31 @@ def album_from_google_result(result: dict) -> Album:
 
     return album
 
+
 def make_rym_artist_url(artist_name: str) -> str:
     """
     Create a RateYourMusic URL for the given artist name.
     """
 
     return f"https://rateyourmusic.com/artist/{quote(artist_name.replace(' ', '-').lower())}"
+
+
+def paginate_embeds(
+        items: list,
+        make_embed_fn: Callable,
+        per_page: int = 10,
+        *args,
+        **kwargs
+):
+    pages = []
+    num_pages = (len(items) + per_page - 1) // per_page
+
+    for i in range(num_pages):
+        page_items = items[i * per_page:(i + 1) * per_page]
+        embed = make_embed_fn(page_items, *args, **kwargs, start= i * per_page)
+        embed.set_footer(text=f"Page {i + 1}/{num_pages}")
+        pages.append(embed)
+
+    view = PaginatorView(pages)
+
+    return view, pages
