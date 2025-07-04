@@ -3,20 +3,19 @@ from typing import Self, Optional
 
 import discord
 
-import utils
 from database import Album, Rating
-from utils import score_to_stars, RYM_RATING_COLORS
+from utils import score_to_stars, RYM_RATING_COLORS, make_rym_artist_url
 from utils.views import PaginatorView
 
 
 class EmbedBuilder:
     def __init__(self):
-        self.title: Optional[str] = None
-        self.description: Optional[str] = None
-        self.url: Optional[str] = None
-        self.thumbnail: Optional[str] = None
+        self.title: str | None = None
+        self.description: str | None = None
+        self.url: str | None = None
+        self.thumbnail: str | None = None
         self.author: Optional[tuple[str, str]] = None
-        self.footer: Optional[str] = None
+        self.footer: str | None = None
         self.color: discord.Color = discord.Color.blue()
 
     def reset(self) -> Self:
@@ -101,10 +100,12 @@ def make_album_embed(album: Album) -> discord.Embed:
 
     title = format_album_title(album)
 
-    description = (
-        f"*{album.genres}*\n\n"
-        f"{format_star_score(album.rating_score * 2)} from **{album.rating_count:,d}** ratings\n"
-    )
+    description = ""
+
+    if album.genres is not None:
+        description += f"*{album.genres}*\n\n"
+
+    description += f"{format_star_score(album.rating_score * 2)} from **{album.rating_count:,d}** ratings\n"
 
     if album.year_position:
         description += f"**#{album.year_position}** of [{album.release_year}](https://rateyourmusic.com/charts/top/album/{album.release_year}/)"
@@ -123,7 +124,7 @@ def make_album_embed(album: Album) -> discord.Embed:
 
 
 def make_who_rated_album_embed(
-        album: Album, ratings: list[Rating], user_id: int, server_name: str
+        ratings: list[Rating], album: Album, user_id: int, server_name: str, start: int = 1
 ) -> discord.Embed:
     """
     Create an embed for the album ratings.
@@ -134,7 +135,7 @@ def make_who_rated_album_embed(
     title = format_album_title(album)
     description = f"**{average_score:.2f}** ⭐ in **{server_name}** from **{len(ratings):,d}** ratings\n\n"
 
-    for (i, rating) in enumerate(ratings, start=1):
+    for (i, rating) in enumerate(ratings, start=start):
         position = f"{i}."
 
         if rating.user == str(user_id):
@@ -303,7 +304,7 @@ def make_most_rated_releases_embed(albums, start: int = 1) -> discord.Embed:
     )
 
 
-def make_best_rated_artists_embed(server_name: str, best_rated_artists) -> discord.Embed:
+def make_best_rated_artists_embed(best_rated_artists, server_name: str, start: int = 1) -> discord.Embed:
     """
     Create an embed for the best rated artists.
     """
@@ -311,12 +312,96 @@ def make_best_rated_artists_embed(server_name: str, best_rated_artists) -> disco
     title = f"Best rated artists in {server_name}"
     description = "\n".join(
         f"{i}. {row.artist} (**{row.average_score / 2:.2f} ⭐** from **{row.releases_count}** releases)"
-        for i, row in enumerate(best_rated_artists, start=1)
+        for i, row in enumerate(best_rated_artists, start=start)
     )
 
     return (
         EmbedBuilder()
         .with_title(title)
+        .with_description(description)
+        .build()
+    )
+
+
+def make_most_rated_artists_embed(
+        most_rated_artists,
+        user_id: str | None,
+        server_name: str | None,
+        start: int = 1
+) -> discord.Embed:
+    """
+    Create an embed for the most rated artists.
+    """
+
+    title = f"Artists with most ratings for user" if user_id else f"Artists with most ratings in {server_name}"
+    description = "\n".join(
+        f"{i}. [{row.artist}]({make_rym_artist_url(row.artist)}) (**{row.rating_count}** ratings)"
+        for i, row in enumerate(most_rated_artists, start=start)
+    )
+
+    return (
+        EmbedBuilder()
+        .with_title(title)
+        .with_description(description)
+        .build()
+    )
+
+
+def make_lyrics_embed(lyrics: list[str], title: str, artist: str) -> discord.Embed:
+    """
+    Create an embed for the lyrics.
+    """
+
+    description = "\n".join(lyrics)
+
+    return (
+        EmbedBuilder()
+        .with_title(f"Lyrics for {artist} - {title}")
+        .with_description(description)
+        .build()
+    )
+
+
+def make_comparison_embed(ratings, start: int = 1) -> discord.Embed:
+    """
+    Create an embed comparing two users' ratings.
+    """
+
+    description = f'<@{ratings[0]["user1"]}> vs <@{ratings[0]["user2"]}>\n\n'
+
+    for row in ratings[start:start + 10]:
+        user1_score = row["score1"] / 2
+        user2_score = row["score2"] / 2
+        description += (
+            f"**{row["artist"]}** - *{row["title"]}*\n"
+            f"{user1_score:.1f} ⭐ | {user2_score:.1f} ⭐ ({user1_score - user2_score:.1f} ⭐)\n\n"
+        )
+
+    return (
+        EmbedBuilder()
+        .with_title("Rating Comparison")
+        .with_description(description)
+        .build()
+    )
+
+
+def ratings_per_year(
+        ratings: list[dict],
+        user: str,
+        start: int = 1
+) -> discord.Embed:
+    """
+    Create an embed for the yearly ratings.
+    """
+
+    description = "\n".join(
+        f"{i}. {rating.album.release_year} - **{rating.rating_count}** ratings"
+        for i, rating in enumerate(ratings, start=start)
+    )
+
+    return (
+        EmbedBuilder()
+        .with_title(f"{user}'s ratings per year")
         .with_description(description)
         .build()
     )

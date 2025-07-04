@@ -1,22 +1,23 @@
 import csv
 import html
-import requests
+import re
 
-from typing import Optional
+import requests
 
 from discord.ext import commands
 from peewee import fn, IntegrityError
 
 from database import UserInfo, Rating, Album
-from utils.embeds import make_ratings_rank_view
+from utils.embeds import make_ratings_rank_view, make_comparison_embed
 
-from utils import utils
+from utils import utils, disabled
 
 
 class UsersCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @disabled()
     @commands.command()
     async def set_rym(self, ctx: commands.Context, username: str):
         """
@@ -33,7 +34,7 @@ class UsersCog(commands.Cog):
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
     @commands.command()
-    async def set_lastfm(self, ctx: commands.Context, *, username: Optional[str]):
+    async def set_lastfm(self, ctx: commands.Context, *, username: str | None):
         """
         Set your last.fm username.
         """
@@ -69,6 +70,63 @@ class UsersCog(commands.Cog):
         view = make_ratings_rank_view(ctx.guild.name, ratings)
 
         await ctx.send(embed=view.pages[0], view=view)
+
+    @disabled()
+    @commands.command(aliases=["c"])
+    async def compare(self, ctx: commands.Context, *, query: str | None = None):
+        """
+        Compare your ratings with another user.
+        """
+
+        if not query:
+            await ctx.send("❌ Please provide a user mention to compare with.")
+
+            return
+
+        match = re.match(r"<@!?(\d+)>", query)
+
+        if not match:
+            await ctx.send("❌ Please provide a valid user mention.")
+
+            return
+
+        user_id = str(ctx.author.id)
+        other_user_id = match.group(1)
+
+        # Fetch ratings for albums in common between the two users
+        r1 = Rating.alias()
+        r2 = Rating.alias()
+
+        common_ratings = (
+            r1.select(
+                r1.album,
+                r1.user.alias("user1"),
+                r1.score.alias("score1"),
+                r2.user.alias("user2"),
+                r2.score.alias("score2"),
+                Album.title,
+                Album.artist
+            )
+            .join(Album, on=(r1.album == Album.id))
+            .switch(r1)
+            .join(r2, on=(r1.album == r2.album))
+            .where(
+                (r1.user == user_id) &
+                (r2.user == other_user_id)
+            )
+            .order_by(r1.score - r2.score)
+            .limit(100)
+        )
+
+        if common_ratings.limit(1).first() is None:
+            await ctx.send("❌ No ratings in common found.")
+
+            return
+
+        # Compare ratings and create an embed
+        comparison_embed = make_comparison_embed(list(common_ratings.dicts()))
+
+        await ctx.send(embed=comparison_embed)
 
     @commands.command(name="import", aliases=["i"])
     async def import_ratings(self, ctx):

@@ -6,4 +6,5 @@ peewee
 requests
 rich
 spotipy
+syncedlyrics
 PyNaCl

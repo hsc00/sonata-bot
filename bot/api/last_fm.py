@@ -3,7 +3,7 @@ import requests
 from config import lastfm_api_key as api_key
 
 
-def get_last_played(username: str, data_type: str):
+def get_last_played(username: str):
     url = f"http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user={username}&api_key={api_key}&format=json"
     response = requests.get(url)
     data = response.json()
@@ -15,14 +15,7 @@ def get_last_played(username: str, data_type: str):
         artist_name = last_track["artist"]["#text"]
         album_name = last_track["album"]["#text"]
 
-        if data_type == "release":
-            return (album_name, artist_name)
-
-        elif data_type == "artist":
-            return artist_name
-
-        elif data_type == "track":
-            return (track_name, artist_name)
+        return (album_name, artist_name, track_name)
 
     else:
         return None

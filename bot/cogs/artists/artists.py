@@ -4,10 +4,9 @@ from discord.ext import commands
 from peewee import fn
 
 from api.last_fm import get_last_played
-from database import UserInfo
-from utils import make_rym_artist_url
+from database import UserInfo, AlbumIndex
+from utils import paginate_embeds
 from utils.embeds import *
-from urllib.parse import quote
 
 
 class ArtistCog(commands.Cog):
@@ -28,9 +27,10 @@ class ArtistCog(commands.Cog):
 
                 return None
 
-            artist = get_last_played(last_fm_username, "artist")
+            album_name, _, _ = get_last_played(last_fm_username)
+            user_id = ctx.message.author.id
 
-            if not artist:
+            if not album_name:
                 await ctx.send(
                     "Could not retrieve the last played album. Please provide a search term."
                 )
@@ -38,22 +38,36 @@ class ArtistCog(commands.Cog):
                 return None
 
         else:
-            artist = query
+            # Fetch user ID from mention if provided
+            user_mention = re.search(r"<@!?(\d+)>", query)
+
+            if user_mention:
+                user_id = user_mention.group(1)
+                album_query = query.replace(f"<@{user_id}>", "").strip()
+
+            else:
+                user_id = ctx.message.author.id
+                album_query = query.strip()
 
         ratings = (
             Rating
             .select()
             .join(Album)
-            .where((Album.artist == artist) & (Rating.user == str(ctx.message.author.id)))
+            .join(AlbumIndex, on=(Album.id == AlbumIndex.rowid))
+            .where(
+                (Rating.user == user_id) &
+                (AlbumIndex.artist.match(album_query))
+            )
             .order_by(Rating.score.desc())
+            .limit(100)
         )
 
         if len(ratings) == 0:
-            await ctx.send(f'No ratings exist for "{artist}".')
+            await ctx.send(f'❌ No ratings exist for "{query}".')
 
             return None
 
-        embed = make_artist_ratings_embed(ratings, artist, ctx.message.author)
+        embed = make_artist_ratings_embed(ratings, ratings[0].album.artist, ctx.message.author)
 
         await ctx.send(embed=embed)
 
@@ -81,14 +95,14 @@ class ArtistCog(commands.Cog):
                  + w3 * fn.COUNT(fn.DISTINCT(Album.id)) * fn.AVG(Rating.score)
                  ).desc()
             )
-            .limit(10)
+            .limit(100)
         )
 
         if query:
             match = re.match(r"<@!?(\d+)>", query)
 
             if not match:
-                await ctx.send("Please provide a valid user mention.")
+                await ctx.send("❌ Please provide a valid user mention.")
 
                 return
 
@@ -97,13 +111,18 @@ class ArtistCog(commands.Cog):
             best_rated_artists = best_rated_artists.where(Rating.user == user_id)
 
         if not best_rated_artists:
-            await ctx.send("No ratings exist for any artists.")
+            await ctx.send("❌ No ratings exist for any artists.")
 
             return
 
-        embed = make_best_rated_artists_embed(ctx.guild.name, best_rated_artists)
+        view, pages = paginate_embeds(
+            best_rated_artists,
+            make_best_rated_artists_embed,
+            per_page=10,
+            server_name=ctx.guild.name
+        )
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=pages[0], view=view)
 
     @commands.command(aliases=["mra"])
     async def most_rated_artists(self, ctx: commands.Context, *, query: Optional[str] = None) -> None:
@@ -119,7 +138,7 @@ class ArtistCog(commands.Cog):
             .join(Rating)
             .group_by(Album.artist)
             .order_by(fn.COUNT(Rating.id).desc())
-            .limit(10)
+            .limit(100)
         )
 
         if query:
@@ -139,15 +158,12 @@ class ArtistCog(commands.Cog):
 
             return
 
-        title = f"Artists with most ratings for user" if user_id else f"Artists with most ratings in {ctx.guild.name}"
-
-        embed = discord.Embed(
-            title=title,
-            description="\n".join(
-                f"{i}. [{row.artist}]({make_rym_artist_url(row.artist)}) (**{row.rating_count}** ratings)"
-                for i, row in enumerate(most_rated_artists, start=1)
-            ),
-            color=discord.Color.blue(),
+        view, pages = paginate_embeds(
+            most_rated_artists,
+            make_most_rated_artists_embed,
+            per_page=10,
+            user_id=user_id,
+            server_name=ctx.guild.name
         )
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=pages[0], view=view)

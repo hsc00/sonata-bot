@@ -2,12 +2,15 @@ import logging
 import re
 from urllib.parse import quote
 
+from discord.ext import commands
+
 from api.last_fm import get_last_played
 from api.google_search import search_album as search_google
 from database import Album, AlbumIndex, UserInfo
-from typing import Optional, Callable, Any
+from typing import Optional, Callable
 
 from utils.constants import *
+from utils.exceptions import SonataError
 from utils.views import PaginatorView
 
 
@@ -51,23 +54,24 @@ async def fetch_album(user_id: str, query: str) -> Optional[Album]:
 
     # Get last played album if no query is provided
     if query is None:
-        last_fm_username = UserInfo.get_or_none(
+        user = UserInfo.get_or_none(
             UserInfo.user_id == user_id,
-        ).lastfm_username
+        )
 
-        if last_fm_username is None:
-            raise Exception(
-                "No last.fm username set. Please provide a search term or set your last.fm username."
+        if user is None:
+            raise SonataError(
+                "❌ No last.fm username set. Please provide a search term or set your last.fm username."
             )
 
-        last_played = get_last_played(last_fm_username, "release")
+        last_fm_username = user.lastfm_username
+        last_played = get_last_played(last_fm_username)
 
         if not last_played:
-            raise Exception(
-                "Could not retrieve the last played album. Please provide a search term."
+            raise SonataError(
+                "❌ Could not retrieve the last played album. Please provide a search term."
             )
 
-        album_name, artist_name = last_played
+        album_name, artist_name, _ = last_played
 
     else:
         album_name, artist_name = query, ""
@@ -85,8 +89,8 @@ async def fetch_album(user_id: str, query: str) -> Optional[Album]:
         result = search_google(album_name)
 
         if result is None:
-            raise Exception(
-                f'No results found for "{query}".'
+            raise SonataError(
+                f'❌ No results found for "{query}".'
             )
 
         # Search again with the result name
@@ -137,9 +141,7 @@ def album_from_google_result(result: dict) -> Album:
 
     cover_url = pagemap["cse_thumbnail"][0]["src"]
 
-    genres = re.search(
-        r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"]
-    ).group(1)
+    genres = (match := re.search(r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"])) and match.group(1)
 
     rating = pagemap["aggregaterating"][0]
     rating_score, rating_count = float(rating["ratingvalue"]), int(
@@ -195,10 +197,17 @@ def paginate_embeds(
 
     for i in range(num_pages):
         page_items = items[i * per_page:(i + 1) * per_page]
-        embed = make_embed_fn(page_items, *args, **kwargs, start= i * per_page)
+        embed = make_embed_fn(page_items, *args, **kwargs, start=i * per_page)
         embed.set_footer(text=f"Page {i + 1}/{num_pages}")
         pages.append(embed)
 
     view = PaginatorView(pages)
 
     return view, pages
+
+
+def disabled():
+    def predicate(ctx):
+        raise commands.DisabledCommand("This command is disabled.")
+
+    return commands.check(predicate)
