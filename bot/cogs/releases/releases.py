@@ -8,6 +8,7 @@ from discord import Message
 from peewee import fn
 
 from api.sputnik import fetch_new_releases
+from core.errors import NoRatingsFound, InvalidYear
 from core.utils import fetch_album, paginate_embeds, SonataError
 from core.decorators import disabled
 from core.embeds import *
@@ -93,9 +94,7 @@ class ReleasesCog(commands.Cog):
         )
 
         if len(ratings) == 0:
-            await ctx.send(f'❌ No ratings exist for "{release.title}".')
-
-            return
+            raise NoRatingsFound(release.title)
 
         view, pages = paginate_embeds(
             ratings,
@@ -258,9 +257,7 @@ class ReleasesCog(commands.Cog):
                     raise ValueError
 
             except ValueError:
-                await ctx.send("❌ Please provide a valid year.")
-
-                return
+                raise InvalidYear(query)
 
         # Select ratings from the given year
         ratings = (

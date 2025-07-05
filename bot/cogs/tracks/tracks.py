@@ -4,6 +4,8 @@ from discord.ext import commands
 from syncedlyrics import search
 
 from api.last_fm import get_last_played
+from core.decorators import disabled
+from core.errors import NoLyricsFound, NoLastFMUsername
 from core.utils import paginate_embeds
 from database import UserInfo
 from core.embeds import lyrics_embed
@@ -21,9 +23,7 @@ class TracksCog(commands.Cog):
         ).lastfm_username
 
         if last_fm_username is None:
-            raise Exception(
-                "❌ No last.fm username set. Please provide a search term or set your last.fm username by running `!set_lastfm <username>`."
-            )
+            raise NoLastFMUsername()
 
         # TODO: This can be refactored to use "fetch_album" (which should be renamed)
         #       to get the last played track with album and artist data
@@ -32,7 +32,7 @@ class TracksCog(commands.Cog):
             synced_lyrics = search(f"{artist_name} - {track_name}")
 
             if not synced_lyrics or synced_lyrics == "":
-                await ctx.send(content=f"❌ No lyrics found.")
+                raise NoLyricsFound()
 
             # Remove the timestamp from the lyrics
             lyrics_lines = [re.sub(r"^\[.+](.*)$", r"\1", line).strip() for line in synced_lyrics.split('\n')]
@@ -46,3 +46,11 @@ class TracksCog(commands.Cog):
             )
 
         await ctx.send(embed=pages[0], view=view)
+
+    @disabled()
+    @commands.command()
+    async def samples(self, ctx: commands.Context):
+        user_id = str(ctx.author.id)
+        last_fm_username = UserInfo.get_or_none(
+            UserInfo.user_id == user_id,
+        ).lastfm_username

@@ -310,12 +310,17 @@ def most_rated_releases_embed(albums, start: int = 1) -> discord.Embed:
     )
 
 
-def best_rated_artists_embed(best_rated_artists, server_name: str, start: int = 1) -> discord.Embed:
+def best_rated_artists_embed(
+        best_rated_artists,
+        server_name: str | None = None,
+        user_name: str | None = None,
+        start: int = 1
+) -> discord.Embed:
     """
     Create an embed for the best rated artists.
     """
 
-    title = f"Best rated artists in {server_name}"
+    title = f"Best rated artists for user {user_name}" if user_name else f"Best rated artists in {server_name}"
     description = "\n".join(
         f"{i}. {row.artist} (**{row.average_score / 2:.2f} ⭐** from **{row.releases_count}** releases)"
         for i, row in enumerate(best_rated_artists, start=start)
@@ -331,7 +336,7 @@ def best_rated_artists_embed(best_rated_artists, server_name: str, start: int = 
 
 def most_rated_artists_embed(
         most_rated_artists: list,
-        user_id: str | None,
+        user_name: str | None,
         server_name: str | None,
         start: int = 1
 ) -> discord.Embed:
@@ -339,7 +344,7 @@ def most_rated_artists_embed(
     Create an embed for the most rated artists.
     """
 
-    title = f"Artists with most ratings for user" if user_id else f"Artists with most ratings in {server_name}"
+    title = f"Artists with most ratings for user {user_name}" if user_name else f"Artists with most ratings in {server_name}"
     description = "\n".join(
         f"{i}. [{row.artist}]({create_rym_artist_url(row.artist)}) (**{row.rating_count}** ratings)"
         for i, row in enumerate(most_rated_artists, start=start)

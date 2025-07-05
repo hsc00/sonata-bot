@@ -3,7 +3,9 @@ import discord
 
 from discord.ext import commands
 
+from core import events
 from core.config import *
+from core.events import init_events
 from database import *
 
 import logging
@@ -22,6 +24,8 @@ logging.basicConfig(
 class SonataBot(commands.Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(command_prefix="!", *args, **kwargs)
+
+        init_events(self)
 
 
 # Define the intents

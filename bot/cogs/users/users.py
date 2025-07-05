@@ -7,10 +7,13 @@ import requests
 from discord.ext import commands
 from peewee import fn, IntegrityError
 
+from core.errors import InvalidUserMention, NoRatingsFound, RatingsImportFailed, NoFileAttached
+from core.utils import store_album
 from database import UserInfo, Rating, Album
 from core.embeds import ratings_rank_view, comparison_embed
 
 from core.decorators import disabled
+
 
 class UsersCog(commands.Cog):
     def __init__(self, bot):
@@ -69,9 +72,7 @@ class UsersCog(commands.Cog):
         )
 
         if not ratings:
-            await ctx.send("No ratings found.")
-
-            return
+            raise NoRatingsFound()
 
         view = ratings_rank_view(ctx.guild.name, ratings)
 
@@ -85,16 +86,12 @@ class UsersCog(commands.Cog):
         """
 
         if not query:
-            await ctx.send("❌ Please provide a user mention to compare with.")
-
-            return
+            raise InvalidUserMention()
 
         match = re.match(r"<@!?(\d+)>", query)
 
         if not match:
-            await ctx.send("❌ Please provide a valid user mention.")
-
-            return
+            raise InvalidUserMention(query)
 
         user_id = str(ctx.author.id)
         other_user_id = match.group(1)
@@ -130,9 +127,9 @@ class UsersCog(commands.Cog):
             return
 
         # Compare ratings and create an embed
-        comparison_embed = comparison_embed(list(common_ratings.dicts()))
+        embed = comparison_embed(list(common_ratings.dicts()))
 
-        await ctx.send(embed=comparison_embed)
+        await ctx.send(embed=embed)
 
     @commands.command(name="import", aliases=["i"])
     async def import_ratings(self, ctx):
@@ -141,19 +138,13 @@ class UsersCog(commands.Cog):
         """
 
         if not ctx.message.attachments:
-            await ctx.send("❌ No file attached.")
-
-            return
-
-        message = await ctx.send(f"📥 Importing ratings for user <@{ctx.message.author.id}>...")
+            raise NoFileAttached()
 
         attachment_url = ctx.message.attachments[0].url
         response = requests.get(attachment_url)
 
         if response.status_code != 200:
-            await message.edit(content="❌ Failed to import ratings.")
-
-            return
+            raise RatingsImportFailed()
 
         try:
             # Clean existing ratings for the user
@@ -165,10 +156,10 @@ class UsersCog(commands.Cog):
             for row in rows:
                 await self.import_rating(ctx.author.id, row)
 
-            await message.edit(content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>.")
+            await ctx.send(content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>.")
 
         except Exception:
-            await message.edit(content=f"❌ Failed to import ratings.")
+            raise RatingsImportFailed()
 
     @staticmethod
     async def import_rating(user_id: int, row):
@@ -207,7 +198,7 @@ class UsersCog(commands.Cog):
             )
 
             album.save(force_insert=True)
-            utils.store_album(album)
+            store_album(album)
 
         try:
             Rating.create(
