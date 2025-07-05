@@ -21,7 +21,9 @@ class ArtistCog(commands.Cog):
         """
 
         if query is None:
-            last_fm_username = UserInfo.get_or_none(str(ctx.message.author.id)).lastfm_username
+            user_id = str(ctx.message.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
 
             if last_fm_username is None:
                 raise NoLastFMUsername()
@@ -127,8 +129,6 @@ class ArtistCog(commands.Cog):
         """
         Get the most rated artists.
         """
-
-        user_id = None
 
         most_rated_artists = (
             Album

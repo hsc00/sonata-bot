@@ -1,7 +1,7 @@
 import re
 import requests
 
-from core.config import google_tokens, cse_id
+from core.config import google_token, cse_id
 
 
 def search_google(query: str) -> dict | None:
@@ -11,7 +11,7 @@ def search_google(query: str) -> dict | None:
 
     with requests.Session() as session:
         try:
-            token = google_tokens[0]
+            token = google_token
             search_url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={token}&cx={cse_id}"
             release_pattern = re.compile(
                 r"^https:\/\/rateyourmusic.com\/release\/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)\/([^\/]*)\/([^\/]*)\/?$"
@@ -26,7 +26,10 @@ def search_google(query: str) -> dict | None:
                     if release_pattern.match(result["link"]):
                         return result
 
-            return None
+            else:
+                print(f"Google search failed with status code: {response.status_code}")
+
+                return None
 
         except Exception as e:
             print(f"Failed to search for album: {e}")

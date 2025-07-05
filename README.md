@@ -46,3 +46,4 @@ python bot/bot.py
 - Rate from the bot
 - Log rating from the browser
 - Integration with last.fm bot
+- Slash commands

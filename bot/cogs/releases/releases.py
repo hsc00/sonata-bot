@@ -1,5 +1,7 @@
 import logging
+import math
 import re
+from collections import defaultdict
 from datetime import datetime
 
 from discord.ext import commands
@@ -8,7 +10,7 @@ from discord import Message
 from peewee import fn
 
 from api.sputnik import fetch_new_releases
-from core.errors import NoRatingsFound, InvalidYear
+from core.errors import NoRatingsFound, InvalidYear, InvalidUserMention
 from core.utils import fetch_album, paginate_embeds, SonataError
 from core.decorators import disabled
 from core.embeds import *
@@ -189,9 +191,7 @@ class ReleasesCog(commands.Cog):
             match = re.match(r"<@!?(\d+)>", query)
 
             if not match:
-                await ctx.send("Please provide a valid user mention.")
-
-                return
+                raise InvalidUserMention(query)
 
             user_id = match.group(1)
 
@@ -233,8 +233,6 @@ class ReleasesCog(commands.Cog):
             await ctx.send("No ratings found.")
 
             return
-
-        # TODO: Update album details if they are missing
 
         user = await ctx.bot.fetch_user(rating.user)
 
@@ -287,6 +285,56 @@ class ReleasesCog(commands.Cog):
         await ctx.send(embed=pages[0], view=view)
 
     @disabled()
+    @commands.command(aliases=["tg"])
+    async def top_genres(self, ctx: commands.Context, *, query: str | None = None) -> None:
+        """
+        Get the top genres of a user.
+        """
+
+        if query is None:
+            user_id = str(ctx.author.id)
+
+        else:
+            match = re.match(r"<@!?(\d+)>", query)
+
+            if not match:
+                raise InvalidUserMention(query)
+
+            user_id = match.group(1)
+
+        genre_scores = defaultdict(list)
+
+        # Fetch albums and their ratings
+        for album in Album.select().prefetch(Rating):
+            if not album.genres:
+                continue
+
+            genres = [g.strip() for g in album.genres.split(',')]
+            scores = [r.score for r in album.ratings]
+
+            if not scores:
+                continue
+
+            for genre in genres:
+                genre_scores[genre].extend(scores)
+
+        # Aggregate
+        genre_stats = []
+
+        for genre, scores in genre_scores.items():
+            avg = sum(scores) / len(scores)
+            count = len(scores)
+            weighted = avg * math.log(1 + count)
+            genre_stats.append((genre, avg, count, weighted))
+
+        # Sort by weighted score
+        genre_stats.sort(key=lambda x: x[3], reverse=True)
+
+        embed = top_genres_embed(genre_stats[:20])
+
+        await ctx.send(embed=embed)
+
+    @disabled()
     @commands.command(aliases=["rpy"])
     async def ratings_per_year(self, ctx: commands.Context, *, query: str | None = None) -> None:
         """
@@ -324,7 +372,7 @@ class ReleasesCog(commands.Cog):
 
             return
 
-        embed = ratings_per_year(ratings, user_id)
+        embed = ratings_per_year_embed(ratings, user_id)
 
         await ctx.send(embed=embed)
 

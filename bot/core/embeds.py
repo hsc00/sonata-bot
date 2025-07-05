@@ -397,7 +397,7 @@ def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:
     )
 
 
-def ratings_per_year(
+def ratings_per_year_embed(
         ratings: list[dict],
         user: str,
         start: int = 1
@@ -414,6 +414,48 @@ def ratings_per_year(
     return (
         EmbedBuilder()
         .with_title(f"{user}'s ratings per year")
+        .with_description(description)
+        .build()
+    )
+
+
+def profile_embed(
+        user_name: str,
+        average_rating: float
+) -> discord.Embed:
+    """
+    Create an embed for the user profile.
+    """
+
+    description = f"Average rating: {format_star_score(average_rating)}\n"
+    description += "Number of ratings: 1230\n"
+
+    return (
+        EmbedBuilder()
+        .with_title(user_name)
+        .with_description(description)
+        .build()
+    )
+
+
+def top_genres_embed(
+        genres: list,
+        start: int = 1
+) -> discord.Embed:
+    """
+    Create an embed for the top genres.
+    """
+
+    print(genres)
+
+    description = "\n".join(
+        f"{i}. {genre[0]} - {format_star_score(genre[1])} ({genre[2]} ratings)" for i, genre in
+        enumerate(genres, start=start)
+    )
+
+    return (
+        EmbedBuilder()
+        .with_title(f"Top Genres")
         .with_description(description)
         .build()
     )

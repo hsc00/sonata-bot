@@ -4,8 +4,10 @@ discord.py
 pandas
 python-dotenv
 peewee
+playhouse
 requests
 rich
+setuptools
 spotipy
 syncedlyrics
 PyNaCl

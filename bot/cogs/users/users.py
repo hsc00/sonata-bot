@@ -10,7 +10,7 @@ from peewee import fn, IntegrityError
 from core.errors import InvalidUserMention, NoRatingsFound, RatingsImportFailed, NoFileAttached
 from core.utils import store_album
 from database import UserInfo, Rating, Album
-from core.embeds import ratings_rank_view, comparison_embed
+from core.embeds import ratings_rank_view, comparison_embed, profile_embed
 
 from core.decorators import disabled
 
@@ -128,6 +128,21 @@ class UsersCog(commands.Cog):
 
         # Compare ratings and create an embed
         embed = comparison_embed(list(common_ratings.dicts()))
+
+        await ctx.send(embed=embed)
+
+    @commands.command()
+    async def profile(self, ctx: commands.Context, *, query: str | None = None):
+        user_id = ctx.author.id if query is None else query
+        user_name = ctx.author.display_name if query is None else (await ctx.guild.fetch_member(int(user_id))).display_name
+        average_rating = (
+            Rating
+            .select(fn.AVG(Rating.score).alias('average_rating'))
+            .where(Rating.user == user_id)
+            .scalar()
+        )
+
+        embed = profile_embed(user_name, average_rating)
 
         await ctx.send(embed=embed)
 

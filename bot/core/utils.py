@@ -7,13 +7,16 @@ from database import Album
 from typing import Optional, Callable
 
 from core.constants import FULL_STAR, HALF_STAR
-from core.errors import SonataError
+from core.errors import SonataError, NoLastFMUsername
 from core.views import PaginatorView
 
 from database import AlbumIndex, UserInfo
 
 from api.last_fm import get_last_played
 from api.google_search import search_google
+
+from rich import print
+
 
 def score_to_stars(score: int) -> str:
     if not (1 <= score <= 10):
@@ -39,7 +42,7 @@ def store_album(album: Album) -> None:
 
 
 def search_album(album_name: str, artist_name: str = "") -> Album:
-    query = f'{album_name} {artist_name}'.strip()
+    query = f'{album_name} - {artist_name}'.strip()
 
     return (
         Album.select()
@@ -55,16 +58,12 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
 
     # Get last played album if no query is provided
     if query is None:
-        user = UserInfo.get_or_none(
-            UserInfo.user_id == user_id,
-        )
+        user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+        last_fm_username = user.lastfm_username if user else None
 
-        if user is None:
-            raise SonataError(
-                "❌ No last.fm username set. Please provide a search term or set your last.fm username."
-            )
+        if last_fm_username is None:
+            raise NoLastFMUsername()
 
-        last_fm_username = user.lastfm_username
         last_played = get_last_played(last_fm_username)
 
         if not last_played:
@@ -83,11 +82,11 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
     # If the album is not found in the database, search for it on Google
     if not album:
         logger.info(
-            f'Album "{album_name}" not found in the database. Searching on Google...'
+            f'Album "{artist_name} - {album_name}" not found in the database. Searching on Google...'
         )
 
         # Search for the album on Google
-        result = search_google(album_name)
+        result = search_google(f"{artist_name} - {album_name}")
 
         if result is None:
             raise SonataError(
@@ -95,15 +94,18 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
             )
 
         # Search again with the result name
-        album = search_album(result["pagemap"]["musicalbum"][0]["name"])
+        album = search_album(
+            result["pagemap"]["musicalbum"][0]["name"],
+            result["pagemap"]["musicgroup"][0]["name"]
+        )
 
         if not album:
             album = album_from_google_result(result)
 
     # Update album details if they are missing
     if album.rating_count is None:
-        logger.info(f'Album "{album_name}" found, but missing details. Updating...')
-        result = search_google(album_name)
+        logger.info(f'Album "{artist_name} - {album_name}" found, but missing details. Updating...')
+        result = search_google(f"{album_name}")
 
         if result:
             updated_album = album_from_google_result(result)
@@ -119,6 +121,7 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
                 "url",
             ]:
                 setattr(album, field, getattr(updated_album, field))
+
             album.save()
 
     return album
@@ -140,7 +143,7 @@ def album_from_google_result(result: dict) -> Album:
         ).group(1)
     )
 
-    cover_url = pagemap["cse_thumbnail"][0]["src"]
+    cover_url = f'{pagemap["cse_image"][0]["src"]}/cover.jpg'
 
     genres = (match := re.search(r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"])) and match.group(1)
 

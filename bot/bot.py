@@ -3,7 +3,6 @@ import discord
 
 from discord.ext import commands
 
-from core import events
 from core.config import *
 from core.events import init_events
 from database import *

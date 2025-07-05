@@ -1,32 +1,24 @@
 These are the Sonata bible commands:
 # Setup
-- `setfm <username>`: Set your last.fm username.
+- `setfm <username>`: Set your last.fm username. ✅
 - `setrym <username>`: Set your RYM username.
 - `setspotify`: Set your connection between Spotify and Sonata bot.
-- `i or import`: Import your RYM ratings to the bot. Check instructions [here].
+- `i or import`: Import your RYM ratings to the bot. Check instructions [here]. ✅
 - `pingsonata`: Check if the bot is online.
 
-
-
 # Albums
-- `ab or album`: Check RYM info for an album or release.
-- `wa or whoknowsalbum`: Check who rated a release
-- `ratingchanges or rc`: Check the rating changes for a release.
-- `rdr (roast/glaze) or randomrating` (roast/glaze): Check a random rating/roast/glaze from available users.
-- `wlr or wholikesrelease`: Check who likes a release.
+- `ab or album`: Check RYM info for an album or release. ✅
+- `wa or whoknowsalbum`: Check who rated a release ✅
+- `ratingchanges or rc`: Check the rating changes for a release. ⌛
+- `rdr (roast/glaze) or randomrating` (roast/glaze): Check a random rating/roast/glaze from available users. ✅
+- `wlr or wholikesrelease`: Check who likes a release. 🚫
 - `mlr or mostlovedreleases`: Check the most loved releases.
-- `wdr or whodislikesrelease`: Check who dislikes a release.
+- `wdr or whodislikesrelease`: Check who dislikes a release. 🚫
 - `mhr or mosthatedreleases`: Check the most hated releases.
-- `new or newreleases` : Searches for new releases.
+- `new or newreleases` : Searches for new releases. ✅
 # Albums
-- `mrr or mostratedreleases` : Checks the server most rated albums.
-- `brr or bestratedreleases` : Checks the server best rated albums.
-
-
-
-
-
-
+- `mrr or mostratedreleases` : Checks the server most rated albums. ✅
+- `brr or bestratedreleases` : Checks the server best rated albums. ✅
 
 # Artists
 - `a or artist`: Check RYM and last.fm info for an artist.
@@ -39,25 +31,16 @@ These are the Sonata bible commands:
 - `wda or whodislikesartist`: Check who dislikes an artist.
 - `mha or mosthatedartists`: Check the most hated artists.
 # Artists
-- `ar or artistratings (user)` : Checks your artist ratings.
-- `mra or mostratedartists` : Checks the server most rated artists.
-- `bra or bestratedartists (user)` : Checks the best rated artists.
+- `ar or artistratings (user)` : Checks your artist ratings. ✅
+- `mra or mostratedartists` : Checks the server most rated artists. ✅
+- `bra or bestratedartists (user)` : Checks the best rated artists. ✅
 - `wra or worstratedartists (user)` : Checks the worst rated artists.
-
-
-
-
 
 # Tracks
 - `tr` or `trackinfo`: Check track info.
 - `samples`: Check samples and interpolations used/being used in a track.
 - `covers`: Check if a track is a cover or has covers.
-- `lyrics` or `lr`: Check the current lyrics for the current or a specific track, you can input a timestamp.
-
-
-
-
-
+- `lyrics` or `lr`: Check the current lyrics for the current or a specific track, you can input a timestamp. ✅
 
 # User Stats 
 - `spr` or `sonataprofile`: Check your own or another person's profile.
@@ -66,5 +49,5 @@ These are the Sonata bible commands:
 - `rr` or `ratingsrank`: Checks the ratings rank.
 - `rg` or `ratingsglazers`: Checks the ratings glazers rank.
 - `rh` or `ratingshaters`: Checks the ratings haters rank.
-- `aoty (year) (user)`: Checks the highest rated releases from a year.
+- `aoty (year) (user)`: Checks the highest rated releases from a year. ✅
 - `aotyl (year) (user)`: Checks the lowest rated releases from a year.

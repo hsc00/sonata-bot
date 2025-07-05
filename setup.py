@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     package_dir={"": "bot"},
     packages=find_packages(where="bot"),
-    py_modules=["bot", "config"],
+    py_modules=["bot"],
 
     entry_points={
         "console_scripts": [

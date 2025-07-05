@@ -18,9 +18,8 @@ class TracksCog(commands.Cog):
     @commands.command(aliases=["lr"])
     async def lyrics(self, ctx: commands.Context):
         user_id = str(ctx.author.id)
-        last_fm_username = UserInfo.get_or_none(
-            UserInfo.user_id == user_id,
-        ).lastfm_username
+        user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+        last_fm_username = user.lastfm_username if user else None
 
         if last_fm_username is None:
             raise NoLastFMUsername()
@@ -51,6 +50,5 @@ class TracksCog(commands.Cog):
     @commands.command()
     async def samples(self, ctx: commands.Context):
         user_id = str(ctx.author.id)
-        last_fm_username = UserInfo.get_or_none(
-            UserInfo.user_id == user_id,
-        ).lastfm_username
+        user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+        last_fm_username = user.lastfm_username if user else None
