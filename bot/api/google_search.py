@@ -1,7 +1,10 @@
+import logging
 import re
 import requests
 
 from core.config import google_token, cse_id
+
+logger = logging.getLogger(__name__)
 
 
 def search_google(query: str) -> dict | None:
@@ -27,7 +30,7 @@ def search_google(query: str) -> dict | None:
                         return result
 
             else:
-                print(f"Google search failed with status code: {response.status_code}")
+                logger.error(f"Google search failed with status code: {response.status_code}")
 
                 return None
 

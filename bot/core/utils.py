@@ -15,9 +15,6 @@ from database import AlbumIndex, UserInfo
 from api.last_fm import get_last_played
 from api.google_search import search_google
 
-from rich import print
-
-
 def score_to_stars(score: int) -> str:
     if not (1 <= score <= 10):
         raise ValueError("Score must be between 1 and 10")
@@ -104,8 +101,8 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
 
     # Update album details if they are missing
     if album.rating_count is None:
-        logger.info(f'Album "{artist_name} - {album_name}" found, but missing details. Updating...')
-        result = search_google(f"{album_name}")
+        logger.info(f'Album "{album_name}" found, but missing details. Updating...')
+        result = search_google(f"{album_name}" if not artist_name else f"{artist_name} - {album_name}")
 
         if result:
             updated_album = album_from_google_result(result)

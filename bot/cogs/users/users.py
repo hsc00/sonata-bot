@@ -134,7 +134,8 @@ class UsersCog(commands.Cog):
     @commands.command()
     async def profile(self, ctx: commands.Context, *, query: str | None = None):
         user_id = ctx.author.id if query is None else query
-        user_name = ctx.author.display_name if query is None else (await ctx.guild.fetch_member(int(user_id))).display_name
+        user_name = ctx.author.display_name if query is None else (
+            await ctx.guild.fetch_member(int(user_id))).display_name
         average_rating = (
             Rating
             .select(fn.AVG(Rating.score).alias('average_rating'))
@@ -168,10 +169,11 @@ class UsersCog(commands.Cog):
             # Read the CSV file
             rows = list(csv.DictReader(response.text.splitlines()))
 
-            for row in rows:
-                await self.import_rating(ctx.author.id, row)
+            with ctx.typing():
+                for row in rows:
+                    await self.import_rating(ctx.author.id, row)
 
-            await ctx.send(content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>.")
+                await ctx.send(content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>.")
 
         except Exception:
             raise RatingsImportFailed()

@@ -1,6 +1,10 @@
+import logging
+
 from discord.ext.commands import CommandNotFound
 
 from core.errors import SonataError
+
+logger = logging.getLogger(__name__)
 
 
 def init_events(bot):
@@ -19,6 +23,6 @@ def init_events(bot):
             await ctx.send(f"❌ {e}. Please check the command name and try again.")
 
         except Exception as e:
-            print(f"An error occurred while handling an error: {e.__class__.__name__}: {e}")
+            logger.error(f"An error occurred while handling an error: {e.__class__.__name__}: {e}")
 
             await ctx.send("❌ An unexpected error occurred. Please try again later.")
