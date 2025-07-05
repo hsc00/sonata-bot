@@ -3,20 +3,20 @@ import discord
 
 from discord.ext import commands
 
-from config import *
+from core.config import *
 from database import *
+
+import logging
 
 discord_bot_token = os.getenv("DISCORD_SONATA_TOKEN")
 
-
-class BotMessage:
-    def __init__(self, channel, author, content):
-        self.channel = channel
-        self.author = author
-        self.content = content
-        self.guild = channel.guild
-        self._state = channel._state
-        self.id = 1
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 
 
 class SonataBot(commands.Bot):

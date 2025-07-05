@@ -7,8 +7,12 @@ from discord import Message
 
 from peewee import fn
 
-from utils import fetch_album, paginate_embeds, SonataError, disabled
-from utils.embeds import *
+from api.sputnik import fetch_new_releases
+from core.utils import fetch_album, paginate_embeds, SonataError
+from core.decorators import disabled
+from core.embeds import *
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
 
 from database.models import Album, Rating
 
@@ -18,6 +22,13 @@ logger = logging.getLogger(__name__)
 class ReleasesCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+        self.scheduler = AsyncIOScheduler()
+        self.scheduler.add_job(
+            self.new_releases,
+            CronTrigger(day_of_week='fri', hour=0, minute=0),  # Every Friday at 00:00
+            name="New Releases",
+        )
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
@@ -53,7 +64,7 @@ class ReleasesCog(commands.Cog):
 
             return
 
-        embed = make_album_embed(release)
+        embed = album_embed(release)
 
         await ctx.send(embed=embed)
 
@@ -88,7 +99,7 @@ class ReleasesCog(commands.Cog):
 
         view, pages = paginate_embeds(
             ratings,
-            make_who_rated_album_embed,
+            who_rated_album_embed,
             per_page=10,
             album=release,
             user_id=ctx.message.author.id,
@@ -152,7 +163,7 @@ class ReleasesCog(commands.Cog):
 
         view, pages = paginate_embeds(
             top_releases,
-            make_best_rated_albums_embed,
+            best_rated_albums_embed,
             per_page=10,
             server_name=ctx.guild.name
         )
@@ -194,7 +205,7 @@ class ReleasesCog(commands.Cog):
 
         view, pages = paginate_embeds(
             most_rated_releases,
-            make_most_rated_releases_embed,
+            most_rated_releases_embed,
             per_page=10,
         )
 
@@ -228,7 +239,7 @@ class ReleasesCog(commands.Cog):
 
         user = await ctx.bot.fetch_user(rating.user)
 
-        await ctx.send(embed=make_rating_embed(user, rating))
+        await ctx.send(embed=rating_embed(user, rating))
 
     @commands.command(aliases=["aoty"])
     async def album_of_the_year(self, ctx: commands.Context, *, query: str | None) -> None:
@@ -270,7 +281,7 @@ class ReleasesCog(commands.Cog):
 
         view, pages = paginate_embeds(
             ratings,
-            make_album_of_the_year_embed,
+            album_of_the_year_embed,
             per_page=10,
             user=ctx.message.author,
             year=year,
@@ -319,3 +330,24 @@ class ReleasesCog(commands.Cog):
         embed = ratings_per_year(ratings, user_id)
 
         await ctx.send(embed=embed)
+
+    async def new_releases(self):
+        """
+        Get the new releases of the week.
+        """
+
+        channel_id = 1245325666900115517
+        channel = self.bot.get_channel(channel_id)
+        new_releases = fetch_new_releases()
+
+        if not new_releases:
+            await channel.send("❌ No new releases found.")
+
+            return
+
+        for release in new_releases:
+            try:
+                await self.release.callback(self, channel, query=release)
+
+            except SonataError:
+                continue

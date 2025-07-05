@@ -1,10 +1,10 @@
 import re
 import requests
 
-from config import google_tokens, cse_id
+from core.config import google_tokens, cse_id
 
 
-def search_album(query: str) -> dict | None:
+def search_google(query: str) -> dict | None:
     """
     Search for a RYM album on Google.
     """

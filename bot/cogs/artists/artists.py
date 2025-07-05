@@ -5,8 +5,8 @@ from peewee import fn
 
 from api.last_fm import get_last_played
 from database import UserInfo, AlbumIndex
-from utils import paginate_embeds
-from utils.embeds import *
+from core.utils import paginate_embeds
+from core.embeds import *
 
 
 class ArtistCog(commands.Cog):
@@ -23,19 +23,22 @@ class ArtistCog(commands.Cog):
             last_fm_username = UserInfo.get_or_none(str(ctx.message.author.id)).lastfm_username
 
             if last_fm_username is None:
-                await ctx.send('Please provide an artist or use `!setfm` to set your last.fm account.')
+                await ctx.send(
+                    "❌ No last.fm username set. Please provide a search term or set your last.fm username by running `!set_lastfm <username>`.")
 
                 return None
 
-            album_name, _, _ = get_last_played(last_fm_username)
+            _, artist_name, _ = get_last_played(last_fm_username)
             user_id = ctx.message.author.id
 
-            if not album_name:
+            if not artist_name:
                 await ctx.send(
-                    "Could not retrieve the last played album. Please provide a search term."
+                    "Could not retrieve the last played artist. Please provide a search term."
                 )
 
                 return None
+
+            artist_query = artist_name
 
         else:
             # Fetch user ID from mention if provided
@@ -43,11 +46,11 @@ class ArtistCog(commands.Cog):
 
             if user_mention:
                 user_id = user_mention.group(1)
-                album_query = query.replace(f"<@{user_id}>", "").strip()
+                artist_query = query.replace(f"<@{user_id}>", "").strip()
 
             else:
                 user_id = ctx.message.author.id
-                album_query = query.strip()
+                artist_query = query.strip()
 
         ratings = (
             Rating
@@ -56,18 +59,18 @@ class ArtistCog(commands.Cog):
             .join(AlbumIndex, on=(Album.id == AlbumIndex.rowid))
             .where(
                 (Rating.user == user_id) &
-                (AlbumIndex.artist.match(album_query))
+                (AlbumIndex.artist.match(artist_query))
             )
             .order_by(Rating.score.desc())
             .limit(100)
         )
 
         if len(ratings) == 0:
-            await ctx.send(f'❌ No ratings exist for "{query}".')
+            await ctx.send(f'❌ No ratings exist for "{artist_query}".')
 
             return None
 
-        embed = make_artist_ratings_embed(ratings, ratings[0].album.artist, ctx.message.author)
+        embed = artist_ratings_embed(ratings, ratings[0].album.artist, ctx.message.author)
 
         await ctx.send(embed=embed)
 
@@ -117,7 +120,7 @@ class ArtistCog(commands.Cog):
 
         view, pages = paginate_embeds(
             best_rated_artists,
-            make_best_rated_artists_embed,
+            best_rated_artists_embed,
             per_page=10,
             server_name=ctx.guild.name
         )
@@ -160,7 +163,7 @@ class ArtistCog(commands.Cog):
 
         view, pages = paginate_embeds(
             most_rated_artists,
-            make_most_rated_artists_embed,
+            most_rated_artists_embed,
             per_page=10,
             user_id=user_id,
             server_name=ctx.guild.name

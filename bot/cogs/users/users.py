@@ -8,10 +8,9 @@ from discord.ext import commands
 from peewee import fn, IntegrityError
 
 from database import UserInfo, Rating, Album
-from utils.embeds import make_ratings_rank_view, make_comparison_embed
+from core.embeds import ratings_rank_view, comparison_embed
 
-from utils import utils, disabled
-
+from core.decorators import disabled
 
 class UsersCog(commands.Cog):
     def __init__(self, bot):
@@ -33,7 +32,7 @@ class UsersCog(commands.Cog):
 
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
-    @commands.command()
+    @commands.command(alias="setlastfm")
     async def set_lastfm(self, ctx: commands.Context, *, username: str | None):
         """
         Set your last.fm username.
@@ -44,7 +43,14 @@ class UsersCog(commands.Cog):
 
             return
 
-        UserInfo.create(user_id=str(ctx.author.id), lastfm_username=username)
+        user_info, created = UserInfo.get_or_create(
+            user_id=str(ctx.author.id),
+            defaults={'lastfm_username': username}
+        )
+
+        if not created:
+            user_info.lastfm_username = username
+            user_info.save()
 
         await ctx.send(f"Your last.fm username has been set to **{username}**.")
 
@@ -67,7 +73,7 @@ class UsersCog(commands.Cog):
 
             return
 
-        view = make_ratings_rank_view(ctx.guild.name, ratings)
+        view = ratings_rank_view(ctx.guild.name, ratings)
 
         await ctx.send(embed=view.pages[0], view=view)
 
@@ -124,7 +130,7 @@ class UsersCog(commands.Cog):
             return
 
         # Compare ratings and create an embed
-        comparison_embed = make_comparison_embed(list(common_ratings.dicts()))
+        comparison_embed = comparison_embed(list(common_ratings.dicts()))
 
         await ctx.send(embed=comparison_embed)
 

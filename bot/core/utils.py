@@ -1,18 +1,19 @@
 import logging
 import re
+
 from urllib.parse import quote
 
-from discord.ext import commands
-
-from api.last_fm import get_last_played
-from api.google_search import search_album as search_google
-from database import Album, AlbumIndex, UserInfo
+from database import Album
 from typing import Optional, Callable
 
-from utils.constants import *
-from utils.exceptions import SonataError
-from utils.views import PaginatorView
+from core.constants import FULL_STAR, HALF_STAR
+from core.errors import SonataError
+from core.views import PaginatorView
 
+from database import AlbumIndex, UserInfo
+
+from api.last_fm import get_last_played
+from api.google_search import search_google
 
 def score_to_stars(score: int) -> str:
     if not (1 <= score <= 10):
@@ -49,7 +50,7 @@ def search_album(album_name: str, artist_name: str = "") -> Album:
     )
 
 
-async def fetch_album(user_id: str, query: str) -> Optional[Album]:
+async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
     logger = logging.getLogger(__name__)
 
     # Get last played album if no query is provided
@@ -143,10 +144,15 @@ def album_from_google_result(result: dict) -> Album:
 
     genres = (match := re.search(r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"])) and match.group(1)
 
-    rating = pagemap["aggregaterating"][0]
-    rating_score, rating_count = float(rating["ratingvalue"]), int(
-        rating["ratingcount"]
-    )
+    rating = pagemap.get("aggregaterating", [None])[0]
+
+    if rating is not None:
+        rating_score, rating_count = float(rating["ratingvalue"]), int(
+            rating["ratingcount"]
+        )
+
+    else:
+        rating_score, rating_count = None, None
 
     if matches := re.search(
             r"Rated #(\d+) in the best albums of \d+(?:, and #(\d+) of all time)?",
@@ -177,7 +183,7 @@ def album_from_google_result(result: dict) -> Album:
     return album
 
 
-def make_rym_artist_url(artist_name: str) -> str:
+def create_rym_artist_url(artist_name: str) -> str:
     """
     Create a RateYourMusic URL for the given artist name.
     """
@@ -187,7 +193,7 @@ def make_rym_artist_url(artist_name: str) -> str:
 
 def paginate_embeds(
         items: list,
-        make_embed_fn: Callable,
+        embed_fn: Callable,
         per_page: int = 10,
         *args,
         **kwargs
@@ -197,17 +203,10 @@ def paginate_embeds(
 
     for i in range(num_pages):
         page_items = items[i * per_page:(i + 1) * per_page]
-        embed = make_embed_fn(page_items, *args, **kwargs, start=i * per_page)
+        embed = embed_fn(page_items, *args, **kwargs, start=i * per_page)
         embed.set_footer(text=f"Page {i + 1}/{num_pages}")
         pages.append(embed)
 
     view = PaginatorView(pages)
 
     return view, pages
-
-
-def disabled():
-    def predicate(ctx):
-        raise commands.DisabledCommand("This command is disabled.")
-
-    return commands.check(predicate)

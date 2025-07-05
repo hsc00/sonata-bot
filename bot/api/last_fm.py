@@ -1,6 +1,6 @@
 import requests
 
-from config import lastfm_api_key as api_key
+from core.config import lastfm_api_key as api_key
 
 
 def get_last_played(username: str):
