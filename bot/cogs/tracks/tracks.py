@@ -6,16 +6,15 @@ from syncedlyrics import search
 from api.last_fm import get_last_played
 from core.decorators import disabled
 from core.errors import NoLyricsFound, NoLastFMUsername
-from core.utils import paginate_embeds
 from database import UserInfo
-from core.embeds import lyrics_embed
+from core.embeds import lyrics_embed, paginate_embeds
 
 
 class TracksCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["lr"])
+    @commands.hybrid_command(name="lyrics", aliases=["lr"])
     async def lyrics(self, ctx: commands.Context):
         user_id = str(ctx.author.id)
         user = UserInfo.get_or_none(UserInfo.user_id == user_id)

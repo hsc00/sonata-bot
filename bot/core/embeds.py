@@ -1,5 +1,5 @@
 from math import ceil
-from typing import Self, Optional
+from typing import Self, Optional, Callable
 
 import discord
 
@@ -459,3 +459,24 @@ def top_genres_embed(
         .with_description(description)
         .build()
     )
+
+
+def paginate_embeds(
+        items: list,
+        embed_fn: Callable,
+        per_page: int = 10,
+        *args,
+        **kwargs
+):
+    pages = []
+    num_pages = (len(items) + per_page - 1) // per_page
+
+    for i in range(num_pages):
+        page_items = items[i * per_page:(i + 1) * per_page]
+        embed = embed_fn(page_items, *args, **kwargs, start=i * per_page)
+        embed.set_footer(text=f"Page {i + 1}/{num_pages}")
+        pages.append(embed)
+
+    view = PaginatorView(pages)
+
+    return view, pages

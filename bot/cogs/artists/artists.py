@@ -4,9 +4,8 @@ from discord.ext import commands
 from peewee import fn
 
 from api.last_fm import get_last_played
-from core.errors import NoRatingsFound, NoLastFMUsername, InvalidUserMention
+from core.errors import NoRatingsFound, NoLastFMUsername
 from database import UserInfo, AlbumIndex
-from core.utils import paginate_embeds
 from core.embeds import *
 
 
@@ -14,16 +13,25 @@ class ArtistCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=["ar"])
-    async def artist_ratings(self, ctx: commands.Context, *, query: Optional[str] = None):
+    @commands.hybrid_command(name="artistratings", aliases=["ar"])
+    async def artist_ratings(
+            self, ctx: commands.Context,
+            user: discord.User | None = None,
+            artist_name: str | None = None
+    ):
         """
         Get the ratings for a given artist.
         """
 
-        if query is None:
+        if user is None:
             user_id = str(ctx.message.author.id)
-            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
-            last_fm_username = user.lastfm_username if user else None
+
+        else:
+            user_id = str(user.id)
+
+        if artist_name is None:
+            user_info = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user_info.lastfm_username if user_info else None
 
             if last_fm_username is None:
                 raise NoLastFMUsername()
@@ -39,16 +47,7 @@ class ArtistCog(commands.Cog):
             artist_query = artist_name
 
         else:
-            # Fetch user ID from mention if provided
-            user_mention = re.search(r"<@!?(\d+)>", query)
-
-            if user_mention:
-                user_id = user_mention.group(1)
-                artist_query = query.replace(f"<@{user_id}>", "").strip()
-
-            else:
-                user_id = ctx.message.author.id
-                artist_query = query.strip()
+            artist_query = artist_name.strip()
 
         ratings = (
             Rating
@@ -70,8 +69,12 @@ class ArtistCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["bra"])
-    async def best_rated_artists(self, ctx: commands.Context, *, query: Optional[str] = None) -> None:
+    @commands.hybrid_command(name="bestratedartists", aliases=["bra"])
+    async def best_rated_artists(
+            self,
+            ctx: commands.Context,
+            user: discord.User | None = None
+    ) -> None:
         """
         Get the best rated artists.
         """
@@ -99,13 +102,8 @@ class ArtistCog(commands.Cog):
 
         user_name = None
 
-        if query:
-            match = re.match(r"<@!?(\d+)>", query)
-
-            if not match:
-                raise InvalidUserMention(query)
-
-            user_id = match.group(1)
+        if user:
+            user_id = user.id
             user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
             best_rated_artists = best_rated_artists.where(Rating.user == user_id)
@@ -123,8 +121,12 @@ class ArtistCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.command(aliases=["mra"])
-    async def most_rated_artists(self, ctx: commands.Context, *, query: Optional[str] = None) -> None:
+    @commands.hybrid_command(name="mostratedartists", aliases=["mra"])
+    async def most_rated_artists(
+            self,
+            ctx: commands.Context,
+            user: discord.User | None = None,
+    ) -> None:
         """
         Get the most rated artists.
         """
@@ -140,17 +142,9 @@ class ArtistCog(commands.Cog):
 
         user_name = None
 
-        if query:
-            match = re.match(r"<@!?(\d+)>", query)
-
-            if not match:
-                await ctx.send("Please provide a valid user mention.")
-
-                return
-
-            user_id = match.group(1)
-            user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
-            most_rated_artists = most_rated_artists.where(Rating.user == user_id)
+        if user:
+            user_name = user.display_name
+            most_rated_artists = most_rated_artists.where(Rating.user == user.id)
 
         if not most_rated_artists:
             raise NoRatingsFound()

@@ -2,6 +2,7 @@ import csv
 import html
 import re
 
+import discord
 import requests
 
 from discord.ext import commands
@@ -35,7 +36,7 @@ class UsersCog(commands.Cog):
 
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
-    @commands.command(alias="setlastfm")
+    @commands.command(name="setlastfm", alias="setlastfm")
     async def set_lastfm(self, ctx: commands.Context, *, username: str | None):
         """
         Set your last.fm username.
@@ -57,7 +58,7 @@ class UsersCog(commands.Cog):
 
         await ctx.send(f"Your last.fm username has been set to **{username}**.")
 
-    @commands.command(aliases=["rr"])
+    @commands.hybrid_command(name="ratingsrank", aliases=["rr"])
     async def ratings_rank(self, ctx: commands.Context):
         """
         Get a ranking of users by their number of ratings.
@@ -131,10 +132,14 @@ class UsersCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command()
-    async def profile(self, ctx: commands.Context, *, query: str | None = None):
-        user_id = ctx.author.id if query is None else query
-        user_name = ctx.author.display_name if query is None else (
+    @commands.hybrid_command()
+    async def profile(
+            self,
+            ctx: commands.Context,
+            user: discord.User | None = None
+    ):
+        user_id = ctx.author.id if user is None else user.id
+        user_name = ctx.author.display_name if user is None else (
             await ctx.guild.fetch_member(int(user_id))).display_name
         average_rating = (
             Rating
@@ -227,6 +232,15 @@ class UsersCog(commands.Cog):
 
         except IntegrityError:
             pass
+
+    @commands.hybrid_command(name="sync", description="Sync slash commands to the guild")
+    @commands.is_owner()
+    async def sync(self, ctx: commands.Context):
+        guild = discord.Object(id=ctx.guild.id)
+        self.bot.tree.copy_global_to(guild=guild)
+        synced = await self.bot.tree.sync(guild=guild)
+
+        await ctx.send(f"Synced {len(synced)} command(s) to this guild.", ephemeral=True)
 
 
 async def setup(bot):

@@ -4,16 +4,16 @@ import re
 from urllib.parse import quote
 
 from database import Album
-from typing import Optional, Callable
+from typing import Optional
 
 from core.constants import FULL_STAR, HALF_STAR
 from core.errors import SonataError, NoLastFMUsername
-from core.views import PaginatorView
 
 from database import AlbumIndex, UserInfo
 
 from api.last_fm import get_last_played
 from api.google_search import search_google
+
 
 def score_to_stars(score: int) -> str:
     if not (1 <= score <= 10):
@@ -193,24 +193,3 @@ def create_rym_artist_url(artist_name: str) -> str:
     """
 
     return f"https://rateyourmusic.com/artist/{quote(artist_name.replace(' ', '-').lower())}"
-
-
-def paginate_embeds(
-        items: list,
-        embed_fn: Callable,
-        per_page: int = 10,
-        *args,
-        **kwargs
-):
-    pages = []
-    num_pages = (len(items) + per_page - 1) // per_page
-
-    for i in range(num_pages):
-        page_items = items[i * per_page:(i + 1) * per_page]
-        embed = embed_fn(page_items, *args, **kwargs, start=i * per_page)
-        embed.set_footer(text=f"Page {i + 1}/{num_pages}")
-        pages.append(embed)
-
-    view = PaginatorView(pages)
-
-    return view, pages

@@ -1,3 +1,6 @@
+from datetime import datetime
+
+
 class SonataError(Exception):
     def __init__(self, message: str):
         self.message = message
@@ -31,8 +34,8 @@ class NoLyricsFound(SonataError):
 
 
 class InvalidYear(SonataError):
-    def __init__(self, query: str):
-        super().__init__(f"❌ Invalid year: {query}. Please provide a valid year.")
+    def __init__(self, year: int):
+        super().__init__(f"❌ Invalid year: {year}. Please provide a value between 1900 and {datetime.now().year}.")
 
 class RatingsImportFailed(SonataError):
     def __init__(self):

@@ -3,6 +3,7 @@ import math
 import re
 from collections import defaultdict
 from datetime import datetime
+from typing import Literal
 
 from discord.ext import commands
 from discord import Message
@@ -11,7 +12,7 @@ from peewee import fn
 
 from api.sputnik import fetch_new_releases
 from core.errors import NoRatingsFound, InvalidYear, InvalidUserMention
-from core.utils import fetch_album, paginate_embeds, SonataError
+from core.utils import fetch_album, SonataError
 from core.decorators import disabled
 from core.embeds import *
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -48,22 +49,20 @@ class ReleasesCog(commands.Cog):
 
             await self.release.callback(self, ctx, query=f"{artist} {album}")
 
-    @commands.command(aliases=["r", "a", "album"])
-    async def release(self, ctx: commands.Context, *, query: str | None = None) -> None:
+    @commands.hybrid_command(name="release", aliases=["r", "a", "album"])
+    async def release(
+            self,
+            ctx: commands.Context,
+            release_name: str | None = None
+    ) -> None:
         """
         Get information about a given release.
         """
 
-        try:
-            release = await fetch_album(str(ctx.author.id), query)
-
-        except SonataError as e:
-            await ctx.send(str(e))
-
-            return
+        release = await fetch_album(str(ctx.author.id), release_name)
 
         if release is None:
-            logger.error("No album found for %s", query)
+            logger.error("No album found for %s", release_name)
 
             return
 
@@ -71,21 +70,21 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["wr", "wa", "who_rated_album"])
-    async def who_rated_release(self, ctx: commands.Context, *, query: str | None = None) -> None:
+    @commands.hybrid_command(name="whoratedrelease", aliases=["wr", "wa", "who_rated_album"])
+    async def who_rated_release(
+            self,
+            ctx: commands.Context,
+            release_name: str | None = None
+    ) -> None:
         """
         Get the users who rated a given release.
         """
 
-        try:
-            release = await fetch_album(str(ctx.author.id), query)
-
-        except SonataError as e:
-            await ctx.send(str(e))
-
-            return
+        release = await fetch_album(str(ctx.author.id), release_name)
 
         if release is None:
+            logger.error("No album found for %s", release_name)
+
             return
 
         ratings = list(
@@ -109,10 +108,10 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.command(aliases=["brr", "brab", "best_rated_albums"])
+    @commands.hybrid_command(name="bestratedreleases", aliases=["brr", "brab", "best_rated_albums"])
     async def best_rated_releases(self, ctx: commands.Context) -> None:
         """
-        Get the best rated releases in the server or for a specific user.
+        Get the best rated releases in the server.
         """
 
         # Select releases with more than 3 ratings
@@ -171,8 +170,11 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.command(aliases=["mrr", "mrab", "most_rated_albums"])
-    async def most_rated_releases(self, ctx: commands.Context, *, query: str | None = None) -> None:
+    @commands.hybrid_command(name="mostratedreleases", aliases=["mrr", "mrab", "most_rated_albums"])
+    async def most_rated_releases(
+            self,
+            ctx: commands.Context,
+    ) -> None:
         """
         Get the most rated releases in the server.
         """
@@ -187,16 +189,6 @@ class ReleasesCog(commands.Cog):
             .limit(100)
         )
 
-        if query:
-            match = re.match(r"<@!?(\d+)>", query)
-
-            if not match:
-                raise InvalidUserMention(query)
-
-            user_id = match.group(1)
-
-            most_rated_releases = most_rated_releases.where(Rating.user == user_id)
-
         if len(most_rated_releases) == 0:
             await ctx.send("No albums found with more than 3 ratings.")
 
@@ -210,18 +202,22 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.command(aliases=["rdr"])
-    async def random_rating(self, ctx: commands.Context, *, query: str | None) -> None:
+    @commands.hybrid_command(name="randomrating", aliases=["rdr"])
+    async def random_rating(
+            self,
+            ctx: commands.Context,
+            filter: Literal["roast", "glaze"] | None = None
+    ) -> None:
         """
         Get a random rating.
         """
 
-        if query == "roast":
+        if filter == "roast":
             rating = Rating.select().where(
                 Rating.score <= 2.0,
             ).order_by(fn.Random()).first()
 
-        elif query == "glaze":
+        elif filter == "glaze":
             rating = Rating.select().where(
                 Rating.score >= 3.0,
             ).order_by(fn.Random()).first()
@@ -238,24 +234,29 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=rating_embed(user, rating))
 
-    @commands.command(aliases=["aoty"])
-    async def album_of_the_year(self, ctx: commands.Context, *, query: str | None) -> None:
+    @commands.hybrid_command(name="aoty")
+    async def album_of_the_year(
+            self,
+            ctx: commands.Context,
+            year: int | None,
+            user: discord.User | None = None
+    ) -> None:
         """
         Get the best rated albums of a given year.
         """
 
-        if query is None:
+        if year is None:
             year = datetime.now().year
 
         else:
-            try:
-                year = int(query)
+            if year < 1900 or year > datetime.now().year:
+                raise InvalidYear(year)
 
-                if year < 1900 or year > datetime.now().year:
-                    raise ValueError
+        if user:
+            user_id = str(user.id)
 
-            except ValueError:
-                raise InvalidYear(query)
+        else:
+            user_id = str(ctx.author.id)
 
         # Select ratings from the given year
         ratings = (
@@ -264,13 +265,13 @@ class ReleasesCog(commands.Cog):
             .join(Album)
             .where(
                 (Album.release_year == year) &
-                (Rating.user == str(ctx.author.id))
+                (Rating.user == user_id)
             )
             .order_by(Rating.score.desc())
         )
 
         if len(ratings) == 0:
-            await ctx.send(f"No ratings found for the year {year}.")
+            await ctx.send(f"❌ No ratings found for the year {year}.")
 
             return
 
