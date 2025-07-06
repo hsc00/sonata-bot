@@ -234,8 +234,12 @@ class UsersCog(commands.Cog):
             pass
 
     @commands.hybrid_command(name="sync", description="Sync slash commands to the guild")
-    @commands.is_owner()
     async def sync(self, ctx: commands.Context):
+        if ctx.author.id != self.bot.owner_id and ctx.author.id != 207090194006933505:
+            await ctx.send("You do not have permission to use this command.", ephemeral=True)
+
+            return
+
         guild = discord.Object(id=ctx.guild.id)
         self.bot.tree.copy_global_to(guild=guild)
         synced = await self.bot.tree.sync(guild=guild)
