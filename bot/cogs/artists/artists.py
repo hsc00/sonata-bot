@@ -56,6 +56,7 @@ class ArtistCog(commands.Cog):
             AlbumIndex
             .select(AlbumIndex.artist)
             .where(AlbumIndex.match(f'artist:{artist_query}'))
+            .order_by(AlbumIndex.bm25())
             .first()
         )
 
