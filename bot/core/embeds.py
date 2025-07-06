@@ -240,7 +240,7 @@ def rating_embed(
     )
 
 
-def artist_ratings_embed(ratings: list[Rating], artist: str, user: discord.User) -> discord.Embed:
+def artist_ratings_embed(ratings: list[Rating], artist: str, user_name: str) -> discord.Embed:
     lines = []
 
     for i, rating in enumerate(ratings[:10], start=1):
@@ -248,7 +248,7 @@ def artist_ratings_embed(ratings: list[Rating], artist: str, user: discord.User)
             f"{i}. {rating.album.title} \\- **{(rating.score / 2):.2f}** ⭐"
         )
 
-    title = f"Top {artist} albums for {user.display_name}"
+    title = f"Top {artist} albums for {user_name}"
 
     description = f"Average score: **{(sum(rating.score for rating in ratings) / len(ratings) / 2):.2f}** ⭐\n\n"
     description += "\n".join(lines)

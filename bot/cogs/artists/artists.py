@@ -1,4 +1,5 @@
 from discord.ext import commands
+from discord.ext.commands import Greedy
 from peewee import fn
 
 from api.last_fm import get_last_played
@@ -13,9 +14,11 @@ class ArtistCog(commands.Cog):
 
     @commands.hybrid_command(name="artistratings", aliases=["ar"])
     async def artist_ratings(
-            self, ctx: commands.Context,
-            artist_name: str | None = None,
+            self,
+            ctx: commands.Context,
             user: discord.User | None = None,
+            *,
+            artist_name: str | None = None,
     ):
         """
         Get the ratings for a given artist.
@@ -23,9 +26,11 @@ class ArtistCog(commands.Cog):
 
         if user is None:
             user_id = str(ctx.message.author.id)
+            user_name = ctx.message.author.display_name
 
         else:
             user_id = str(user.id)
+            user_name = user.display_name
 
         if artist_name is None:
             user_info = UserInfo.get_or_none(UserInfo.user_id == user_id)
@@ -45,7 +50,7 @@ class ArtistCog(commands.Cog):
             artist_query = artist_name
 
         else:
-            artist_query = artist_name.strip()
+            artist_query = artist_name
 
         artist = (
             AlbumIndex
@@ -73,7 +78,11 @@ class ArtistCog(commands.Cog):
         if len(ratings) == 0:
             raise NoRatingsFound(artist_query)
 
-        embed = artist_ratings_embed(ratings, ratings[0].album.artist, ctx.message.author)
+        embed = artist_ratings_embed(
+            ratings,
+            artist.artist,
+            user_name
+        )
 
         await ctx.send(embed=embed)
 
