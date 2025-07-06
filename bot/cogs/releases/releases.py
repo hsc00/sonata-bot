@@ -252,11 +252,11 @@ class ReleasesCog(commands.Cog):
             if year < 1900 or year > datetime.now().year:
                 raise InvalidYear(year)
 
-        if user:
-            user_id = str(user.id)
+        if not user:
+            user = ctx.author
 
-        else:
-            user_id = str(ctx.author.id)
+        user_id = str(user.id)
+        user_name = user.display_name
 
         # Select ratings from the given year
         ratings = (
@@ -279,7 +279,7 @@ class ReleasesCog(commands.Cog):
             ratings,
             album_of_the_year_embed,
             per_page=10,
-            user=ctx.message.author,
+            user_name=user_name,
             year=year,
         )
 

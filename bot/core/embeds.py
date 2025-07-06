@@ -188,7 +188,7 @@ def best_rated_albums_embed(
 
 def album_of_the_year_embed(
         ratings: list[Rating],
-        user: discord.user.User,
+        user_name: str,
         year: int,
         start: int = 1
 ) -> discord.Embed:
@@ -203,7 +203,7 @@ def album_of_the_year_embed(
             f"{i}. {rating.album.artist} - {rating.album.title} \\- **{(rating.score / 2):.2f}** ⭐"
         )
 
-    title = f"Top {year} releases for {user.display_name}"
+    title = f"Top {year} releases for {user_name}"
     description = "\n".join(lines)
 
     return (
