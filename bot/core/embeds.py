@@ -87,7 +87,7 @@ class EmbedBuilder:
 
 
 def format_album_title(album: Album) -> str:
-    return f"{album.artist} - {album.title} ({album.release_year})"
+    return f"{album.artist} - {album.title} ({album.release_year})" if album.release_year else f"{album.artist} - {album.title}"
 
 
 def format_star_score(score: float) -> str:

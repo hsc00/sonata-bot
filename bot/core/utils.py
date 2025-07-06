@@ -134,11 +134,15 @@ def album_from_google_result(result: dict) -> Album:
     title = pagemap["musicalbum"][0]["name"]
     artist = pagemap["musicgroup"][0]["name"]
 
-    release_year = int(
-        re.search(
+    release_year_match = re.search(
             r"Released .* (\d{4})", pagemap["metatags"][0]["og:description"]
-        ).group(1)
-    )
+        )
+
+    if  release_year_match:
+        release_year = int(release_year_match.group(1))
+
+    else:
+        release_year = None
 
     cover_url = f'{pagemap["cse_image"][0]["src"]}/cover.jpg'
 
