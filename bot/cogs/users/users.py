@@ -169,13 +169,14 @@ class UsersCog(commands.Cog):
             # Read the CSV file
             rows = list(csv.DictReader(response.text.splitlines()))
 
-            with ctx.typing():
+            async with ctx.typing():
                 for row in rows:
                     await self.import_rating(ctx.author.id, row)
 
                 await ctx.send(content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>.")
 
-        except Exception:
+        except Exception as e:
+            print(e)
             raise RatingsImportFailed()
 
     @staticmethod
