@@ -1,5 +1,3 @@
-import re
-
 from discord.ext import commands
 from peewee import fn
 
@@ -16,8 +14,8 @@ class ArtistCog(commands.Cog):
     @commands.hybrid_command(name="artistratings", aliases=["ar"])
     async def artist_ratings(
             self, ctx: commands.Context,
+            artist_name: str | None = None,
             user: discord.User | None = None,
-            artist_name: str | None = None
     ):
         """
         Get the ratings for a given artist.
@@ -49,14 +47,24 @@ class ArtistCog(commands.Cog):
         else:
             artist_query = artist_name.strip()
 
+        artist = (
+            AlbumIndex
+            .select(AlbumIndex.artist)
+            .where(AlbumIndex.artist.match(artist_query))
+            .group_by(AlbumIndex.artist)
+            .first()
+        )
+
+        if not artist:
+            raise NoRatingsFound(artist_query)
+
         ratings = (
             Rating
             .select()
             .join(Album)
-            .join(AlbumIndex, on=(Album.id == AlbumIndex.rowid))
             .where(
                 (Rating.user == user_id) &
-                (AlbumIndex.artist.match(artist_query))
+                (Album.artist == artist.artist)
             )
             .order_by(Rating.score.desc())
             .limit(100)
