@@ -97,7 +97,7 @@ class ArtistCog(commands.Cog):
             .limit(100)
         )
 
-        user_id = None
+        user_name = None
 
         if query:
             match = re.match(r"<@!?(\d+)>", query)
@@ -106,13 +106,12 @@ class ArtistCog(commands.Cog):
                 raise InvalidUserMention(query)
 
             user_id = match.group(1)
+            user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
             best_rated_artists = best_rated_artists.where(Rating.user == user_id)
 
         if not best_rated_artists:
             raise NoRatingsFound()
-
-        user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
         view, pages = paginate_embeds(
             best_rated_artists,
