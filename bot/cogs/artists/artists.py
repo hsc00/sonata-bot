@@ -55,8 +55,7 @@ class ArtistCog(commands.Cog):
         artist = (
             AlbumIndex
             .select(AlbumIndex.artist)
-            .where(AlbumIndex.artist.match(artist_query))
-            .group_by(AlbumIndex.artist)
+            .where(AlbumIndex.match(f'artist:{artist_query}'))
             .first()
         )
 
