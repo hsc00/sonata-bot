@@ -14,7 +14,7 @@ class TracksCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.hybrid_command(name="lyrics", aliases=["lr"])
+    @commands.hybrid_command(name="lyrics", aliases=["lr"], app_command=True)
     async def lyrics(self, ctx: commands.Context):
         user_id = str(ctx.author.id)
         user = UserInfo.get_or_none(UserInfo.user_id == user_id)

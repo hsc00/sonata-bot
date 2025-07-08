@@ -36,7 +36,7 @@ class UsersCog(commands.Cog):
 
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
-    @commands.command(name="setlastfm", alias="setlastfm")
+    @commands.hybrid_command(name="setlastfm", aliases=["set_lastfm"], app_command=True)
     async def set_lastfm(self, ctx: commands.Context, *, username: str | None):
         """
         Set your last.fm username.
