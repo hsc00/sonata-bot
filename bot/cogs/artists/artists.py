@@ -1,5 +1,4 @@
 from discord.ext import commands
-from discord.ext.commands import Greedy
 from peewee import fn
 
 from api.last_fm import get_last_played
@@ -54,9 +53,15 @@ class ArtistCog(commands.Cog):
 
         artist = (
             AlbumIndex
-            .select(AlbumIndex.artist)
+            .select(
+                AlbumIndex.artist,
+                fn.COUNT(Rating.id).alias("rating_count")
+            )
+            .join(Album, on=(AlbumIndex.rowid == Album.id))
+            .join(Rating, on=((Rating.album == Album.id) & (Rating.user == user_id)))
             .where(AlbumIndex.match(f'artist:{artist_query}'))
-            .order_by(AlbumIndex.bm25())
+            .group_by(AlbumIndex.artist)
+            .order_by(fn.COUNT(Rating.id).desc())
             .first()
         )
 
