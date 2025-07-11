@@ -4,7 +4,6 @@ import re
 
 import discord
 import requests
-from discord import app_commands
 
 from discord.ext import commands
 from peewee import fn, IntegrityError
@@ -209,19 +208,21 @@ class UsersCog(commands.Cog):
 
         title = html.unescape(row["Title"])
 
+        first_name = row[' First Name'] or None
+        last_name = row['Last Name']
+        artist = html.unescape(f"{first_name + " " if first_name else ""}{last_name}")
+        release_year = int(row.get("Release_Date") or "0")
+
         # Search for the album in the database
         try:
-            album = Album.get(Album.title == title)
+            album = Album.get(
+                Album.title == title,
+                Album.artist == artist,
+                Album.release_year == release_year
+            )
 
         # If the album is not found, create it
         except Album.DoesNotExist:
-            first_name = row[' First Name'] or None
-            last_name = row['Last Name']
-
-            artist = html.unescape(f"{first_name + " " if first_name else ""}{last_name}")
-
-            release_year = int(row.get("Release_Date") or "0")
-
             album = Album(
                 title=title,
                 artist=artist,
@@ -238,7 +239,9 @@ class UsersCog(commands.Cog):
                 album=album,
             )
 
-        except IntegrityError:
+        except IntegrityError as e:
+            print(e, album.title, album.artist, album.release_year)
+
             pass
 
     @commands.hybrid_command(name="sync", description="Sync slash commands to the guild or globally")
