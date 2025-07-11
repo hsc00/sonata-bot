@@ -421,14 +421,15 @@ def ratings_per_year_embed(
 
 def profile_embed(
         user_name: str,
-        average_rating: float
+        average_rating: float,
+        number_ratings: int
 ) -> discord.Embed:
     """
     Create an embed for the user profile.
     """
 
     description = f"Average rating: {format_star_score(average_rating)}\n"
-    description += "Number of ratings: 1230\n"
+    description += f"Number of ratings: {number_ratings}\n"
 
     return (
         EmbedBuilder()

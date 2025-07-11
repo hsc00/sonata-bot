@@ -149,7 +149,14 @@ class UsersCog(commands.Cog):
             .scalar()
         )
 
-        embed = profile_embed(user_name, average_rating)
+        number_ratings = (
+            Rating
+            .select(fn.COUNT(Rating.id).alias('rating_count'))
+            .where(Rating.user == user_id)
+            .scalar()
+        )
+
+        embed = profile_embed(user_name, average_rating, number_ratings)
 
         await ctx.send(embed=embed)
 
