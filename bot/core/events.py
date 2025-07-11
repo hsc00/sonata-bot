@@ -10,6 +10,8 @@ logger = logging.getLogger(__name__)
 def init_events(bot):
     @bot.event
     async def on_command_error(ctx, error: Exception):
+        logger.error(error)
+
         try:
             original = getattr(error, "original", error)
 
@@ -19,10 +21,8 @@ def init_events(bot):
             else:
                 raise original
 
-        except CommandNotFound as e:
-            await ctx.send(f"❌ {e}. Please check the command name and try again.")
+        except CommandNotFound:
+            pass
 
-        except Exception as e:
-            logger.error(f"An error occurred while handling an error: {e.__class__.__name__}: {e}")
-
+        except Exception:
             await ctx.send("❌ An unexpected error occurred. Please try again later.")
