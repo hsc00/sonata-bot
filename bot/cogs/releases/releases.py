@@ -53,6 +53,7 @@ class ReleasesCog(commands.Cog):
     async def release(
             self,
             ctx: commands.Context,
+            *,
             release_name: str | None = None
     ) -> None:
         """
@@ -74,6 +75,7 @@ class ReleasesCog(commands.Cog):
     async def who_rated_release(
             self,
             ctx: commands.Context,
+            *,
             release_name: str | None = None
     ) -> None:
         """
