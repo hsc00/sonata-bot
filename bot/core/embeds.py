@@ -4,7 +4,7 @@ from typing import Self, Optional, Callable
 import discord
 
 from database import Album, Rating
-from core.utils import score_to_stars, create_rym_artist_url
+from core.utils import score_to_stars, create_rym_search_artist_url, create_rym_search_release_url
 from core.constants import RYM_RATING_COLORS
 from core.views import PaginatorView
 
@@ -172,7 +172,7 @@ def best_rated_albums_embed(
 
     for i, (album, average_score, rating_count) in enumerate(top_releases, start=start):
         lines.append(
-            f"{i}. {album.artist} - {album.title} (**{(average_score / 2):.2f}** ⭐)"
+            f"{i}. {format_artist(album.artist)} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)"
         )
 
     title = f"Best rated albums in {server_name}"
@@ -200,7 +200,7 @@ def album_of_the_year_embed(
 
     for i, rating in enumerate(ratings[:10], start=start):
         lines.append(
-            f"{i}. {rating.album.artist} - {rating.album.title} \\- **{(rating.score / 2):.2f}** ⭐"
+            f"{i}. {format_artist(rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐"
         )
 
     title = f"Top {year} releases for {user_name}"
@@ -232,7 +232,7 @@ def rating_embed(
         EmbedBuilder()
         .with_title(title)
         .with_description(description)
-        .with_url(album.url)
+        .with_url(album.url or create_rym_search_release_url(album.title))
         .with_thumbnail(album.cover_url)
         .with_author(f"{user.name} rated...", user.avatar.url)
         .with_color(discord.Color(int(RYM_RATING_COLORS[rating.score].lstrip('#'), 16)))
@@ -245,7 +245,7 @@ def artist_ratings_embed(ratings: list[Rating], artist: str, user_name: str) -> 
 
     for i, rating in enumerate(ratings[:10], start=1):
         lines.append(
-            f"{i}. {rating.album.title} \\- **{(rating.score / 2):.2f}** ⭐"
+            f"{i}. {format_release(rating.album)} ({rating.album.release_year}) \\- {format_star_score(rating.score)}"
         )
 
     title = f"Top {artist} albums for {user_name}"
@@ -257,6 +257,7 @@ def artist_ratings_embed(ratings: list[Rating], artist: str, user_name: str) -> 
         EmbedBuilder()
         .with_title(title)
         .with_description(description)
+        .with_thumbnail(ratings[0].album.cover_url)
         .build()
     )
 
@@ -298,7 +299,7 @@ def most_rated_releases_embed(albums, start: int = 1) -> discord.Embed:
     """
 
     description = "\n".join(
-        f"{i}. {row.artist} \\- {row.title} (**{row.rating_count}** ratings)"
+        f"{i}. {format_artist(row.artist)} \\- [{row.title}]({create_rym_search_release_url(row.title)}) (**{row.rating_count}** ratings)"
         for i, row in enumerate(albums, start=start)
     )
 
@@ -322,7 +323,8 @@ def best_rated_artists_embed(
 
     title = f"Best rated artists for user {user_name}" if user_name else f"Best rated artists in {server_name}"
     description = "\n".join(
-        f"{i}. {row.artist} (**{row.average_score / 2:.2f} ⭐** from **{row.releases_count}** releases)"
+
+        f"{i}. {format_artist(row.artist)} ({format_star_score(row.average_score)} from **{row.releases_count}** releases)"
         for i, row in enumerate(best_rated_artists, start=start)
     )
 
@@ -346,7 +348,7 @@ def most_rated_artists_embed(
 
     title = f"Artists with most ratings for user {user_name}" if user_name else f"Artists with most ratings in {server_name}"
     description = "\n".join(
-        f"{i}. [{row.artist}]({create_rym_artist_url(row.artist)}) (**{row.rating_count}** ratings)"
+        f"{i}. {format_artist(row.artist)} (**{row.rating_count}** ratings)"
         for i, row in enumerate(most_rated_artists, start=start)
     )
 
@@ -481,3 +483,17 @@ def paginate_embeds(
     view = PaginatorView(pages)
 
     return view, pages
+
+
+def format_release(album: Album) -> str:
+    if album.url:
+        url = album.url
+
+    else:
+        url = create_rym_search_release_url(album.title)
+
+    return f"[{album.title}]({url})"
+
+
+def format_artist(artist: str) -> str:
+    return f"[{artist}]({create_rym_search_artist_url(artist)})"

@@ -194,9 +194,17 @@ def album_from_google_result(result: dict) -> Album:
     return album
 
 
-def create_rym_artist_url(artist_name: str) -> str:
+def create_rym_search_artist_url(artist_name: str) -> str:
     """
-    Create a RateYourMusic URL for the given artist name.
+    Create a RateYourMusic search URL for the given artist name.
     """
 
-    return f"https://rateyourmusic.com/artist/{quote(artist_name.replace(' ', '-').lower())}"
+    return f"https://rateyourmusic.com/search?searchtype=a&searchterm={quote(artist_name)}"
+
+
+def create_rym_search_release_url(release_name: str) -> str:
+    """
+    Create a RateYourMusic search URL for the given release name.
+    """
+
+    return f"https://rateyourmusic.com/search?searchtype=l&searchterm={quote(release_name)}"
