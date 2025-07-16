@@ -83,13 +83,16 @@ class ArtistCog(commands.Cog):
         if len(ratings) == 0:
             raise NoRatingsFound(artist_query)
 
-        embed = artist_ratings_embed(
+        view, pages = paginate_embeds(
             ratings,
-            artist.artist,
-            user_name
+            artist_ratings_embed,
+            per_page=10,
+            artist=artist.artist,
+            user_name=user_name,
+            average_score=sum(rating.score for rating in ratings) / len(ratings)
         )
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(name="bestratedartists", aliases=["bra"])
     async def best_rated_artists(
