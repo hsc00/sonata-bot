@@ -1,28 +1,26 @@
+from __future__ import annotations
+
+from api.last_fm import get_last_played
+from core.embeds import *
+from core.errors import NoLastFMUsername, NoRatingsFound
+from database import AlbumIndex, UserInfo
 from discord.ext import commands
 from peewee import fn
 
-from api.last_fm import get_last_played
-from core.errors import NoRatingsFound, NoLastFMUsername
-from database import UserInfo, AlbumIndex
-from core.embeds import *
-
 
 class ArtistCog(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @commands.hybrid_command(name="artistratings", aliases=["ar"])
     async def artist_ratings(
-            self,
-            ctx: commands.Context,
-            user: discord.User | None = None,
-            *,
-            artist_name: str | None = None,
-    ):
-        """
-        Get the ratings for a given artist.
-        """
-
+        self,
+        ctx: commands.Context,
+        user: discord.User | None = None,
+        *,
+        artist_name: str | None = None,
+    ) -> None:
+        """Get the ratings for a given artist."""
         if user is None:
             user_id = str(ctx.message.author.id)
             user_name = ctx.message.author.display_name
@@ -43,7 +41,7 @@ class ArtistCog(commands.Cog):
 
             if not artist_name:
                 await ctx.send(
-                    "Could not retrieve the last played artist. Please provide a search term."
+                    "Could not retrieve the last played artist. Please provide a search term.",
                 )
 
             artist_query = artist_name
@@ -52,14 +50,13 @@ class ArtistCog(commands.Cog):
             artist_query = artist_name
 
         artist = (
-            AlbumIndex
-            .select(
+            AlbumIndex.select(
                 AlbumIndex.artist,
-                fn.COUNT(Rating.id).alias("rating_count")
+                fn.COUNT(Rating.id).alias("rating_count"),
             )
             .join(Album, on=(AlbumIndex.rowid == Album.id))
             .join(Rating, on=((Rating.album == Album.id) & (Rating.user == user_id)))
-            .where(AlbumIndex.match(f'artist:{artist_query}'))
+            .where(AlbumIndex.match(f"artist:{artist_query}"))
             .group_by(AlbumIndex.artist)
             .order_by(fn.COUNT(Rating.id).desc())
             .first()
@@ -69,13 +66,9 @@ class ArtistCog(commands.Cog):
             raise NoRatingsFound(artist_query)
 
         ratings = (
-            Rating
-            .select()
+            Rating.select()
             .join(Album)
-            .where(
-                (Rating.user == user_id) &
-                (Album.artist == artist.artist)
-            )
+            .where((Rating.user == user_id) & (Album.artist == artist.artist))
             .order_by(Rating.score.desc())
             .limit(100)
         )
@@ -89,38 +82,35 @@ class ArtistCog(commands.Cog):
             per_page=10,
             artist=artist.artist,
             user_name=user_name,
-            average_score=sum(rating.score for rating in ratings) / len(ratings)
+            average_score=sum(rating.score for rating in ratings) / len(ratings),
         )
 
         await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(name="bestratedartists", aliases=["bra"])
     async def best_rated_artists(
-            self,
-            ctx: commands.Context,
-            user: discord.User | None = None
+        self,
+        ctx: commands.Context,
+        user: discord.User | None = None,
     ) -> None:
-        """
-        Get the best rated artists.
-        """
-
+        """Get the best rated artists."""
         w1, w2, w3 = 14, 0.07, 0.1
 
         best_rated_artists = (
-            Album
-            .select(
+            Album.select(
                 Album.artist,
-                fn.AVG(Rating.score).alias('average_score'),
-                fn.COUNT(fn.DISTINCT(Album.id)).alias('releases_count'),
+                fn.AVG(Rating.score).alias("average_score"),
+                fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
             )
             .join(Rating)
             .group_by(Album.artist)
             .having(fn.COUNT(Rating.id) > 3)
             .order_by(
-                (w1 * fn.AVG(Rating.score)
-                 + w2 * fn.COUNT(Rating.id)
-                 + w3 * fn.COUNT(fn.DISTINCT(Album.id)) * fn.AVG(Rating.score)
-                 ).desc()
+                (
+                    w1 * fn.AVG(Rating.score)
+                    + w2 * fn.COUNT(Rating.id)
+                    + w3 * fn.COUNT(fn.DISTINCT(Album.id)) * fn.AVG(Rating.score)
+                ).desc(),
             )
             .limit(100)
         )
@@ -148,17 +138,13 @@ class ArtistCog(commands.Cog):
 
     @commands.hybrid_command(name="mostratedartists", aliases=["mra"])
     async def most_rated_artists(
-            self,
-            ctx: commands.Context,
-            user: discord.User | None = None,
+        self,
+        ctx: commands.Context,
+        user: discord.User | None = None,
     ) -> None:
-        """
-        Get the most rated artists.
-        """
-
+        """Get the most rated artists."""
         most_rated_artists = (
-            Album
-            .select(Album.artist, fn.COUNT(Rating.id).alias('rating_count'))
+            Album.select(Album.artist, fn.COUNT(Rating.id).alias("rating_count"))
             .join(Rating)
             .group_by(Album.artist)
             .order_by(fn.COUNT(Rating.id).desc())
@@ -179,7 +165,7 @@ class ArtistCog(commands.Cog):
             most_rated_artists_embed,
             per_page=10,
             user_name=user_name,
-            server_name=ctx.guild.name
+            server_name=ctx.guild.name,
         )
 
         await ctx.send(embed=pages[0], view=view)

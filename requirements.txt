@@ -1,6 +1,7 @@
 apscheduler
 beautifulsoup4
 discord.py
+lyricsgenius
 pandas
 python-dotenv
 peewee

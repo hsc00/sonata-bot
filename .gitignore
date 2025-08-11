@@ -172,3 +172,5 @@ cython_debug/
 
 # Database
 *.db*
+
+.ruff_cache/

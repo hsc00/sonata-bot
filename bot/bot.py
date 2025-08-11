@@ -1,13 +1,11 @@
 import asyncio
+import logging
+
 import discord
-
-from discord.ext import commands
-
 from core.config import *
 from core.events import init_events
-from database import *
-
-import logging
+from database import Album, AlbumIndex, Rating, UserInfo, db
+from discord.ext import commands
 
 discord_bot_token = os.getenv("DISCORD_SONATA_TOKEN")
 
@@ -15,13 +13,13 @@ logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
     handlers=[
-        logging.StreamHandler()
-    ]
+        logging.StreamHandler(),
+    ],
 )
 
 
 class SonataBot(commands.Bot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(command_prefix="!", *args, **kwargs)
 
         init_events(self)
@@ -38,11 +36,11 @@ initial_extensions = [
     "cogs.artists",
     "cogs.releases",
     "cogs.tracks",
-    "cogs.users"
+    "cogs.users",
 ]
 
 
-async def main():
+async def main() -> None:
     async with bot:
         # Load extensions
         for extension in initial_extensions:

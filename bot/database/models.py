@@ -1,11 +1,12 @@
+from .database import BaseModel, db
 from peewee import *
-from playhouse.sqlite_ext import RowIDField, SearchField, FTSModel
-from .database import db, BaseModel
+from playhouse.sqlite_ext import FTSModel, RowIDField, SearchField
 
 
 class Album(BaseModel):
     title = TextField()
     artist = TextField()
+    album_artist = TextField(null=True)
     release_year = IntegerField(null=True)
     cover_url = TextField(null=True)
     genres = TextField(null=True)
@@ -23,19 +24,17 @@ class AlbumIndex(FTSModel):
 
     class Meta:
         database = db
-        options = {'tokenize': 'porter'}
+        options = {"tokenize": "porter"}
 
 
 class Rating(BaseModel):
     user = TextField()
-    score = IntegerField(constraints=[Check('score BETWEEN 1 AND 10')])
+    score = IntegerField(constraints=[Check("score BETWEEN 1 AND 10")])
     album = ForeignKeyField(Album, backref="ratings")
     review = TextField(null=True)
 
     class Meta:
-        indexes = (
-            (('user', 'album'), True),
-        )
+        indexes = ((("user", "album"), True),)
 
 
 class UserInfo(BaseModel):

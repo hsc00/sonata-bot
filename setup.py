@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="sonata-bot",
@@ -9,8 +9,8 @@ setup(
 
     entry_points={
         "console_scripts": [
-            "sonata-bot = bot:main",  
-        ]
+            "sonata-bot = bot:main",
+        ],
     },
 
     author="Educorreia932",

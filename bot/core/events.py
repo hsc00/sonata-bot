@@ -1,15 +1,15 @@
 import logging
 
-from discord.ext.commands import CommandNotFound
-
 from core.errors import SonataError
+from discord.ext import commands
+from discord.ext.commands import CommandNotFound
 
 logger = logging.getLogger(__name__)
 
 
-def init_events(bot):
+def init_events(bot: commands.Bot) -> None:
     @bot.event
-    async def on_command_error(ctx, error: Exception):
+    async def on_command_error(ctx: commands.Context, error: Exception) -> None:
         logger.error(error)
 
         try:

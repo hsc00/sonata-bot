@@ -1,23 +1,21 @@
 import logging
 import re
-import requests
 
-from core.config import google_token, cse_id
+import requests
+from core.config import cse_id, google_token
 
 logger = logging.getLogger(__name__)
 
 
 def search_google(query: str) -> dict | None:
+    """Search for a RYM album on Google.
     """
-    Search for a RYM album on Google.
-    """
-
     with requests.Session() as session:
         try:
             token = google_token
             search_url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={token}&cx={cse_id}"
             release_pattern = re.compile(
-                r"^https:\/\/rateyourmusic.com\/release\/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)\/([^\/]*)\/([^\/]*)\/?$"
+                r"^https:\/\/rateyourmusic.com\/release\/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)\/([^\/]*)\/([^\/]*)\/?$",
             )
             response = session.get(search_url)
 

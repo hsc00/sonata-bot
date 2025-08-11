@@ -1,21 +1,26 @@
+from __future__ import annotations
+
 from math import ceil
-from typing import Self, Optional, Callable
+from typing import Callable, Self
 
 import discord
-
-from database import Album, Rating
-from core.utils import score_to_stars, create_rym_search_artist_url, create_rym_search_release_url
 from core.constants import RYM_RATING_COLORS
+from core.utils import (
+    create_rym_search_artist_url,
+    create_rym_search_release_url,
+    score_to_stars,
+)
 from core.views import PaginatorView
+from database import Album, Rating
 
 
 class EmbedBuilder:
-    def __init__(self):
+    def __init__(self) -> None:
         self.title: str | None = None
         self.description: str | None = None
         self.url: str | None = None
         self.thumbnail: str | None = None
-        self.author: Optional[tuple[str, str]] = None
+        self.author: tuple[str, str] | None = None
         self.footer: str | None = None
         self.color: discord.Color = discord.Color.blue()
 
@@ -61,13 +66,15 @@ class EmbedBuilder:
 
     def build(self) -> discord.Embed:
         if not self.title or not self.description:
-            raise ValueError("Title and description must be set before building the embed.")
+            raise ValueError(
+                "Title and description must be set before building the embed.",
+            )
 
         embed = discord.Embed(
             title=self.title,
             description=self.description,
             url=self.url,
-            color=self.color
+            color=self.color,
         )
 
         if self.thumbnail:
@@ -87,7 +94,11 @@ class EmbedBuilder:
 
 
 def format_album_title(album: Album) -> str:
-    return f"{album.artist} - {album.title} ({album.release_year})" if album.release_year else f"{album.artist} - {album.title}"
+    return (
+        f"{album.album_artist or album.artist} - {album.title} ({album.release_year})"
+        if album.release_year
+        else f"{album.artist} - {album.title}"
+    )
 
 
 def format_star_score(score: float) -> str:
@@ -95,10 +106,7 @@ def format_star_score(score: float) -> str:
 
 
 def album_embed(album: Album) -> discord.Embed:
-    """
-    Create an embed for the album.
-    """
-
+    """Create an embed for the album."""
     title = format_album_title(album)
 
     description = ""
@@ -126,22 +134,19 @@ def album_embed(album: Album) -> discord.Embed:
 
 
 def who_rated_album_embed(
-        ratings: list[Rating],
-        album: Album,
-        user_id: int,
-        server_name: str,
-        start: int = 1
+    ratings: list[Rating],
+    album: Album,
+    user_id: int,
+    server_name: str,
+    start: int = 1,
 ) -> discord.Embed:
-    """
-    Create an embed for the album ratings.
-    """
-
+    """Create an embed for the album ratings."""
     average_score = (sum(rating.score for rating in ratings) / len(ratings)) / 2
 
     title = format_album_title(album)
     description = f"**{average_score:.2f}** ⭐ in **{server_name}** from **{len(ratings):,d}** ratings\n\n"
 
-    for (i, rating) in enumerate(ratings, start=start):
+    for i, rating in enumerate(ratings, start=start):
         position = f"{i + 1}."
 
         if rating.user == str(user_id):
@@ -160,47 +165,36 @@ def who_rated_album_embed(
 
 
 def best_rated_albums_embed(
-        top_releases: list[tuple[Album, int, int]],
-        server_name: str,
-        start: int = 1
+    top_releases: list[tuple[Album, int, int]],
+    server_name: str,
+    start: int = 1,
 ) -> discord.Embed:
-    """
-    Create an embed for the album ratings.
-    """
-
+    """Create an embed for the album ratings."""
     lines = []
 
-    for i, (album, average_score, rating_count) in enumerate(top_releases, start=start):
+    for i, (album, average_score, _) in enumerate(top_releases, start=start):
         lines.append(
-            f"{i}. {format_artist(album.artist)} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)"
+            f"{i}. {format_artist(album.artist)} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)",
         )
 
     title = f"Best rated albums in {server_name}"
     description = "\n".join(lines)
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .build()
-    )
+    return EmbedBuilder().with_title(title).with_description(description).build()
 
 
 def album_of_the_year_embed(
-        ratings: list[Rating],
-        user_name: str,
-        year: int,
-        start: int = 1
+    ratings: list[Rating],
+    user_name: str,
+    year: int,
+    start: int = 1,
 ) -> discord.Embed:
-    """
-    Create an embed for the album ratings.
-    """
-
+    """Create an embed for the album ratings."""
     lines = []
 
     for i, rating in enumerate(ratings[:10], start=start):
         lines.append(
-            f"{i}. {format_artist(rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐"
+            f"{i}. {format_artist(rating.album.album_artist or rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐",
         )
 
     title = f"Top {year} releases for {user_name}"
@@ -215,14 +209,8 @@ def album_of_the_year_embed(
     )
 
 
-def rating_embed(
-        user: discord.user.User,
-        rating: Rating
-) -> discord.Embed:
-    """
-    Create an embed for the rating.
-    """
-
+def rating_embed(user: discord.user.User, rating: Rating) -> discord.Embed:
+    """Create an embed for the rating."""
     album = rating.album
 
     title = f"{album.artist} - {album.title} ({album.release_year})"
@@ -235,23 +223,23 @@ def rating_embed(
         .with_url(album.url or create_rym_search_release_url(album.title))
         .with_thumbnail(album.cover_url)
         .with_author(f"{user.name} rated...", user.avatar.url)
-        .with_color(discord.Color(int(RYM_RATING_COLORS[rating.score].lstrip('#'), 16)))
+        .with_color(discord.Color(int(RYM_RATING_COLORS[rating.score].lstrip("#"), 16)))
         .build()
     )
 
 
 def artist_ratings_embed(
-        ratings: list[Rating],
-        artist: str,
-        user_name: str,
-        average_score: float,
-        start=1
+    ratings: list[Rating],
+    artist: str,
+    user_name: str,
+    average_score: float,
+    start: int = 1,
 ) -> discord.Embed:
     lines = []
 
     for i, rating in enumerate(ratings, start=start):
         lines.append(
-            f"{i}. {format_release(rating.album)} ({rating.album.release_year}) \\- {format_star_score(rating.score)}"
+            f"{i}. {format_release(rating.album)} ({rating.album.release_year}) \\- {format_star_score(rating.score)}",
         )
 
     title = f"Top {artist} albums for {user_name}"
@@ -268,7 +256,11 @@ def artist_ratings_embed(
     )
 
 
-def ratinks_rank_embed(server_name: str, ratings: list[Rating], start=1) -> discord.Embed:
+def ratinks_rank_embed(
+    server_name: str,
+    ratings: list[Rating],
+    start: int = 1,
+) -> discord.Embed:
     lines = []
 
     for i, row in enumerate(ratings, start=start):
@@ -277,12 +269,7 @@ def ratinks_rank_embed(server_name: str, ratings: list[Rating], start=1) -> disc
     title = f"{server_name} Ratings Rank"
     description = "\n".join(lines)
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .build()
-    )
+    return EmbedBuilder().with_title(title).with_description(description).build()
 
 
 def ratings_rank_view(server_name: str, ratings: list[Rating]) -> PaginatorView:
@@ -290,7 +277,7 @@ def ratings_rank_view(server_name: str, ratings: list[Rating]) -> PaginatorView:
     num_pages = ceil(len(ratings) / 10)
 
     for i in range(num_pages):
-        page_ratings = ratings[i * 10:(i + 1) * 10]
+        page_ratings = ratings[i * 10 : (i + 1) * 10]
         page = ratinks_rank_embed(server_name, page_ratings, start=i)
         page.set_footer(text=f"Page {i + 1}/{num_pages}")
 
@@ -299,11 +286,8 @@ def ratings_rank_view(server_name: str, ratings: list[Rating]) -> PaginatorView:
     return PaginatorView(pages)
 
 
-def most_rated_releases_embed(albums, start: int = 1) -> discord.Embed:
-    """
-    Create an embed for the most rated releases.
-    """
-
+def most_rated_releases_embed(albums: list, start: int = 1) -> discord.Embed:
+    """Create an embed for the most rated releases."""
     description = "\n".join(
         f"{i}. {format_artist(row.artist)} \\- [{row.title}]({create_rym_search_release_url(row.title)}) (**{row.rating_count}** ratings)"
         for i, row in enumerate(albums, start=start)
@@ -318,78 +302,63 @@ def most_rated_releases_embed(albums, start: int = 1) -> discord.Embed:
 
 
 def best_rated_artists_embed(
-        best_rated_artists,
-        server_name: str | None = None,
-        user_name: str | None = None,
-        start: int = 1
+    best_rated_artists: list,
+    server_name: str | None = None,
+    user_name: str | None = None,
+    start: int = 1,
 ) -> discord.Embed:
-    """
-    Create an embed for the best rated artists.
-    """
-
-    title = f"Best rated artists for user {user_name}" if user_name else f"Best rated artists in {server_name}"
+    """Create an embed for the best rated artists."""
+    title = (
+        f"Best rated artists for user {user_name}"
+        if user_name
+        else f"Best rated artists in {server_name}"
+    )
     description = "\n".join(
-
         f"{i}. {format_artist(row.artist)} ({format_star_score(row.average_score)} from **{row.releases_count}** releases)"
         for i, row in enumerate(best_rated_artists, start=start)
     )
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .build()
-    )
+    return EmbedBuilder().with_title(title).with_description(description).build()
 
 
 def most_rated_artists_embed(
-        most_rated_artists: list,
-        user_name: str | None,
-        server_name: str | None,
-        start: int = 1
+    most_rated_artists: list,
+    user_name: str | None,
+    server_name: str | None,
+    start: int = 1,
 ) -> discord.Embed:
-    """
-    Create an embed for the most rated artists.
-    """
-
-    title = f"Artists with most ratings for user {user_name}" if user_name else f"Artists with most ratings in {server_name}"
+    """Create an embed for the most rated artists."""
+    title = (
+        f"Artists with most ratings for user {user_name}"
+        if user_name
+        else f"Artists with most ratings in {server_name}"
+    )
     description = "\n".join(
         f"{i}. {format_artist(row.artist)} (**{row.rating_count}** ratings)"
         for i, row in enumerate(most_rated_artists, start=start)
     )
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .build()
-    )
+    return EmbedBuilder().with_title(title).with_description(description).build()
 
 
-def lyrics_embed(lyrics: list[str], title: str, artist: str, start: int = 1) -> discord.Embed:
-    """
-    Create an embed for the lyrics.
-    """
-
+def lyrics_embed(
+    lyrics: list[str],
+    title: str,
+    artist: str,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for the lyrics."""
     title = f"Lyrics for {artist} - {title}"
     description = "\n".join(lyrics)
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .build()
-    )
+    return EmbedBuilder().with_title(title).with_description(description).build()
 
 
 def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:
-    """
-    Create an embed comparing two users' ratings.
-    """
-
+    """Create an embed comparing two users' ratings."""
     description = f'<@{ratings[0]["user1"]}> vs <@{ratings[0]["user2"]}>\n\n'
 
-    for row in ratings[start:start + 10]:
+    for row in ratings[start : start + 10]:
         user1_score = row["score1"] / 2
         user2_score = row["score2"] / 2
         description += (
@@ -406,14 +375,11 @@ def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:
 
 
 def ratings_per_year_embed(
-        ratings: list[dict],
-        user: str,
-        start: int = 1
+    ratings: list[dict],
+    user: str,
+    start: int = 1,
 ) -> discord.Embed:
-    """
-    Create an embed for the yearly ratings.
-    """
-
+    """Create an embed for the yearly ratings."""
     description = "\n".join(
         f"{i}. {rating.album.release_year} - **{rating.rating_count}** ratings"
         for i, rating in enumerate(ratings, start=start)
@@ -428,60 +394,65 @@ def ratings_per_year_embed(
 
 
 def profile_embed(
-        user_name: str,
-        average_rating: float,
-        number_ratings: int
+    user_name: str,
+    average_rating: float,
+    number_ratings: int,
 ) -> discord.Embed:
-    """
-    Create an embed for the user profile.
-    """
-
+    """Create an embed for the user profile."""
     description = f"Average rating: {format_star_score(average_rating)}\n"
     description += f"Number of ratings: {number_ratings}\n"
 
-    return (
-        EmbedBuilder()
-        .with_title(user_name)
-        .with_description(description)
-        .build()
-    )
+    return EmbedBuilder().with_title(user_name).with_description(description).build()
 
 
-def top_genres_embed(
-        genres: list,
-        start: int = 1
+def samples_embed(
+    artist_name: str,
+    track_name: str,
+    cover_url: str,
+    url: str,
+    relationships: list[list[dict]],
 ) -> discord.Embed:
-    """
-    Create an embed for the top genres.
-    """
+    """Create an embed for the track samples."""
+    description = ""
 
-    print(genres)
+    for songs, subtitle in zip(
+        relationships, ["Samples", "Interpolations", "Sampled in"]
+    ):
+        if len(songs) > 0:
+            description = f"### {subtitle}\n"
 
-    description = "\n".join(
-        f"{i}. {genre[0]} - {format_star_score(genre[1])} ({genre[2]} ratings)" for i, genre in
-        enumerate(genres, start=start)
-    )
+        for song in songs:
+            description += (
+                f"- [{song["artist_names"]} - {song["title"]}]({song["url"]})\n"
+            )
+
+    if not description:
+        description = "*No samples found.*"
+
+    description += "\n*Data retrieved from [Genius](https://genius.com/)*"
 
     return (
         EmbedBuilder()
-        .with_title(f"Top Genres")
+        .with_title(f"{artist_name} - {track_name}")
         .with_description(description)
+        .with_thumbnail(cover_url)
+        .with_url(url)
         .build()
     )
 
 
 def paginate_embeds(
-        items: list,
-        embed_fn: Callable,
-        per_page: int = 10,
-        *args,
-        **kwargs
-):
+    items: list,
+    embed_fn: Callable,
+    per_page: int = 10,
+    *args,
+    **kwargs,
+) -> tuple[PaginatorView, list]:
     pages = []
     num_pages = (len(items) + per_page - 1) // per_page
 
     for i in range(num_pages):
-        page_items = items[i * per_page:(i + 1) * per_page]
+        page_items = items[i * per_page : (i + 1) * per_page]
         embed = embed_fn(page_items, *args, **kwargs, start=i * per_page)
         embed.set_footer(text=f"Page {i + 1}/{num_pages}")
         pages.append(embed)
@@ -492,11 +463,7 @@ def paginate_embeds(
 
 
 def format_release(album: Album) -> str:
-    if album.url:
-        url = album.url
-
-    else:
-        url = create_rym_search_release_url(album.title)
+    url = album.url if album.url else create_rym_search_release_url(album.title)
 
     return f"[{album.title}]({url})"
 

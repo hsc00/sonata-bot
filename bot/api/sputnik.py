@@ -1,11 +1,12 @@
-import requests
+from __future__ import annotations
 
+import requests
 from bs4 import BeautifulSoup
 
 SPUTNIK_URL = "https://www.sputnikmusic.com/newreleases.php"
 
 
-def fetch_new_releases():
+def fetch_new_releases() -> dict | None:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
@@ -14,7 +15,7 @@ def fetch_new_releases():
     try:
         response = requests.get(f"{SPUTNIK_URL}/newreleases.php", headers=headers)
         response.raise_for_status()
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(response.content, "html.parser")
         elements = soup.find_all("td", class_="hi")
         releases = []
 
@@ -33,4 +34,4 @@ def fetch_new_releases():
     except requests.RequestException as e:
         print(f"Request failed: {e}")
 
-        return []
+        return None

@@ -1,34 +1,37 @@
+from __future__ import annotations
+
 import csv
 import html
 import re
 
 import discord
 import requests
-
-from discord.ext import commands
-from peewee import fn, IntegrityError
-
-from core.errors import InvalidUserMention, NoRatingsFound, RatingsImportFailed, NoFileAttached
-from core.utils import store_album
-from database import UserInfo, Rating, Album
-from core.embeds import ratings_rank_view, comparison_embed, profile_embed
-
 from core.decorators import disabled
+from core.embeds import comparison_embed, profile_embed, ratings_rank_view
+from core.errors import (
+    InvalidUserMention,
+    NoFileAttached,
+    NoRatingsFound,
+    RatingsImportFailed,
+)
+from core.utils import store_album
+from database import Album, Rating, UserInfo
+from discord.ext import commands
+from peewee import IntegrityError, fn
 
 
 class UsersCog(commands.Cog):
-    def __init__(self, bot):
+    def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @disabled()
     @commands.command()
-    async def set_rym(self, ctx: commands.Context, username: str):
-        """
-        Set your RYM username.
-        """
-
+    async def set_rym(self, ctx: commands.Context, username: str) -> None:
+        """Set your RYM username."""
         if not username:
-            await ctx.send("Please provide a [RateYourMusic](https://rateyourmusic.com/) username.")
+            await ctx.send(
+                "Please provide a [RateYourMusic](https://rateyourmusic.com/) username."
+            )
 
             return
 
@@ -37,11 +40,8 @@ class UsersCog(commands.Cog):
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
     @commands.hybrid_command(name="setlastfm", aliases=["set_lastfm"], app_command=True)
-    async def set_lastfm(self, ctx: commands.Context, *, username: str | None):
-        """
-        Set your last.fm username.
-        """
-
+    async def set_lastfm(self, ctx: commands.Context, *, username: str | None) -> None:
+        """Set your last.fm username."""
         if not username:
             await ctx.send("Please provide a [last.fm](https://www.last.fm/) username.")
 
@@ -49,7 +49,7 @@ class UsersCog(commands.Cog):
 
         user_info, created = UserInfo.get_or_create(
             user_id=str(ctx.author.id),
-            defaults={'lastfm_username': username}
+            defaults={"lastfm_username": username},
         )
 
         if not created:
@@ -59,21 +59,17 @@ class UsersCog(commands.Cog):
         await ctx.send(f"Your last.fm username has been set to **{username}**.")
 
     @commands.hybrid_command(name="ratingsrank", aliases=["rr"])
-    async def ratings_rank(self, ctx: commands.Context):
-        """
-        Get a ranking of users by their number of ratings.
-        """
-
+    async def ratings_rank(self, ctx: commands.Context) -> None:
+        """Get a ranking of users by their number of ratings."""
         ratings = (
-            Rating
-            .select(Rating.user, fn.COUNT(Rating.id).alias('rating_count'))
+            Rating.select(Rating.user, fn.COUNT(Rating.id).alias("rating_count"))
             .group_by(Rating.user)
             .order_by(fn.COUNT(Rating.id).desc())
             .limit(100)
         )
 
         if not ratings:
-            raise NoRatingsFound()
+            raise NoRatingsFound
 
         view = ratings_rank_view(ctx.guild.name, ratings)
 
@@ -81,11 +77,8 @@ class UsersCog(commands.Cog):
 
     @disabled()
     @commands.command(aliases=["c"])
-    async def compare(self, ctx: commands.Context, *, query: str | None = None):
-        """
-        Compare your ratings with another user.
-        """
-
+    async def compare(self, ctx: commands.Context, *, query: str | None = None) -> None:
+        """Compare your ratings with another user."""
         if not query:
             raise InvalidUserMention()
 
@@ -109,14 +102,13 @@ class UsersCog(commands.Cog):
                 r2.user.alias("user2"),
                 r2.score.alias("score2"),
                 Album.title,
-                Album.artist
+                Album.artist,
             )
             .join(Album, on=(r1.album == Album.id))
             .switch(r1)
             .join(r2, on=(r1.album == r2.album))
             .where(
-                (r1.user == user_id) &
-                (r2.user == other_user_id)
+                (r1.user == user_id) & (r2.user == other_user_id),
             )
             .order_by(r1.score - r2.score)
             .limit(100)
@@ -134,23 +126,24 @@ class UsersCog(commands.Cog):
 
     @commands.hybrid_command()
     async def profile(
-            self,
-            ctx: commands.Context,
-            user: discord.User | None = None
-    ):
+        self,
+        ctx: commands.Context,
+        user: discord.User | None = None,
+    ) -> None:
         user_id = ctx.author.id if user is None else user.id
-        user_name = ctx.author.display_name if user is None else (
-            await ctx.guild.fetch_member(int(user_id))).display_name
+        user_name = (
+            ctx.author.display_name
+            if user is None
+            else (await ctx.guild.fetch_member(int(user_id))).display_name
+        )
         average_rating = (
-            Rating
-            .select(fn.AVG(Rating.score).alias('average_rating'))
+            Rating.select(fn.AVG(Rating.score).alias("average_rating"))
             .where(Rating.user == user_id)
             .scalar()
         )
 
         number_ratings = (
-            Rating
-            .select(fn.COUNT(Rating.id).alias('rating_count'))
+            Rating.select(fn.COUNT(Rating.id).alias("rating_count"))
             .where(Rating.user == user_id)
             .scalar()
         )
@@ -160,11 +153,8 @@ class UsersCog(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="import", aliases=["i"])
-    async def import_ratings(self, ctx):
-        """
-        Import ratings from RYM.
-        """
-
+    async def import_ratings(self, ctx) -> None:
+        """Import ratings from RYM."""
         if not ctx.message.attachments:
             raise NoFileAttached()
 
@@ -172,7 +162,7 @@ class UsersCog(commands.Cog):
         response = requests.get(attachment_url)
 
         if response.status_code != 200:
-            raise RatingsImportFailed()
+            raise RatingsImportFailed
 
         try:
             # Clean existing ratings for the user
@@ -185,18 +175,16 @@ class UsersCog(commands.Cog):
                 for row in rows:
                     await self.import_rating(ctx.author.id, row)
 
-                await ctx.send(content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>.")
+                await ctx.send(
+                    content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>."
+                )
 
         except Exception as e:
-            print(e)
-            raise RatingsImportFailed()
+            raise RatingsImportFailed
 
     @staticmethod
     async def import_rating(user_id: int, row):
-        """
-        Import a single rating.
-        """
-
+        """Import a single rating."""
         score = int(row["Rating"])
 
         # Skip wishlisted albums
@@ -208,8 +196,8 @@ class UsersCog(commands.Cog):
 
         title = html.unescape(row["Title"])
 
-        first_name = row[' First Name'] or None
-        last_name = row['Last Name']
+        first_name = row[" First Name"] or None
+        last_name = row["Last Name"]
         artist = html.unescape(f"{first_name + " " if first_name else ""}{last_name}")
         release_year = int(row.get("Release_Date") or "0")
 
@@ -218,7 +206,7 @@ class UsersCog(commands.Cog):
             album = Album.get(
                 Album.title == title,
                 Album.artist == artist,
-                Album.release_year == release_year
+                Album.release_year == release_year,
             )
 
         # If the album is not found, create it
@@ -242,19 +230,23 @@ class UsersCog(commands.Cog):
         except IntegrityError as e:
             print(e, album.title, album.artist, album.release_year)
 
-            pass
-
-    @commands.hybrid_command(name="sync", description="Sync slash commands to the guild or globally")
-    async def sync(self, ctx: commands.Context, guild_only: bool = False):
+    @commands.hybrid_command(
+        name="sync", description="Sync slash commands to the guild or globally"
+    )
+    async def sync(self, ctx: commands.Context, guild_only: bool = False) -> None:
         if ctx.author.id != self.bot.owner_id and ctx.author.id != 207090194006933505:
-            await ctx.send("You do not have permission to use this command.", ephemeral=True)
+            await ctx.send(
+                "You do not have permission to use this command.", ephemeral=True
+            )
             return
 
         if guild_only:
             guild = discord.Object(id=ctx.guild.id)
             self.bot.tree.copy_global_to(guild=guild)
             synced = await self.bot.tree.sync(guild=guild)
-            await ctx.send(f"Synced {len(synced)} command(s) to this guild.", ephemeral=True)
+            await ctx.send(
+                f"Synced {len(synced)} command(s) to this guild.", ephemeral=True
+            )
 
         else:
             synced = await self.bot.tree.sync()

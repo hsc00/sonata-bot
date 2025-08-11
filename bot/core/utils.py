@@ -1,18 +1,14 @@
+from __future__ import annotations
+
 import logging
 import re
-
 from urllib.parse import quote
 
-from database import Album
-from typing import Optional
-
-from core.constants import FULL_STAR, HALF_STAR
-from core.errors import SonataError, NoLastFMUsername
-
-from database import AlbumIndex, UserInfo
-
-from api.last_fm import get_last_played
 from api.google_search import search_google
+from api.last_fm import get_last_played
+from core.constants import FULL_STAR, HALF_STAR
+from core.errors import NoLastFMUsername, SonataError
+from database import Album, AlbumIndex, UserInfo
 
 
 def score_to_stars(score: int) -> str:
@@ -27,19 +23,21 @@ def score_to_stars(score: int) -> str:
 
 
 def store_album(album: Album) -> None:
-    (AlbumIndex.insert(
-        {
-            AlbumIndex.rowid: album.id,
-            AlbumIndex.title: album.title,
-            AlbumIndex.artist: album.artist,
-        }
+    (
+        AlbumIndex.insert(
+            {
+                AlbumIndex.rowid: album.id,
+                AlbumIndex.title: album.title,
+                AlbumIndex.artist: album.artist,
+            },
+        )
+        .on_conflict_ignore()
+        .execute()
     )
-     .on_conflict_ignore()
-     .execute())
 
 
 def search_album(album_name: str, artist_name: str = "") -> Album:
-    query = f'{album_name} - {artist_name}'.strip()
+    query = f"{album_name} - {artist_name}".strip()
 
     return (
         Album.select()
@@ -50,7 +48,7 @@ def search_album(album_name: str, artist_name: str = "") -> Album:
     )
 
 
-async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
+async def fetch_album(user_id: str | None, query: str) -> Album | None:
     logger = logging.getLogger(__name__)
 
     # Get last played album if no query is provided
@@ -65,7 +63,7 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
 
         if not last_played:
             raise SonataError(
-                "❌ Could not retrieve the last played album. Please provide a search term."
+                "❌ Could not retrieve the last played album. Please provide a search term.",
             )
 
         album_name, artist_name, _ = last_played
@@ -77,9 +75,9 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
     album = search_album(album_name, artist_name)
 
     # If the album is not found in the database, search for it on Google
-    if not album:
+    if True:
         logger.info(
-            f'Album "{artist_name} - {album_name}" not found in the database. Searching on Google...'
+            f'Album "{artist_name} - {album_name}" not found in the database. Searching on Google...',
         )
 
         # Search for the album on Google
@@ -87,13 +85,13 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
 
         if result is None:
             raise SonataError(
-                f'❌ No results found for "{query}".'
+                f'❌ No results found for "{query}".',
             )
 
         # Search again with the result name
         album = search_album(
             result["pagemap"]["musicalbum"][0]["name"],
-            result["pagemap"]["musicgroup"][0]["name"]
+            result["pagemap"]["musicgroup"][0]["name"],
         )
 
         if not album:
@@ -102,7 +100,9 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
     # Update album details if they are missing
     if album.rating_count is None:
         logger.info(f'Album "{album_name}" found, but missing details. Updating...')
-        result = search_google(f"{album_name}" if not artist_name else f"{artist_name} - {album_name}")
+        result = search_google(
+            f"{album_name}" if not artist_name else f"{artist_name} - {album_name}",
+        )
 
         if result:
             updated_album = album_from_google_result(result)
@@ -125,10 +125,7 @@ async def fetch_album(user_id: str | None, query: str) -> Optional[Album]:
 
 
 def album_from_google_result(result: dict) -> Album:
-    """
-    Create an Album object from a Google search result.
-    """
-
+    """Create an Album object from a Google search result."""
     pagemap = result["pagemap"]
 
     title = pagemap["musicalbum"][0]["name"]
@@ -139,36 +136,34 @@ def album_from_google_result(result: dict) -> Album:
         pagemap["metatags"][0]["og:description"],
     )
 
-    if release_year_match:
-        release_year = int(release_year_match.group(1))
-
-    else:
-        release_year = None
+    release_year = int(release_year_match.group(1)) if release_year_match else None
 
     if "cse_image" in pagemap:
         cover_url = f'{pagemap["cse_image"][0]["src"]}/cover.jpg'
 
     elif "og:image" in pagemap["metatags"][0]:
-        cover_url = f'pagemap["metatags"][0]["og:image"]/cover.jp'
+        cover_url = 'pagemap["metatags"][0]["og:image"]/cover.jp'
 
     else:
         cover_url = None
 
-    genres = (match := re.search(r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"])) and match.group(1)
+    genres = (
+        match := re.search(r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"])
+    ) and match.group(1)
 
     rating = pagemap.get("aggregaterating", [None])[0]
 
     if rating is not None:
         rating_score, rating_count = float(rating["ratingvalue"]), int(
-            rating["ratingcount"]
+            rating["ratingcount"],
         )
 
     else:
         rating_score, rating_count = None, None
 
     if matches := re.search(
-            r"Rated #(\d+) in the best albums of \d+(?:, and #(\d+) of all time)?",
-            pagemap["metatags"][0]["og:description"],
+        r"Rated #(\d+) in the best albums of \d+(?:, and #(\d+) of all time)?",
+        pagemap["metatags"][0]["og:description"],
     ):
         year_position, overall_position = (
             int(x) if x else None for x in matches.groups()
@@ -179,7 +174,7 @@ def album_from_google_result(result: dict) -> Album:
 
     url = result["link"]
 
-    album = Album(
+    return Album(
         title=title,
         artist=artist,
         release_year=release_year,
@@ -192,20 +187,14 @@ def album_from_google_result(result: dict) -> Album:
         url=url,
     )
 
-    return album
-
 
 def create_rym_search_artist_url(artist_name: str) -> str:
-    """
-    Create a RateYourMusic search URL for the given artist name.
-    """
-
-    return f"https://rateyourmusic.com/search?searchtype=a&searchterm={quote(artist_name)}"
+    """Create a RateYourMusic search URL for the given artist name."""
+    return (
+        f"https://rateyourmusic.com/search?searchtype=a&searchterm={quote(artist_name)}"
+    )
 
 
 def create_rym_search_release_url(release_name: str) -> str:
-    """
-    Create a RateYourMusic search URL for the given release name.
-    """
-
+    """Create a RateYourMusic search URL for the given release name."""
     return f"https://rateyourmusic.com/search?searchtype=l&searchterm={quote(release_name)}"

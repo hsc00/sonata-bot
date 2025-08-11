@@ -1,5 +1,4 @@
 import requests
-
 from core.config import lastfm_api_key as api_key
 
 
@@ -17,5 +16,4 @@ def get_last_played(username: str):
 
         return (album_name, artist_name, track_name)
 
-    else:
-        return None
+    return None
