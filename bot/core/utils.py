@@ -135,7 +135,8 @@ def album_from_google_result(result: dict) -> Album:
     artist = pagemap["musicgroup"][0]["name"]
 
     release_year_match = re.search(
-        r"Released .* (\d{4})", pagemap["metatags"][0]["og:description"]
+        r"Released .*? (\d{4})",
+        pagemap["metatags"][0]["og:description"],
     )
 
     if release_year_match:
