@@ -65,5 +65,4 @@ async def main() -> None:
         await bot.start(discord_bot_token)
 
 
-if __name__ == "__main__":
-    asyncio.run(main())
+asyncio.run(main())
