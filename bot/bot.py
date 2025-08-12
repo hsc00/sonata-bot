@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 
 import discord
 from core.config import *
@@ -47,8 +48,9 @@ async def main() -> None:
             try:
                 await bot.load_extension(extension)
 
-            except Exception:
-                print(f"Failed to load extension {extension}.")
+            except Exception as e:
+                logging.error(f"Failed to load extension {extension}.")
+                logging.error(f"Error: {e}")
 
         # Create the database tables
         with db:
@@ -57,7 +59,11 @@ async def main() -> None:
         # Setup logging
         discord.utils.setup_logging()
 
+        if discord_bot_token is None:
+            raise ValueError("DISCORD_SONATA_TOKEN environment variable is not set.")
+
         await bot.start(discord_bot_token)
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())

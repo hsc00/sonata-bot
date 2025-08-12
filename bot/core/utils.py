@@ -7,7 +7,7 @@ from urllib.parse import quote
 from api.google_search import search_google
 from api.last_fm import get_last_played
 from core.constants import FULL_STAR, HALF_STAR
-from core.errors import NoLastFMUsername, SonataError
+from core.errors import NoLastFMUsernameError, SonataError
 from database import Album, AlbumIndex, UserInfo
 
 
@@ -57,7 +57,7 @@ async def fetch_album(user_id: str | None, query: str) -> Album | None:
         last_fm_username = user.lastfm_username if user else None
 
         if last_fm_username is None:
-            raise NoLastFMUsername()
+            raise NoLastFMUsernameError()
 
         last_played = get_last_played(last_fm_username)
 

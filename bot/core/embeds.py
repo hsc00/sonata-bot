@@ -11,7 +11,7 @@ from core.utils import (
     score_to_stars,
 )
 from core.views import PaginatorView
-from database import Album, Rating
+from database.models import Album, Rating
 
 
 class EmbedBuilder:
@@ -23,11 +23,6 @@ class EmbedBuilder:
         self.author: tuple[str, str] | None = None
         self.footer: str | None = None
         self.color: discord.Color = discord.Color.blue()
-
-    def reset(self) -> Self:
-        self.__init__()
-
-        return self
 
     def with_title(self, title: str) -> Self:
         self.title = title
@@ -222,7 +217,7 @@ def rating_embed(user: discord.user.User, rating: Rating) -> discord.Embed:
         .with_description(description)
         .with_url(album.url or create_rym_search_release_url(album.title))
         .with_thumbnail(album.cover_url)
-        .with_author(f"{user.name} rated...", user.avatar.url)
+        .with_author(f"{user.name} rated...", str(user.avatar))
         .with_color(discord.Color(int(RYM_RATING_COLORS[rating.score].lstrip("#"), 16)))
         .build()
     )
@@ -345,7 +340,7 @@ def lyrics_embed(
     lyrics: list[str],
     title: str,
     artist: str,
-    start: int = 1,
+    _start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the lyrics."""
     title = f"Lyrics for {artist} - {title}"
@@ -375,7 +370,7 @@ def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:
 
 
 def ratings_per_year_embed(
-    ratings: list[dict],
+    ratings: list[Rating],
     user: str,
     start: int = 1,
 ) -> discord.Embed:

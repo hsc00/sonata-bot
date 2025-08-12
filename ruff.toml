@@ -42,7 +42,12 @@ ignore = [
     "D105",
     "D106",
     "D107",
-    "E501", # Line too long
-    "F405", # Name may be undefined, or defined from star imports: <module>
+    "D202",
+    "E501",    # Line too long
+    "EM101",
+    "F405",    # Name may be undefined, or defined from star imports: <module>
     "G004",
+    "PERF203",
+    "PLR2004",
+    "TRY003",
 ]

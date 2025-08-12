@@ -9,14 +9,14 @@ class SonataError(Exception):
         super().__init__(message)
 
 
-class NoLastFMUsername(SonataError):
+class NoLastFMUsernameError(SonataError):
     def __init__(self) -> None:
         super().__init__(
             "❌ No last.fm username set. Please provide a search term or set your last.fm username by running `!set_lastfm <username>`.",
         )
 
 
-class InvalidUserMention(SonataError):
+class InvalidUserMentionError(SonataError):
     def __init__(self, user_id: str | None = None) -> None:
         message = (
             f'❌ Invalid user mention: "{user_id}". Please provide a valid mention.'
@@ -27,7 +27,7 @@ class InvalidUserMention(SonataError):
         super().__init__(message)
 
 
-class NoRatingsFound(SonataError):
+class NoRatingsFoundError(SonataError):
     def __init__(self, title: str | None = None) -> None:
         message = (
             f'❌ No ratings found for "{title}".' if title else "❌ No ratings found."
@@ -36,24 +36,24 @@ class NoRatingsFound(SonataError):
         super().__init__(message)
 
 
-class NoLyricsFound(SonataError):
+class NoLyricsFoundError(SonataError):
     def __init__(self) -> None:
         super().__init__("❌ No lyrics found for the requested track.")
 
 
-class InvalidYear(SonataError):
+class InvalidYearError(SonataError):
     def __init__(self, year: int) -> None:
         super().__init__(
             f"❌ Invalid year: {year}. Please provide a value between 1900 and {datetime.now().year}.",
         )
 
 
-class RatingsImportFailed(SonataError):
+class RatingsImportFailedError(SonataError):
     def __init__(self) -> None:
         super().__init__("❌ Failed to import ratings.")
 
 
-class NoFileAttached(SonataError):
+class NoFileAttachedError(SonataError):
     def __init__(self) -> None:
         super().__init__(
             "❌ No file attached. Please attach a valid CSV file with ratings.",

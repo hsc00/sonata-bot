@@ -2,18 +2,25 @@ from __future__ import annotations
 
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Literal
 
 from api.sputnik import fetch_new_releases
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
 from core.decorators import disabled
-from core.embeds import *
-from core.errors import InvalidYear, NoRatingsFound
-from core.utils import SonataError, fetch_album
+from core.embeds import (
+    album_embed,
+    album_of_the_year_embed,
+    best_rated_albums_embed,
+    most_rated_releases_embed,
+    paginate_embeds,
+    rating_embed,
+    ratings_per_year_embed,
+    who_rated_album_embed,
+)
+from core.errors import InvalidYearError, NoRatingsFoundError
+from core.utils import fetch_album
 from database.models import Album, Rating
-from discord import Message, app_commands
+from discord import Message, User, app_commands
 from discord.ext import commands
 from peewee import fn
 
@@ -23,13 +30,6 @@ logger = logging.getLogger(__name__)
 class ReleasesCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
-
-        self.scheduler = AsyncIOScheduler()
-        # self.scheduler.add_job(
-        #     self.new_releases,
-        #     CronTrigger(day_of_week="fri", hour=0, minute=0),  # Every Friday at 00:00
-        #     name="New Releases",
-        # )
 
     @commands.Cog.listener()
     async def on_message(self, message: Message) -> None:
@@ -50,7 +50,9 @@ class ReleasesCog(commands.Cog):
 
             await self.release.callback(self, ctx, release_name=f"{artist} {album}")
 
-    @commands.hybrid_command(name="release", aliases=["r", "a", "album"])
+    @commands.hybrid_command(
+        name="release", aliases=["r", "a", "album"], with_app_command=True
+    )
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     @app_commands.describe(
         release_name="Name of release (defaults to last played album)",
@@ -102,7 +104,7 @@ class ReleasesCog(commands.Cog):
         )
 
         if len(ratings) == 0:
-            raise NoRatingsFound(release.title)
+            raise NoRatingsFoundError(release.title)
 
         view, pages = paginate_embeds(
             ratings,
@@ -110,7 +112,7 @@ class ReleasesCog(commands.Cog):
             per_page=10,
             album=release,
             user_id=ctx.message.author.id,
-            server_name=ctx.guild.name,
+            server_name=getattr(ctx.guild, "name", ""),
         )
 
         await ctx.send(embed=pages[0], view=view)
@@ -167,7 +169,7 @@ class ReleasesCog(commands.Cog):
             top_releases,
             best_rated_albums_embed,
             per_page=10,
-            server_name=ctx.guild.name,
+            server_name=getattr(ctx.guild, "name", ""),
         )
 
         await ctx.send(embed=pages[0], view=view)
@@ -207,8 +209,8 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.hybrid_command(name="randomrating", aliases=["rdr"])
     @app_commands.describe(filter="Filter ratings by roast (<= 2.0) or glaze (>= 3.0)")
+    @commands.hybrid_command(name="randomrating", aliases=["rdr"])
     async def random_rating(
         self,
         ctx: commands.Context,
@@ -247,7 +249,7 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=rating_embed(user, rating))
 
-    @commands.hybrid_command(name="aoty")
+    @commands.hybrid_command(name="aoty", with_app_command=True)
     @app_commands.describe(
         year="Year to get the best rated albums from (defaults to current year)",
         user="User to get the ratings from (defaults to the command author)",
@@ -256,14 +258,15 @@ class ReleasesCog(commands.Cog):
         self,
         ctx: commands.Context,
         year: int | None,
-        user: discord.User | None = None,
+        user: User | None = None,
     ) -> None:
         """Get the best rated albums of a given year."""
-        if year is None:
-            year = datetime.now().year
 
-        elif year < 1900 or year > datetime.now().year:
-            raise InvalidYear(year)
+        if year is None:
+            year = datetime.now(tz=timezone.utc).year
+
+        elif year < 1900 or year > datetime.now(tz=timezone.utc).year:
+            raise InvalidYearError(year)
 
         if not user:
             user = ctx.author
@@ -347,15 +350,11 @@ class ReleasesCog(commands.Cog):
         new_releases = fetch_new_releases()
 
         if not new_releases:
-            await channel.send("❌ No new releases found.")
+            await channel.send("💔 No new releases found.")
 
             return
 
         ctx.channel = channel
 
         for release in new_releases:
-            try:
-                await self.release.callback(self, ctx, release_name=release)
-
-            except SonataError:
-                continue
+            await self.release.callback(self, ctx, release_name=release)

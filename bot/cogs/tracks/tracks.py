@@ -5,7 +5,7 @@ import re
 from api.genius import get_track_relationships
 from api.last_fm import get_last_played
 from core.embeds import lyrics_embed, paginate_embeds, samples_embed
-from core.errors import NoLastFMUsername, NoLyricsFound
+from core.errors import NoLastFMUsernameError, NoLyricsFoundError
 from database import UserInfo
 from discord.ext import commands
 from syncedlyrics import search
@@ -15,14 +15,14 @@ class TracksCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @commands.hybrid_command(name="lyrics", aliases=["lr"], app_command=True)
+    @commands.hybrid_command(name="lyrics", aliases=["lr"], with_app_command=True)
     async def lyrics(self, ctx: commands.Context) -> None:
         user_id = str(ctx.author.id)
         user = UserInfo.get_or_none(UserInfo.user_id == user_id)
         last_fm_username = user.lastfm_username if user else None
 
         if last_fm_username is None:
-            raise NoLastFMUsername()
+            raise NoLastFMUsernameError()
 
         # TODO: This can be refactored to use "fetch_album" (which should be renamed)
         #       to get the last played track with album and artist data
@@ -31,7 +31,7 @@ class TracksCog(commands.Cog):
             synced_lyrics = search(f"{artist_name} - {track_name}")
 
             if not synced_lyrics or synced_lyrics == "":
-                raise NoLyricsFound()
+                raise NoLyricsFoundError()
 
             # Remove the timestamp from the lyrics
             lyrics_lines = [
@@ -49,7 +49,7 @@ class TracksCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.hybrid_command(name="samples", app_command=True)
+    @commands.hybrid_command(name="samples", with_app_command=True)
     async def samples(
         self,
         ctx: commands.Context,
@@ -64,7 +64,7 @@ class TracksCog(commands.Cog):
             last_fm_username = user.lastfm_username if user else None
 
             if last_fm_username is None:
-                raise NoLastFMUsername
+                raise NoLastFMUsernameError
 
             _, artist_name, track_name = get_last_played(last_fm_username)
 

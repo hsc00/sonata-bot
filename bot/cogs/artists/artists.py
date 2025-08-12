@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+from typing import Any
+
 from api.last_fm import get_last_played
 from core.embeds import *
-from core.errors import NoLastFMUsername, NoRatingsFound
+from core.errors import NoLastFMUsernameError, NoRatingsFoundError
 from database import AlbumIndex, UserInfo
+from database.models import Album, Rating
 from discord.ext import commands
 from peewee import fn
 
@@ -12,7 +15,11 @@ class ArtistCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @commands.hybrid_command(name="artistratings", aliases=["ar"])
+    @commands.hybrid_command(
+        name="artistratings",
+        aliases=["ar"],
+        with_app_command=True,
+    )
     async def artist_ratings(
         self,
         ctx: commands.Context,
@@ -34,7 +41,7 @@ class ArtistCog(commands.Cog):
             last_fm_username = user_info.lastfm_username if user_info else None
 
             if last_fm_username is None:
-                raise NoLastFMUsername()
+                raise NoLastFMUsernameError()
 
             _, artist_name, _ = get_last_played(last_fm_username)
             user_id = ctx.message.author.id
@@ -63,7 +70,7 @@ class ArtistCog(commands.Cog):
         )
 
         if not artist:
-            raise NoRatingsFound(artist_query)
+            raise NoRatingsFoundError(artist_query)
 
         ratings = (
             Rating.select()
@@ -74,7 +81,7 @@ class ArtistCog(commands.Cog):
         )
 
         if len(ratings) == 0:
-            raise NoRatingsFound(artist_query)
+            raise NoRatingsFoundError(artist_query)
 
         view, pages = paginate_embeds(
             ratings,
@@ -87,7 +94,11 @@ class ArtistCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.hybrid_command(name="bestratedartists", aliases=["bra"])
+    @commands.hybrid_command(
+        name="bestratedartists",
+        aliases=["bra"],
+        with_app_command=True,
+    )
     async def best_rated_artists(
         self,
         ctx: commands.Context,
@@ -124,22 +135,26 @@ class ArtistCog(commands.Cog):
             best_rated_artists = best_rated_artists.where(Rating.user == user_id)
 
         if not best_rated_artists:
-            raise NoRatingsFound()
+            raise NoRatingsFoundError()
 
         view, pages = paginate_embeds(
             best_rated_artists,
             best_rated_artists_embed,
             per_page=10,
-            server_name=ctx.guild.name,
+            server_name=getattr(ctx.guild, "name", ""),
             user_name=user_name,
         )
 
         await ctx.send(embed=pages[0], view=view)
 
-    @commands.hybrid_command(name="mostratedartists", aliases=["mra"])
+    @commands.hybrid_command(
+        name="mostratedartists",
+        aliases=["mra"],
+        with_app_command=True,
+    )
     async def most_rated_artists(
         self,
-        ctx: commands.Context,
+        ctx: commands.Context[Any],
         user: discord.User | None = None,
     ) -> None:
         """Get the most rated artists."""
@@ -158,14 +173,14 @@ class ArtistCog(commands.Cog):
             most_rated_artists = most_rated_artists.where(Rating.user == user.id)
 
         if not most_rated_artists:
-            raise NoRatingsFound()
+            raise NoRatingsFoundError()
 
         view, pages = paginate_embeds(
             most_rated_artists,
             most_rated_artists_embed,
             per_page=10,
             user_name=user_name,
-            server_name=ctx.guild.name,
+            server_name=getattr(ctx.guild, "name", ""),
         )
 
         await ctx.send(embed=pages[0], view=view)

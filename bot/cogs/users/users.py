@@ -3,16 +3,17 @@ from __future__ import annotations
 import csv
 import html
 import re
+from venv import logger
 
 import discord
 import requests
 from core.decorators import disabled
 from core.embeds import comparison_embed, profile_embed, ratings_rank_view
 from core.errors import (
-    InvalidUserMention,
-    NoFileAttached,
-    NoRatingsFound,
-    RatingsImportFailed,
+    InvalidUserMentionError,
+    NoFileAttachedError,
+    NoRatingsFoundError,
+    RatingsImportFailedError,
 )
 from core.utils import store_album
 from database import Album, Rating, UserInfo
@@ -39,7 +40,11 @@ class UsersCog(commands.Cog):
 
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
-    @commands.hybrid_command(name="setlastfm", aliases=["set_lastfm"], app_command=True)
+    @commands.hybrid_command(
+        name="setlastfm",
+        aliases=["set_lastfm"],
+        with_app_command=True,
+    )
     async def set_lastfm(self, ctx: commands.Context, *, username: str | None) -> None:
         """Set your last.fm username."""
         if not username:
@@ -69,7 +74,7 @@ class UsersCog(commands.Cog):
         )
 
         if not ratings:
-            raise NoRatingsFound
+            raise NoRatingsFoundError
 
         view = ratings_rank_view(ctx.guild.name, ratings)
 
@@ -80,12 +85,12 @@ class UsersCog(commands.Cog):
     async def compare(self, ctx: commands.Context, *, query: str | None = None) -> None:
         """Compare your ratings with another user."""
         if not query:
-            raise InvalidUserMention()
+            raise InvalidUserMentionError
 
         match = re.match(r"<@!?(\d+)>", query)
 
         if not match:
-            raise InvalidUserMention(query)
+            raise InvalidUserMentionError(query)
 
         user_id = str(ctx.author.id)
         other_user_id = match.group(1)
@@ -124,7 +129,7 @@ class UsersCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.hybrid_command()
+    @commands.hybrid_command(with_app_command=True)
     async def profile(
         self,
         ctx: commands.Context,
@@ -153,16 +158,16 @@ class UsersCog(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="import", aliases=["i"])
-    async def import_ratings(self, ctx) -> None:
+    async def import_ratings(self, ctx: commands.Context) -> None:
         """Import ratings from RYM."""
         if not ctx.message.attachments:
-            raise NoFileAttached()
+            raise NoFileAttachedError()
 
         attachment_url = ctx.message.attachments[0].url
         response = requests.get(attachment_url)
 
-        if response.status_code != 200:
-            raise RatingsImportFailed
+        if response.ok:
+            raise RatingsImportFailedError
 
         try:
             # Clean existing ratings for the user
@@ -180,10 +185,10 @@ class UsersCog(commands.Cog):
                 )
 
         except Exception as e:
-            raise RatingsImportFailed
+            raise RatingsImportFailedError from e
 
     @staticmethod
-    async def import_rating(user_id: int, row):
+    async def import_rating(user_id: int, row) -> None:
         """Import a single rating."""
         score = int(row["Rating"])
 
@@ -228,19 +233,19 @@ class UsersCog(commands.Cog):
             )
 
         except IntegrityError as e:
-            print(e, album.title, album.artist, album.release_year)
+            logger.error(e, album.title, album.artist, album.release_year)
 
     @commands.hybrid_command(
         name="sync", description="Sync slash commands to the guild or globally"
     )
-    async def sync(self, ctx: commands.Context, guild_only: bool = False) -> None:
-        if ctx.author.id != self.bot.owner_id and ctx.author.id != 207090194006933505:
+    async def sync(self, ctx: commands.Context, scope: str = "guild") -> None:
+        if ctx.author.id not in (self.bot.owner_id, 207090194006933505):
             await ctx.send(
                 "You do not have permission to use this command.", ephemeral=True
             )
             return
 
-        if guild_only:
+        if scope == "guild":
             guild = discord.Object(id=ctx.guild.id)
             self.bot.tree.copy_global_to(guild=guild)
             synced = await self.bot.tree.sync(guild=guild)
@@ -248,10 +253,14 @@ class UsersCog(commands.Cog):
                 f"Synced {len(synced)} command(s) to this guild.", ephemeral=True
             )
 
-        else:
+        elif scope == "global":
             synced = await self.bot.tree.sync()
             await ctx.send(f"Globally synced {len(synced)} command(s).", ephemeral=True)
 
+        else:
+            await ctx.send("Invalid scope. Use 'guild' or 'global'.", ephemeral=True)
+            return
 
-async def setup(bot):
+
+async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(UsersCog(bot))
