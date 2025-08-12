@@ -426,9 +426,6 @@ def samples_embed(
                 f"- [{song["artist_names"]} - {song["title"]}]({song["url"]})\n"
             )
 
-    if not description:
-        description = "*No samples found.*"
-
     description += "\n*Data retrieved from [Genius](https://genius.com/)*"
 
     return (

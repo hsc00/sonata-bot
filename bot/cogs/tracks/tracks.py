@@ -73,7 +73,11 @@ class TracksCog(commands.Cog):
                 track_name if artist_name is None else f"{artist_name} - {track_name}"
             )
 
-            if relationships_data is None:
+            if relationships_data is None or (
+                len(relationships_data["relationships"]["samples"]) == 0
+                and len(relationships_data["relationships"]["interpolates"]) == 0
+                and len(relationships_data["relationships"]["sampled_in"]) == 0
+            ):
                 await ctx.send("💔 No samples found for this track.")
 
                 return
