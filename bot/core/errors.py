@@ -30,7 +30,7 @@ class InvalidUserMentionError(SonataError):
 class NoRatingsFoundError(SonataError):
     def __init__(self, title: str | None = None) -> None:
         message = (
-            f'❌ No ratings found for "{title}".' if title else "❌ No ratings found."
+            f'💔 No ratings found for "{title}".' if title else "💔 No ratings found."
         )
 
         super().__init__(message)
@@ -38,7 +38,7 @@ class NoRatingsFoundError(SonataError):
 
 class NoLyricsFoundError(SonataError):
     def __init__(self) -> None:
-        super().__init__("❌ No lyrics found for the requested track.")
+        super().__init__("💔 No lyrics found for the requested track.")
 
 
 class InvalidYearError(SonataError):

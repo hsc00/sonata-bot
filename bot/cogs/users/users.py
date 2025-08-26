@@ -120,7 +120,7 @@ class UsersCog(commands.Cog):
         )
 
         if common_ratings.limit(1).first() is None:
-            await ctx.send("❌ No ratings in common found.")
+            await ctx.send("💔 No ratings in common found.")
 
             return
 
@@ -161,7 +161,7 @@ class UsersCog(commands.Cog):
     async def import_ratings(self, ctx: commands.Context) -> None:
         """Import ratings from RYM."""
         if not ctx.message.attachments:
-            raise NoFileAttachedError()
+            raise NoFileAttachedError
 
         attachment_url = ctx.message.attachments[0].url
         response = requests.get(attachment_url)

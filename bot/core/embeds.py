@@ -340,7 +340,7 @@ def lyrics_embed(
     lyrics: list[str],
     title: str,
     artist: str,
-    _start: int = 1,
+    start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the lyrics."""
     title = f"Lyrics for {artist} - {title}"

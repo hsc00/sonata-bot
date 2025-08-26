@@ -3,20 +3,10 @@ import logging
 import os
 
 import discord
-from core.config import *
+from core.config import discord_bot_token
 from core.events import init_events
 from database import Album, AlbumIndex, Rating, UserInfo, db
 from discord.ext import commands
-
-discord_bot_token = os.getenv("DISCORD_SONATA_TOKEN")
-
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-    handlers=[
-        logging.StreamHandler(),
-    ],
-)
 
 
 class SonataBot(commands.Bot):
