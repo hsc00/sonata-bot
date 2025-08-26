@@ -166,7 +166,7 @@ class UsersCog(commands.Cog):
         attachment_url = ctx.message.attachments[0].url
         response = requests.get(attachment_url)
 
-        if response.ok:
+        if not response.ok:
             raise RatingsImportFailedError
 
         try:
