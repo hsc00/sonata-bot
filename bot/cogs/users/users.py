@@ -210,7 +210,7 @@ class UsersCog(commands.Cog):
         try:
             album = Album.get(
                 Album.title == title,
-                Album.artist == artist,
+                fn.COALESCE(Album.album_artist, Album.artist) == artist,
                 Album.release_year == release_year,
             )
 
