@@ -142,7 +142,7 @@ def album_from_google_result(result: dict) -> Album:
         cover_url = f'{pagemap["cse_image"][0]["src"]}/cover.jpg'
 
     elif "og:image" in pagemap["metatags"][0]:
-        cover_url = 'pagemap["metatags"][0]["og:image"]/cover.jp'
+        cover_url = f'{pagemap["metatags"][0]["og:image"]}/cover.jpg'
 
     else:
         cover_url = None
