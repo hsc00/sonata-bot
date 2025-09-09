@@ -6,6 +6,7 @@ import re
 from venv import logger
 
 import discord
+from discord import app_commands
 import requests
 from core.decorators import disabled
 from core.embeds import comparison_embed, profile_embed, ratings_rank_view
@@ -45,6 +46,7 @@ class UsersCog(commands.Cog):
         aliases=["set_lastfm"],
         with_app_command=True,
     )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def set_lastfm(self, ctx: commands.Context, *, username: str | None) -> None:
         """Set your last.fm username."""
         if not username:
@@ -158,6 +160,7 @@ class UsersCog(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command(name="import", aliases=["i"])
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def import_ratings(self, ctx: commands.Context) -> None:
         """Import ratings from RYM."""
         if not ctx.message.attachments:

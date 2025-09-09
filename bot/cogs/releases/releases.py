@@ -121,6 +121,7 @@ class ReleasesCog(commands.Cog):
         name="bestratedreleases",
         aliases=["brr", "brab", "best_rated_albums"],
     )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def best_rated_releases(self, ctx: commands.Context) -> None:
         """Get the best rated releases in the server."""
         # Select releases with more than 3 ratings
@@ -178,6 +179,7 @@ class ReleasesCog(commands.Cog):
         name="mostratedreleases",
         aliases=["mrr", "mrab", "most_rated_albums"],
     )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def most_rated_releases(
         self,
         ctx: commands.Context,
@@ -250,6 +252,7 @@ class ReleasesCog(commands.Cog):
         await ctx.send(embed=rating_embed(user, rating))
 
     @commands.hybrid_command(name="aoty", with_app_command=True)
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     @app_commands.describe(
         year="Year to get the best rated albums from (defaults to current year)",
         user="User to get the ratings from (defaults to the command author)",

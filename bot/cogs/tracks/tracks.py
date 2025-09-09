@@ -7,6 +7,7 @@ from api.last_fm import get_last_played
 from core.embeds import lyrics_embed, paginate_embeds, samples_embed
 from core.errors import NoLastFMUsernameError, NoLyricsFoundError
 from database import UserInfo
+from discord import app_commands
 from discord.ext import commands
 from syncedlyrics import search
 
@@ -16,6 +17,7 @@ class TracksCog(commands.Cog):
         self.bot = bot
 
     @commands.hybrid_command(name="lyrics", aliases=["lr"], with_app_command=True)
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def lyrics(self, ctx: commands.Context) -> None:
         user_id = str(ctx.author.id)
         user = UserInfo.get_or_none(UserInfo.user_id == user_id)

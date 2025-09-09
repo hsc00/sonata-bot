@@ -7,6 +7,7 @@ from core.embeds import *
 from core.errors import NoLastFMUsernameError, NoRatingsFoundError
 from database import AlbumIndex, UserInfo
 from database.models import Album, Rating
+from discord import app_commands
 from discord.ext import commands
 from peewee import fn
 
@@ -20,6 +21,7 @@ class ArtistCog(commands.Cog):
         aliases=["ar"],
         with_app_command=True,
     )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def artist_ratings(
         self,
         ctx: commands.Context,
@@ -99,6 +101,7 @@ class ArtistCog(commands.Cog):
         aliases=["bra"],
         with_app_command=True,
     )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def best_rated_artists(
         self,
         ctx: commands.Context,
@@ -152,6 +155,7 @@ class ArtistCog(commands.Cog):
         aliases=["mra"],
         with_app_command=True,
     )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def most_rated_artists(
         self,
         ctx: commands.Context[Any],
