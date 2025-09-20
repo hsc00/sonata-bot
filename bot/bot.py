@@ -18,6 +18,7 @@ class SonataBot(commands.Bot):
 
 # Define the intents
 intents = discord.Intents.default()
+intents.members = True  # Enable the members intent
 intents.message_content = True  # Enable the intent to read message content
 
 # Initialize the bot

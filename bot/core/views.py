@@ -2,7 +2,7 @@ import discord
 
 
 class PaginatorView(discord.ui.View):
-    def __init__(self, pages: list, timeout: int = 60) -> None:
+    def __init__(self, pages: list, timeout: int = 120) -> None:
         super().__init__(timeout=timeout)
         self.pages = pages
         self.current_page = 0
@@ -14,7 +14,9 @@ class PaginatorView(discord.ui.View):
 
     @discord.ui.button(label="⏮️", style=discord.ButtonStyle.primary, disabled=False)
     async def first_button(
-        self, interaction: discord.Interaction, button: discord.ui.Button,
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button,
     ) -> None:
 
         self.current_page = 0
@@ -28,7 +30,9 @@ class PaginatorView(discord.ui.View):
 
     @discord.ui.button(label="◀️", style=discord.ButtonStyle.primary, disabled=True)
     async def previous_button(
-        self, interaction: discord.Interaction, button: discord.ui.Button,
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button,
     ) -> None:
         self.current_page -= 1
 
@@ -41,7 +45,9 @@ class PaginatorView(discord.ui.View):
 
     @discord.ui.button(label="▶️", style=discord.ButtonStyle.primary)
     async def next_button(
-        self, interaction: discord.Interaction, button: discord.ui.Button,
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button,
     ) -> None:
         self.current_page += 1
 
@@ -54,7 +60,9 @@ class PaginatorView(discord.ui.View):
 
     @discord.ui.button(label="⏭️", style=discord.ButtonStyle.primary)
     async def last_button(
-        self, interaction: discord.Interaction, button: discord.ui.Button,
+        self,
+        interaction: discord.Interaction,
+        button: discord.ui.Button,
     ) -> None:
         self.current_page = len(self.pages) - 1
 

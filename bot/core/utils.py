@@ -85,7 +85,7 @@ async def fetch_album(user_id: str | None, query: str) -> Album | None:
 
         if result is None:
             raise SonataError(
-                f'❌ No results found for "{query}".',
+                f'❌ No results found for "{artist_name} - {album_name}".',
             )
 
         # Search again with the result name

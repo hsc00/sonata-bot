@@ -19,6 +19,7 @@ class TracksCog(commands.Cog):
     @commands.hybrid_command(name="lyrics", aliases=["lr"], with_app_command=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def lyrics(self, ctx: commands.Context) -> None:
+        """Get the lyrics for a given track."""
         user_id = str(ctx.author.id)
         user = UserInfo.get_or_none(UserInfo.user_id == user_id)
         last_fm_username = user.lastfm_username if user else None

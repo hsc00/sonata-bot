@@ -77,7 +77,7 @@ class ReleasesCog(commands.Cog):
 
     @commands.hybrid_command(
         name="whoratedrelease",
-        aliases=["wr", "wa", "who_rated_album"],
+        aliases=["wr", "wa", "who_rated_album", "who_rated_release"],
     )
     @app_commands.describe(
         release_name="Name of release (defaults to last played album)",
@@ -96,9 +96,11 @@ class ReleasesCog(commands.Cog):
 
             return
 
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
         ratings = list(
             Rating.select()
-            .where(Rating.album == release)
+            .where((Rating.album == release) & (Rating.user.in_(guild_member_ids)))
             .order_by(Rating.score.desc())
             .iterator(),
         )
@@ -121,77 +123,91 @@ class ReleasesCog(commands.Cog):
         name="bestratedreleases",
         aliases=["brr", "brab", "best_rated_albums"],
     )
-    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
     async def best_rated_releases(self, ctx: commands.Context) -> None:
         """Get the best rated releases in the server."""
-        # Select releases with more than 3 ratings
-        albums: list[Album] = (
-            Album.select().join(Rating).group_by(Album).having(fn.COUNT(Rating.id) > 3)
-        )
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
-        if len(albums) == 0:
-            await ctx.send("No albums found with more than 3 ratings.")
-
-            return
-
-        # Compute average rating and weighted rating for each release
-        w1, w2 = 7, 0.4
-
-        albums_with_weighted_rating = []
-
-        for album in albums:
-            rating_sum = (
-                Rating.select(fn.SUM(Rating.score))
-                .where(Rating.album == album)
-                .scalar()
+        async with ctx.typing():
+            # Select releases with more than 3 ratings
+            albums: list[Album] = (
+                Album.select()
+                .join(Rating)
+                .where(Rating.user.in_(guild_member_ids))
+                .group_by(Album)
+                .having(fn.COUNT(Rating.id) > 3)
             )
 
-            total_ratings = (
-                Rating.select(fn.COUNT(Rating.id)).where(Rating.album == album).scalar()
+            if len(albums) == 0:
+                await ctx.send("No albums found with more than 3 ratings.")
+
+                return
+
+            # Compute average rating and weighted rating for each release
+            w1, w2 = 7, 0.4
+
+            albums_with_weighted_rating = []
+
+            for album in albums:
+                rating_sum = (
+                    Rating.select(fn.SUM(Rating.score))
+                    .where(Rating.album == album)
+                    .scalar()
+                )
+
+                total_ratings = (
+                    Rating.select(fn.COUNT(Rating.id))
+                    .where(Rating.album == album)
+                    .scalar()
+                )
+
+                average_rating = rating_sum / total_ratings
+                weighted_rating = (average_rating * w1) + (total_ratings * w2)
+
+                albums_with_weighted_rating.append(
+                    (album, average_rating, weighted_rating, total_ratings),
+                )
+
+            # Sort releases by their weighted rating in descending order
+            sorted_releases = sorted(
+                albums_with_weighted_rating,
+                key=lambda x: x[2],
+                reverse=True,
             )
 
-            average_rating = rating_sum / total_ratings
-            weighted_rating = (average_rating * w1) + (total_ratings * w2)
+            top_releases = sorted_releases[:100]
 
-            albums_with_weighted_rating.append((album, average_rating, weighted_rating))
+            # TODO: Include number of ratings
 
-        # Sort releases by their weighted rating in descending order
-        sorted_releases = sorted(
-            albums_with_weighted_rating,
-            key=lambda x: x[2],
-            reverse=True,
-        )
+            view, pages = paginate_embeds(
+                top_releases,
+                best_rated_albums_embed,
+                per_page=10,
+                server_name=getattr(ctx.guild, "name", ""),
+            )
 
-        top_releases = sorted_releases[:100]
-
-        # TODO: Include number of ratings
-
-        view, pages = paginate_embeds(
-            top_releases,
-            best_rated_albums_embed,
-            per_page=10,
-            server_name=getattr(ctx.guild, "name", ""),
-        )
-
-        await ctx.send(embed=pages[0], view=view)
+            await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(
         name="mostratedreleases",
         aliases=["mrr", "mrab", "most_rated_albums"],
     )
-    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
     async def most_rated_releases(
         self,
         ctx: commands.Context,
     ) -> None:
         """Get the most rated releases in the server."""
         # Select releases with more than 3 ratings
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
         most_rated_releases = (
             Album.select(
                 Album.artist,
                 Album.title,
                 fn.COUNT(Rating.id).alias("rating_count"),
             )
+            .where(Rating.user.in_(guild_member_ids))
             .join(Rating)
             .group_by(Album)
             .order_by(fn.COUNT(Rating.id).desc())
@@ -219,11 +235,13 @@ class ReleasesCog(commands.Cog):
         filter: Literal["roast", "glaze"] | None = None,
     ) -> None:
         """Get a random rating."""
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
         if filter == "roast":
             rating = (
                 Rating.select()
                 .where(
-                    Rating.score <= 2.0,
+                    Rating.score <= 2.0 & (Rating.user.in_(guild_member_ids)),
                 )
                 .order_by(fn.Random())
                 .first()
@@ -233,14 +251,19 @@ class ReleasesCog(commands.Cog):
             rating = (
                 Rating.select()
                 .where(
-                    Rating.score >= 3.0,
+                    Rating.score >= 3.0 & (Rating.user.in_(guild_member_ids)),
                 )
                 .order_by(fn.Random())
                 .first()
             )
 
         else:
-            rating = Rating.select().order_by(fn.Random()).first()
+            rating = (
+                Rating.select()
+                .where(Rating.user.in_(guild_member_ids))
+                .order_by(fn.Random())
+                .first()
+            )
 
         if rating is None:
             await ctx.send("No ratings found.")

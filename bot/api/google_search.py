@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import logging
 import re
 
@@ -8,8 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def search_google(query: str) -> dict | None:
-    """Search for a RYM album on Google.
-    """
+    """Search for a RYM album on Google."""
     with requests.Session() as session:
         try:
             token = google_token
@@ -28,7 +29,9 @@ def search_google(query: str) -> dict | None:
                         return result
 
             else:
-                logger.error(f"Google search failed with status code: {response.status_code}")
+                logger.error(
+                    f"Google search failed with status code: {response.status_code}"
+                )
 
                 return None
 

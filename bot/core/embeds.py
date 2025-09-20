@@ -167,9 +167,11 @@ def best_rated_albums_embed(
     """Create an embed for the album ratings."""
     lines = []
 
-    for i, (album, average_score, _) in enumerate(top_releases, start=start):
+    for i, (album, average_score, _, num_ratings) in enumerate(
+        top_releases, start=start
+    ):
         lines.append(
-            f"{i}. {format_artist(album.artist)} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)",
+            f"{i}. {format_artist(album.artist)} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",
         )
 
     title = f"Best rated albums in {server_name}"
@@ -416,7 +418,7 @@ def samples_embed(
         if len(songs) > 0:
             description = f"### {subtitle}\n"
 
-        for song in songs:
+        for song in songs[:5]:
             description += (
                 f"- [{song["artist_names"]} - {song["title"]}]({song["url"]})\n"
             )
