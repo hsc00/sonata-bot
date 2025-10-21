@@ -1,12 +1,13 @@
-from .database import BaseModel, db
-from peewee import *
+from peewee import Check, FloatField, ForeignKeyField, IntegerField, TextField
 from playhouse.sqlite_ext import FTSModel, RowIDField, SearchField
+
+from .database import BaseModel, db
 
 
 class Album(BaseModel):
     title = TextField()
     artist = TextField()
-    album_artist = TextField(null=True)
+    album_artist = TextField()
     release_year = IntegerField(null=True)
     cover_url = TextField(null=True)
     genres = TextField(null=True)

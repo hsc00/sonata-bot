@@ -3,10 +3,10 @@ from __future__ import annotations
 import csv
 import html
 import re
+from typing import Literal
 from venv import logger
 
 import discord
-from discord import app_commands
 import requests
 from core.decorators import disabled
 from core.embeds import comparison_embed, profile_embed, ratings_rank_view
@@ -18,6 +18,7 @@ from core.errors import (
 )
 from core.utils import store_album
 from database import Album, Rating, UserInfo
+from discord import app_commands
 from discord.ext import commands
 from peewee import IntegrityError, fn
 
@@ -222,6 +223,7 @@ class UsersCog(commands.Cog):
             album = Album(
                 title=title,
                 artist=artist,
+                album_artist=artist,
                 release_year=release_year,
             )
 
@@ -239,12 +241,18 @@ class UsersCog(commands.Cog):
             logger.error(e, album.title, album.artist, album.release_year)
 
     @commands.hybrid_command(
-        name="sync", description="Sync slash commands to the guild or globally"
+        name="sync",
+        description="Sync slash commands to the guild or globally",
     )
-    async def sync(self, ctx: commands.Context, scope: str = "guild") -> None:
+    async def sync(
+        self,
+        ctx: commands.Context,
+        scope: Literal["global", "guild"] | None = "guild",
+    ) -> None:
         if ctx.author.id not in (self.bot.owner_id, 207090194006933505):
             await ctx.send(
-                "You do not have permission to use this command.", ephemeral=True
+                "You do not have permission to use this command.",
+                ephemeral=True,
             )
             return
 
@@ -253,7 +261,8 @@ class UsersCog(commands.Cog):
             self.bot.tree.copy_global_to(guild=guild)
             synced = await self.bot.tree.sync(guild=guild)
             await ctx.send(
-                f"Synced {len(synced)} command(s) to this guild.", ephemeral=True
+                f"Synced {len(synced)} command(s) to this guild.",
+                ephemeral=True,
             )
 
         elif scope == "global":

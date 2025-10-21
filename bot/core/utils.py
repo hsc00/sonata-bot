@@ -37,7 +37,7 @@ def store_album(album: Album) -> None:
 
 
 def search_album(album_name: str, artist_name: str = "") -> Album:
-    query = f"{album_name} - {artist_name}".strip()
+    query = f"{album_name} - {artist_name}".strip() if artist_name else album_name
 
     return (
         Album.select()
@@ -75,9 +75,9 @@ async def fetch_album(user_id: str | None, query: str) -> Album | None:
     album = search_album(album_name, artist_name)
 
     # If the album is not found in the database, search for it on Google
-    if True:
+    if not album:
         logger.info(
-            f'Album "{artist_name} - {album_name}" not found in the database. Searching on Google...',
+            f'Album "{album_name}" not found in the database. Searching on Google...',
         )
 
         # Search for the album on Google
@@ -177,6 +177,7 @@ def album_from_google_result(result: dict) -> Album:
     return Album(
         title=title,
         artist=artist,
+        album_artist=artist,
         release_year=release_year,
         cover_url=cover_url,
         genres=genres,
