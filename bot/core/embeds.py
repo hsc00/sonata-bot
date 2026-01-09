@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from math import ceil
-from typing import Callable, Self
+from typing import Callable, Self, TypedDict
 
 import discord
 from core.constants import RYM_RATING_COLORS
@@ -14,6 +14,12 @@ from core.views import PaginatorView
 from database.models import Album, Rating
 
 
+class EmbedField(TypedDict):
+    name: str
+    value: str
+    inline: bool
+
+
 class EmbedBuilder:
     def __init__(self) -> None:
         self.title: str | None = None
@@ -23,6 +29,7 @@ class EmbedBuilder:
         self.author: tuple[str, str] | None = None
         self.footer: str | None = None
         self.color: discord.Color = discord.Color.blue()
+        self.fields = []
 
     def with_title(self, title: str) -> Self:
         self.title = title
@@ -59,6 +66,15 @@ class EmbedBuilder:
 
         return self
 
+    def add_field(self, field: EmbedField) -> Self:
+        self.fields.append(field)
+
+    def add_fields(self, fields: list[EmbedField]) -> Self:
+        for field in fields:
+            self.add_field(field)
+
+        return self
+
     def build(self) -> discord.Embed:
         if not self.title or not self.description:
             raise ValueError(
@@ -85,6 +101,11 @@ class EmbedBuilder:
         if self.footer:
             embed.set_footer(text=self.footer)
 
+        for field in self.fields:
+            embed.add_field(
+                name=field["name"], value=field["value"], inline=field["inline"]
+            )
+
         return embed
 
 
@@ -97,7 +118,7 @@ def format_album_title(album: Album) -> str:
 
 
 def format_star_score(score: float) -> str:
-    return f"**{(score / 2):.2f}** ⭐"
+    return f"{(score / 2):.2f} ⭐"
 
 
 def album_embed(album: Album) -> discord.Embed:
@@ -110,7 +131,7 @@ def album_embed(album: Album) -> discord.Embed:
         description += f"*{album.genres}*\n\n"
 
     if album.rating_score and album.rating_count:
-        description += f"{format_star_score(album.rating_score * 2)} from **{album.rating_count:,d}** ratings\n"
+        description += f"**{format_star_score(album.rating_score * 2)}** from **{album.rating_count:,d}** ratings\n"
 
     if album.year_position:
         description += f"**#{album.year_position}** of [{album.release_year}](https://rateyourmusic.com/charts/top/album/{album.release_year}/)"
@@ -236,12 +257,12 @@ def artist_ratings_embed(
 
     for i, rating in enumerate(ratings, start=start):
         lines.append(
-            f"{i}. {format_release(rating.album)} ({rating.album.release_year}) \\- {format_star_score(rating.score)}",
+            f"{i}. {format_release(rating.album)} ({rating.album.release_year}) \\- **{format_star_score(rating.score)}**",
         )
 
     title = f"Top {artist} albums for {user_name}"
 
-    description = f"Average score: {format_star_score(average_score)}\n\n"
+    description = f"Average score: **{format_star_score(average_score)}**\n\n"
     description += "\n".join(lines)
 
     return (
@@ -261,7 +282,7 @@ def ratinks_rank_embed(
     lines = []
 
     for i, row in enumerate(ratings, start=start):
-        lines.append(f"{i}. <@{row.user}> ({row.rating_count})")
+        lines.append(f"{i}. <@{row.user}> - **{row.rating_count}** ratings")
 
     title = f"{server_name} Ratings Rank"
     description = "\n".join(lines)
@@ -311,7 +332,7 @@ def best_rated_artists_embed(
         else f"Best rated artists in {server_name}"
     )
     description = "\n".join(
-        f"{i}. {format_artist(row.artist)} ({format_star_score(row.average_score)} from **{row.releases_count}** releases)"
+        f"{i}. {format_artist(row.artist)} (**{format_star_score(row.average_score)}** from **{row.releases_count}** releases)"
         for i, row in enumerate(best_rated_artists, start=start)
     )
 
@@ -391,15 +412,41 @@ def ratings_per_year_embed(
 
 
 def profile_embed(
-    user_name: str,
-    average_rating: float,
-    number_ratings: int,
+    user: discord.user.User,
+    average_score: float,
+    releases_rated: int,
+    artists_rated: int,
 ) -> discord.Embed:
     """Create an embed for the user profile."""
-    description = f"Average rating: {format_star_score(average_rating)}\n"
-    description += f"Number of ratings: {number_ratings}\n"
+    title = f"Profile for {user.name}"
+    thumbnail = user.display_avatar.url
 
-    return EmbedBuilder().with_title(user_name).with_description(description).build()
+    fields = [
+        {
+            "name": "📊 Average score",
+            "value": format_star_score(average_score),
+            "inline": True,
+        },
+        {
+            "name": "📀 Releases rated",
+            "value": f"{releases_rated:,d}",
+            "inline": True,
+        },
+        {
+            "name": "🧑‍🎤 Artists rated",
+            "value": f"{artists_rated:,d}",
+            "inline": True,
+        },
+    ]
+
+    return (
+        EmbedBuilder()
+        .with_title(title)
+        .with_description("test")
+        .with_thumbnail(thumbnail)
+        .add_fields(fields)
+        .build()
+    )
 
 
 def samples_embed(

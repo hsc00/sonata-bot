@@ -198,7 +198,6 @@ class ReleasesCog(commands.Cog):
         ctx: commands.Context,
     ) -> None:
         """Get the most rated releases in the server."""
-        # Select releases with more than 3 ratings
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         most_rated_releases = (
@@ -215,9 +214,7 @@ class ReleasesCog(commands.Cog):
         )
 
         if len(most_rated_releases) == 0:
-            await ctx.send("No albums found with more than 3 ratings.")
-
-            return
+            raise NoRatingsFoundError
 
         view, pages = paginate_embeds(
             most_rated_releases,
@@ -266,9 +263,7 @@ class ReleasesCog(commands.Cog):
             )
 
         if rating is None:
-            await ctx.send("No ratings found.")
-
-            return
+            raise NoRatingsFoundError
 
         user = await ctx.bot.fetch_user(rating.user)
 
@@ -355,9 +350,7 @@ class ReleasesCog(commands.Cog):
         )
 
         if len(ratings) == 0:
-            await ctx.send("No ratings found for this user.")
-
-            return
+            raise NoRatingsFoundError
 
         embed = ratings_per_year_embed(ratings, user_id)
 

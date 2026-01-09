@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import discord
 
 
 class PaginatorView(discord.ui.View):
-    def __init__(self, pages: list, timeout: int = 120) -> None:
+    def __init__(self, pages: list, timeout: int | None = None) -> None:
         super().__init__(timeout=timeout)
         self.pages = pages
         self.current_page = 0

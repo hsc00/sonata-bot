@@ -37,7 +37,7 @@ def store_album(album: Album) -> None:
 
 
 def search_album(album_name: str, artist_name: str = "") -> Album:
-    query = f"{album_name} - {artist_name}".strip() if artist_name else album_name
+    query = f'"{album_name} - {artist_name}"'.strip() if artist_name else album_name
 
     return (
         Album.select()
@@ -84,9 +84,11 @@ async def fetch_album(user_id: str | None, query: str) -> Album | None:
         result = search_google(f"{artist_name} - {album_name}")
 
         if result is None:
-            raise SonataError(
+            logger.info(
                 f'❌ No results found for "{artist_name} - {album_name}".',
             )
+
+            return None
 
         # Search again with the result name
         album = search_album(

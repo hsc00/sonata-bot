@@ -69,8 +69,11 @@ class UsersCog(commands.Cog):
     @commands.hybrid_command(name="ratingsrank", aliases=["rr"])
     async def ratings_rank(self, ctx: commands.Context) -> None:
         """Get a ranking of users by their number of ratings."""
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
         ratings = (
             Rating.select(Rating.user, fn.COUNT(Rating.id).alias("rating_count"))
+            .where(Rating.user.in_(guild_member_ids))
             .group_by(Rating.user)
             .order_by(fn.COUNT(Rating.id).desc())
             .limit(100)
@@ -138,25 +141,27 @@ class UsersCog(commands.Cog):
         ctx: commands.Context,
         user: discord.User | None = None,
     ) -> None:
-        user_id = ctx.author.id if user is None else user.id
-        user_name = (
-            ctx.author.display_name
-            if user is None
-            else (await ctx.guild.fetch_member(int(user_id))).display_name
-        )
-        average_rating = (
+        user = ctx.author if user is None else user
+        average_score = (
             Rating.select(fn.AVG(Rating.score).alias("average_rating"))
-            .where(Rating.user == user_id)
+            .where(Rating.user == user.id)
             .scalar()
         )
 
-        number_ratings = (
+        releases_rated = (
             Rating.select(fn.COUNT(Rating.id).alias("rating_count"))
-            .where(Rating.user == user_id)
+            .where(Rating.user == user.id)
             .scalar()
         )
 
-        embed = profile_embed(user_name, average_rating, number_ratings)
+        artists_rated = (
+            Rating.select(Rating.album, Album.artist)
+            .join(Album, on=(Rating.album == Album.id))
+            .where(Rating.user == user.id)
+            .group_by(Album.artist)
+        ).count()
+
+        embed = profile_embed(user, average_score, releases_rated, artists_rated)
 
         await ctx.send(embed=embed)
 
@@ -170,6 +175,9 @@ class UsersCog(commands.Cog):
         attachment_url = ctx.message.attachments[0].url
         response = requests.get(attachment_url)
 
+        if response.headers.get("Content-Type") != "text/csv":
+            raise RatingsImportFailedError("The uploaded file is not a CSV file.")
+
         if not response.ok:
             raise RatingsImportFailedError
 
@@ -177,7 +185,6 @@ class UsersCog(commands.Cog):
             # Clean existing ratings for the user
             Rating.delete().where(Rating.user == ctx.author.id).execute()
 
-            # Read the CSV file
             rows = list(csv.DictReader(response.text.splitlines()))
 
             async with ctx.typing():
@@ -185,7 +192,7 @@ class UsersCog(commands.Cog):
                     await self.import_rating(ctx.author.id, row)
 
                 await ctx.send(
-                    content=f"✅ Imported ratings successfully for user <@{ctx.message.author.id}>."
+                    content=f"✅ Imported ratings successfully for user {ctx.message.author.name}.",
                 )
 
         except Exception as e:
