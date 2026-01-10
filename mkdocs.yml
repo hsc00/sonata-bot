@@ -1,0 +1,27 @@
+site_name: Sonata
+repo_url: https://github.com/hsc00/sonata-bot
+repo_name: sonata-bot
+site_description: A Discord bot for music lovers
+theme:
+  name: material
+  logo: assets/logo.png
+  palette:
+    primary: white
+  font:
+    text: Inter
+    code: Roboto Mono
+  language: en
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+copyright: Sonata is not affiliated with Rate Your Music
+nav:
+  - Home: index.md
+  - Commands:
+      - Artists: commands/artists.md
+      - Releases: commands/releases.md
+      - Tracks: commands/tracks.md
+      - Users: commands/users.md

@@ -12,11 +12,6 @@
 
 It is designed to help music lovers discover new albums and share their ratings with friends.
 
-## ✨ Features
-
-- Retrieve album information
-- Import ratings from **RateYourMusic**
-
 ## ⚡ Usage
 
 ### Environment variables
@@ -38,12 +33,3 @@ To run the bot, execute the following command:
 ```sh
 python bot/bot.py
 ```
-
-## 🎯 Roadmap
-
-- Context-aware replies to messages
-- Check reviews
-- Rate from the bot
-- Log rating from the browser
-- Integration with last.fm bot
-- Slash commands
