@@ -15,7 +15,7 @@ from core.embeds import (
     paginate_embeds,
     rating_embed,
     ratings_per_year_embed,
-    who_rated_album_embed,
+    who_rated_release_embed,
 )
 from core.errors import InvalidYearError, NoRatingsFoundError
 from core.utils import fetch_album
@@ -108,11 +108,15 @@ class ReleasesCog(commands.Cog):
         if len(ratings) == 0:
             raise NoRatingsFoundError(release.title)
 
+        average_score = (sum(rating.score for rating in ratings) / len(ratings)) / 2
+
         view, pages = paginate_embeds(
             ratings,
-            who_rated_album_embed,
+            who_rated_release_embed,
             per_page=10,
             album=release,
+            average_score=average_score,
+            num_ratings=len(ratings),
             user_id=ctx.message.author.id,
             server_name=getattr(ctx.guild, "name", ""),
         )

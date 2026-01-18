@@ -149,18 +149,18 @@ def album_embed(album: Album) -> discord.Embed:
     )
 
 
-def who_rated_album_embed(
+def who_rated_release_embed(
     ratings: list[Rating],
     album: Album,
+    average_score: int,
+    num_ratings: int,
     user_id: int,
     server_name: str,
     start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the album ratings."""
-    average_score = (sum(rating.score for rating in ratings) / len(ratings)) / 2
-
     title = format_album_title(album)
-    description = f"**{average_score:.2f}** ⭐ in **{server_name}** from **{len(ratings):,d}** ratings\n\n"
+    description = f"**{average_score:.2f}** ⭐ in **{server_name}** from **{num_ratings:,d}** ratings\n\n"
 
     for i, rating in enumerate(ratings, start=start):
         position = f"{i + 1}."
