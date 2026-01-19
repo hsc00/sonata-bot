@@ -10,7 +10,7 @@ from core.decorators import disabled
 from core.embeds import (
     album_embed,
     album_of_the_year_embed,
-    best_rated_albums_embed,
+    best_rated_releases_embed,
     most_rated_releases_embed,
     paginate_embeds,
     rating_embed,
@@ -134,11 +134,15 @@ class ReleasesCog(commands.Cog):
 
         async with ctx.typing():
             # Select releases with more than 3 ratings
-            albums: list[Album] = (
-                Album.select()
+            albums = (
+                Album.select(
+                    Album,
+                    fn.SUM(Rating.score).alias("rating_sum"),
+                    fn.COUNT(Rating.id).alias("rating_count"),
+                )
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
-                .group_by(Album)
+                .group_by(Album.id)
                 .having(fn.COUNT(Rating.id) > 3)
             )
 
@@ -153,23 +157,11 @@ class ReleasesCog(commands.Cog):
             albums_with_weighted_rating = []
 
             for album in albums:
-                rating_sum = (
-                    Rating.select(fn.SUM(Rating.score))
-                    .where(Rating.album == album)
-                    .scalar()
-                )
-
-                total_ratings = (
-                    Rating.select(fn.COUNT(Rating.id))
-                    .where(Rating.album == album)
-                    .scalar()
-                )
-
-                average_rating = rating_sum / total_ratings
-                weighted_rating = (average_rating * w1) + (total_ratings * w2)
+                average_rating = album.rating_sum / album.rating_count
+                weighted_rating = (average_rating * w1) + (album.rating_count * w2)
 
                 albums_with_weighted_rating.append(
-                    (album, average_rating, weighted_rating, total_ratings),
+                    (album, average_rating, weighted_rating, album.rating_count),
                 )
 
             # Sort releases by their weighted rating in descending order
@@ -181,11 +173,9 @@ class ReleasesCog(commands.Cog):
 
             top_releases = sorted_releases[:100]
 
-            # TODO: Include number of ratings
-
             view, pages = paginate_embeds(
                 top_releases,
-                best_rated_albums_embed,
+                best_rated_releases_embed,
                 per_page=10,
                 server_name=getattr(ctx.guild, "name", ""),
             )

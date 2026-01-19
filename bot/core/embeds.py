@@ -180,7 +180,7 @@ def who_rated_release_embed(
     )
 
 
-def best_rated_albums_embed(
+def best_rated_releases_embed(
     top_releases: list[tuple[Album, int, int]],
     server_name: str,
     start: int = 1,
@@ -189,7 +189,8 @@ def best_rated_albums_embed(
     lines = []
 
     for i, (album, average_score, _, num_ratings) in enumerate(
-        top_releases, start=start
+        top_releases,
+        start=start,
     ):
         lines.append(
             f"{i}. {format_artist(album.artist)} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",

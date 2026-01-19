@@ -36,16 +36,20 @@ def store_album(album: Album) -> None:
     )
 
 
-def search_album(album_name: str, artist_name: str = "") -> Album:
-    query = f'"{album_name} - {artist_name}"'.strip() if artist_name else album_name
+def search_album(album_name: str, artist_name: str = "") -> Album | None:
+    match = f"title:{album_name}"
 
-    return (
-        Album.select()
-        .join(AlbumIndex, on=(Album.id == AlbumIndex.rowid))
-        .where(AlbumIndex.match(query))
+    if artist_name:
+        match += f" artist:{artist_name}"
+
+    query = (
+        AlbumIndex.select(Album)
+        .join(Album, on=(Album.id == AlbumIndex.rowid))
+        .where(AlbumIndex.match(match))
         .order_by(AlbumIndex.bm25())
-        .first()
     )
+
+    return query.first().album if query.exists() else None
 
 
 async def fetch_album(user_id: str | None, query: str) -> Album | None:
@@ -57,7 +61,7 @@ async def fetch_album(user_id: str | None, query: str) -> Album | None:
         last_fm_username = user.lastfm_username if user else None
 
         if last_fm_username is None:
-            raise NoLastFMUsernameError()
+            raise NoLastFMUsernameError
 
         last_played = get_last_played(last_fm_username)
 

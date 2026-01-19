@@ -173,10 +173,7 @@ class UsersCog(commands.Cog):
             raise NoFileAttachedError
 
         attachment_url = ctx.message.attachments[0].url
-        response = requests.get(attachment_url)
-
-        if response.headers.get("Content-Type") != "text/csv":
-            raise RatingsImportFailedError("The uploaded file is not a CSV file.")
+        response = requests.get(attachment_url, timeout=10)
 
         if not response.ok:
             raise RatingsImportFailedError
