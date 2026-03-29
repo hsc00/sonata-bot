@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="A Discord bot for music lovers">
+        <meta name="description" content="A Discord bot for music lovers that brings RateYourMusic ratings to your server">
       
       
       
@@ -20,8 +20,8 @@
         
       
       
-      <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+      <link rel="icon" href="../../favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
@@ -29,7 +29,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -62,6 +62,8 @@
   
     
     
+      
+    
     
     
     
@@ -74,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#releases-commands" class="md-skip">
+        <a href="#release-commands" class="md-skip">
           Skip to content
         </a>
       
@@ -86,9 +88,7 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
+<header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href="../.." title="Sonata" class="md-header__button md-logo" aria-label="Sonata" data-md-component="logo">
       
@@ -117,7 +117,33 @@
     </div>
     
       
+        <form class="md-header__option" data-md-component="palette">
+  
     
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="white" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
     
     
     
@@ -145,6 +171,8 @@
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
         </button>
       </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
       
     </form>
     <div class="md-search__output">
@@ -183,6 +211,94 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../setup/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Setup & Configuration
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../artists/" class="md-tabs__link">
+          
+  
+  
+  Commands
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../faq/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  FAQ
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -196,8 +312,10 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href="../.." title="Sonata" class="md-nav__button md-logo" aria-label="Sonata" data-md-component="logo">
       
@@ -252,6 +370,33 @@
       
   
   
+  
+  
+    <li class="md-nav__item">
+      <a href="../../setup/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Setup & Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
     
   
   
@@ -260,15 +405,23 @@
     
     
     
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
-          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
             
   
   
@@ -286,8 +439,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_2">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -392,22 +545,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#release-r" class="md-nav__link">
+  <a href="#search-information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        release (!r)
+        🔍 Search &amp; Information
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="release (!r)">
+    <nav class="md-nav" aria-label="🔍 Search &amp; Information">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
+  <a href="#release-r-a-album" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !release (!r, !a, !album)
       
     </span>
   </a>
@@ -420,22 +573,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#who_rated_release-wr-wrr" class="md-nav__link">
+  <a href="#community-ratings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        who_rated_release (!wr, !wrr)
+        👥 Community Ratings
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="who_rated_release (!wr, !wrr)">
+    <nav class="md-nav" aria-label="👥 Community Ratings">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options_1" class="md-nav__link">
+  <a href="#whoratedrelease-wr-wa" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !whoratedrelease (!wr, !wa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bestratedreleases-brr-brab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        !bestratedreleases (!brr, !brab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mostratedreleases-mrr-mrab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        !mostratedreleases (!mrr, !mrab)
       
     </span>
   </a>
@@ -448,44 +623,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best_rated_releases-brr" class="md-nav__link">
+  <a href="#discovery-fun" class="md-nav__link">
     <span class="md-ellipsis">
       
-        best_rated_releases (!brr)
+        🎲 Discovery &amp; Fun
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#most_rated_releases-mrr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        most_rated_releases (!mrr)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#random_rating-rdr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        random_rating (!rdr)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="random_rating (!rdr)">
+    <nav class="md-nav" aria-label="🎲 Discovery &amp; Fun">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options_2" class="md-nav__link">
+  <a href="#randomrating-rdr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !randomrating (!rdr)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#newreleases-nr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        !newreleases (!nr)
       
     </span>
   </a>
@@ -498,22 +662,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#album_of_the_year-aoty" class="md-nav__link">
+  <a href="#year-based" class="md-nav__link">
     <span class="md-ellipsis">
       
-        album_of_the_year (!aoty)
+        📅 Year-based
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="album_of_the_year (!aoty)">
+    <nav class="md-nav" aria-label="📅 Year-based">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options_3" class="md-nav__link">
+  <a href="#albumoftheyear-aoty" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !albumoftheyear (!aoty)
       
     </span>
   </a>
@@ -597,6 +761,33 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -624,22 +815,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#release-r" class="md-nav__link">
+  <a href="#search-information" class="md-nav__link">
     <span class="md-ellipsis">
       
-        release (!r)
+        🔍 Search &amp; Information
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="release (!r)">
+    <nav class="md-nav" aria-label="🔍 Search &amp; Information">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options" class="md-nav__link">
+  <a href="#release-r-a-album" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !release (!r, !a, !album)
       
     </span>
   </a>
@@ -652,22 +843,44 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#who_rated_release-wr-wrr" class="md-nav__link">
+  <a href="#community-ratings" class="md-nav__link">
     <span class="md-ellipsis">
       
-        who_rated_release (!wr, !wrr)
+        👥 Community Ratings
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="who_rated_release (!wr, !wrr)">
+    <nav class="md-nav" aria-label="👥 Community Ratings">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options_1" class="md-nav__link">
+  <a href="#whoratedrelease-wr-wa" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !whoratedrelease (!wr, !wa)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bestratedreleases-brr-brab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        !bestratedreleases (!brr, !brab)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mostratedreleases-mrr-mrab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        !mostratedreleases (!mrr, !mrab)
       
     </span>
   </a>
@@ -680,44 +893,33 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#best_rated_releases-brr" class="md-nav__link">
+  <a href="#discovery-fun" class="md-nav__link">
     <span class="md-ellipsis">
       
-        best_rated_releases (!brr)
+        🎲 Discovery &amp; Fun
       
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#most_rated_releases-mrr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        most_rated_releases (!mrr)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#random_rating-rdr" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        random_rating (!rdr)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="random_rating (!rdr)">
+    <nav class="md-nav" aria-label="🎲 Discovery &amp; Fun">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options_2" class="md-nav__link">
+  <a href="#randomrating-rdr" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !randomrating (!rdr)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#newreleases-nr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        !newreleases (!nr)
       
     </span>
   </a>
@@ -730,22 +932,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#album_of_the_year-aoty" class="md-nav__link">
+  <a href="#year-based" class="md-nav__link">
     <span class="md-ellipsis">
       
-        album_of_the_year (!aoty)
+        📅 Year-based
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="album_of_the_year (!aoty)">
+    <nav class="md-nav" aria-label="📅 Year-based">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#options_3" class="md-nav__link">
+  <a href="#albumoftheyear-aoty" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Options:
+        !albumoftheyear (!aoty)
       
     </span>
   </a>
@@ -777,69 +979,109 @@
   
 
 
-<h1 id="releases-commands">Releases commands<a class="headerlink" href="#releases-commands" title="Permanent link">&para;</a></h1>
-<h2 id="release-r">release (<code>!r</code>)<a class="headerlink" href="#release-r" title="Permanent link">&para;</a></h2>
-<p>Shows information about a specific release from RateYourMusic.</p>
-<h3 id="options">Options:<a class="headerlink" href="#options" title="Permanent link">&para;</a></h3>
+<h1 id="release-commands">💿 Release Commands<a class="headerlink" href="#release-commands" title="Permanent link">&para;</a></h1>
+<p>Browse albums, discover highly-rated releases, and explore what your server community is listening to.</p>
+<hr />
+<h2 id="search-information">🔍 Search &amp; Information<a class="headerlink" href="#search-information" title="Permanent link">&para;</a></h2>
+<h3 id="release-r-a-album">!release (<code>!r</code>, <code>!a</code>, <code>!album</code>)<a class="headerlink" href="#release-r-a-album" title="Permanent link">&para;</a></h3>
+<p>Shows detailed information about a specific release from RateYourMusic, including ratings, genres, release date, and more.</p>
+<p>If no release name is provided, the bot will use the release you're currently listening to on Last.fm.</p>
+<p><strong>Options:</strong></p>
 <ul>
-<li><strong>Name</strong> – The name of the release you want to search for.</li>
+<li><strong>Name</strong> (optional) – The name of the release you want to search for. Defaults to your currently playing track on Last.fm.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Examples</p>
-<p><code>!release</code><br />
-<code>!release OK Computer</code>  </p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>!release
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>!release OK Computer
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>!album Radiohead OK Computer
+</code></pre></div>
 </div>
-<h2 id="who_rated_release-wr-wrr">who_rated_release (<code>!wr</code>, <code>!wrr</code>)<a class="headerlink" href="#who_rated_release-wr-wrr" title="Permanent link">&para;</a></h2>
-<p>Shows a list of server members who have rated a specific release.</p>
-<h3 id="options_1">Options:<a class="headerlink" href="#options_1" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="community-ratings">👥 Community Ratings<a class="headerlink" href="#community-ratings" title="Permanent link">&para;</a></h2>
+<h3 id="whoratedrelease-wr-wa">!whoratedrelease (<code>!wr</code>, <code>!wa</code>)<a class="headerlink" href="#whoratedrelease-wr-wa" title="Permanent link">&para;</a></h3>
+<p>Shows a list of server members who have rated a specific release, sorted by their rating scores.</p>
+<p>The command displays the average rating and total number of ratings for the release within your server.</p>
+<p><strong>Options:</strong></p>
 <ul>
-<li><strong>Name</strong> – The name of the release you want to search for.</li>
+<li><strong>Name</strong> (optional) – The name of the release you want to search for. Defaults to your currently playing track on Last.fm.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Examples</p>
-<p><code>!who_rated_release</code><br />
-<code>!who_rated_release OK Computer</code>  </p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>!whoratedrelease
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>!whoratedrelease OK Computer
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>!wr Radiohead In Rainbows
+</code></pre></div>
 </div>
-<h2 id="best_rated_releases-brr">best_rated_releases (<code>!brr</code>)<a class="headerlink" href="#best_rated_releases-brr" title="Permanent link">&para;</a></h2>
-<p>Shows the top-rated releases among server members.</p>
-<div class="admonition note">
-<p class="admonition-title">Examples</p>
-<p><code>!best_rated_releases</code></p>
+<h3 id="bestratedreleases-brr-brab">!bestratedreleases (<code>!brr</code>, <code>!brab</code>)<a class="headerlink" href="#bestratedreleases-brr-brab" title="Permanent link">&para;</a></h3>
+<p>Shows the top-rated releases among server members, ranked using a weighted formula that considers both average rating and number of ratings.</p>
+<p>Only releases with more than 3 ratings are included to ensure meaningful results.</p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>!bestratedreleases
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>!brr
+</code></pre></div>
 </div>
-<h2 id="most_rated_releases-mrr">most_rated_releases (<code>!mrr</code>)<a class="headerlink" href="#most_rated_releases-mrr" title="Permanent link">&para;</a></h2>
-<p>Shows the most-rated releases among server members.</p>
-<div class="admonition note">
-<p class="admonition-title">Examples</p>
-<p><code>!most_rated_releases</code></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>This is a great way to discover highly-regarded albums within your community!</p>
 </div>
-<h2 id="random_rating-rdr">random_rating (<code>!rdr</code>)<a class="headerlink" href="#random_rating-rdr" title="Permanent link">&para;</a></h2>
-<p>Shows a random release rated by server members, with an optional filter for high or low ratings.</p>
-<h3 id="options_2">Options:<a class="headerlink" href="#options_2" title="Permanent link">&para;</a></h3>
+<h3 id="mostratedreleases-mrr-mrab">!mostratedreleases (<code>!mrr</code>, <code>!mrab</code>)<a class="headerlink" href="#mostratedreleases-mrr-mrab" title="Permanent link">&para;</a></h3>
+<p>Shows the most-rated releases among server members, sorted by the number of ratings received.</p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>!mostratedreleases
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>!mrr
+</code></pre></div>
+</div>
+<hr />
+<h2 id="discovery-fun">🎲 Discovery &amp; Fun<a class="headerlink" href="#discovery-fun" title="Permanent link">&para;</a></h2>
+<h3 id="randomrating-rdr">!randomrating (<code>!rdr</code>)<a class="headerlink" href="#randomrating-rdr" title="Permanent link">&para;</a></h3>
+<p>Shows a random release rated by a server member, with an optional filter for high or low ratings.</p>
+<p><strong>Options:</strong></p>
 <ul>
-<li><strong>Filter</strong>: – Filter to apply to the random selection. Possible values are:<ul>
-<li><code>glaze</code> – Only include releases with high ratings (4 or 5 stars).</li>
-<li><code>roast</code> – Only include releases with low ratings (1 or 2 stars).</li>
+<li><strong>Filter</strong> (optional) – Filter to apply to the random selection:<ul>
+<li><code>glaze</code> – Only high ratings (3.0+ out of 5) </li>
+<li><code>roast</code> – Only low ratings (2.0 or lower) </li>
 </ul>
 </li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Examples</p>
-<p><code>!random_rating</code><br />
-<code>!random_rating glaze</code><br />
-<code>!random_rating roast</code></p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>!randomrating
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>!randomrating glaze
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>!randomrating roast
+</code></pre></div>
 </div>
-<h2 id="album_of_the_year-aoty">album_of_the_year (<code>!aoty</code>)<a class="headerlink" href="#album_of_the_year-aoty" title="Permanent link">&para;</a></h2>
-<p>Shows the best-rated releases of an year for a specific user.</p>
-<h3 id="options_3">Options:<a class="headerlink" href="#options_3" title="Permanent link">&para;</a></h3>
+<h3 id="newreleases-nr">!newreleases (<code>!nr</code>)<a class="headerlink" href="#newreleases-nr" title="Permanent link">&para;</a></h3>
+<p>Displays new releases of the current week from various artists.</p>
+<p>This command fetches the latest releases from Sputnikmusic and shows information about them, including ratings if available on RateYourMusic.</p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>!newreleases
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>!nr
+</code></pre></div>
+</div>
+<hr />
+<h2 id="year-based">📅 Year-based<a class="headerlink" href="#year-based" title="Permanent link">&para;</a></h2>
+<h3 id="albumoftheyear-aoty">!albumoftheyear (<code>!aoty</code>)<a class="headerlink" href="#albumoftheyear-aoty" title="Permanent link">&para;</a></h3>
+<p>Shows the best-rated releases of a specific year for a user, sorted by rating score.</p>
+<p>Discover personal or community favorites from any year!</p>
+<p><strong>Options:</strong></p>
 <ul>
-<li><strong>Year</strong> – The year you want to search for. If not provided, the current year will be used.</li>
-<li><strong>User</strong> – The user whose ratings you want to check. If not provided, the command will check the ratings of the user who invoked the command.</li>
+<li><strong>Year</strong> (optional) – The year you want to search for. If not provided, the current year will be used.</li>
+<li><strong>User</strong> (optional) – The user whose ratings you want to check. If not provided, shows your own ratings.</li>
 </ul>
-<div class="admonition note">
-<p class="admonition-title">Examples</p>
-<p><code>!album_of_the_year</code><br />
-<code>!album_of_the_year 2025</code><br />
-<code>!album_of_the_year 2025 @username</code></p>
+<div class="admonition example">
+<p class="admonition-title">Usage Examples</p>
+<div class="language-text highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>!albumoftheyear
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>!aoty 2025
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>!aoty 2025 @username
+</code></pre></div>
+</div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>Year must be between 1900 and the current year.</p>
 </div>
 
 
@@ -861,22 +1103,81 @@
 <script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
         </div>
         
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
       </main>
       
         <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../artists/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Artists">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Artists
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../tracks/" class="md-footer__link md-footer__link--next" aria-label="Next: Tracks">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Tracks
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
       <div class="md-copyright">
   
     <div class="md-copyright__highlight">
-      Sonata is not affiliated with Rate Your Music
+      Sonata is not affiliated with "Rate Your Music"
     </div>
   
   
     Made with
     <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
       Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+    <a href="https://github.com/hsc00/sonata-bot" target="_blank" rel="noopener" title="Sonata on GitHub" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
     </a>
   
 </div>
@@ -894,10 +1195,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.footer", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
