@@ -17,10 +17,15 @@ from core.embeds import (
     ratings_per_year_embed,
     who_rated_release_embed,
 )
-from core.errors import InvalidYearError, NoRatingsFoundError
+from core.errors import (
+    InvalidUserMentionError,
+    InvalidYearError,
+    NoRatingsFoundError,
+    SonataError,
+)
 from core.utils import fetch_album
 from database.models import Album, Rating
-from discord import Message, User, app_commands
+from discord import Member, Message, User, app_commands
 from discord.ext import commands
 from peewee import fn
 
@@ -89,6 +94,9 @@ class ReleasesCog(commands.Cog):
         release_name: str | None = None,
     ) -> None:
         """Get the users who rated a given release."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         release = await fetch_album(str(ctx.author.id), release_name)
 
         if release is None:
@@ -106,7 +114,7 @@ class ReleasesCog(commands.Cog):
         )
 
         if len(ratings) == 0:
-            raise NoRatingsFoundError(release.title)
+            raise NoRatingsFoundError(str(release.title))
 
         average_score = (sum(rating.score for rating in ratings) / len(ratings)) / 2
 
@@ -130,6 +138,9 @@ class ReleasesCog(commands.Cog):
     @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
     async def best_rated_releases(self, ctx: commands.Context) -> None:
         """Get the best rated releases in the server."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         async with ctx.typing():
@@ -192,6 +203,9 @@ class ReleasesCog(commands.Cog):
         ctx: commands.Context,
     ) -> None:
         """Get the most rated releases in the server."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         most_rated_releases = (
@@ -228,6 +242,9 @@ class ReleasesCog(commands.Cog):
         filter_type: Literal["roast", "glaze"] | None = None,
     ) -> None:
         """Get a random rating."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         if filter_type == "roast":
@@ -275,7 +292,7 @@ class ReleasesCog(commands.Cog):
         self,
         ctx: commands.Context,
         year: int | None,
-        user: User | None = None,
+        user: User | Member | None = None,
     ) -> None:
         """Get the best rated albums of a given year."""
 
@@ -330,9 +347,7 @@ class ReleasesCog(commands.Cog):
             match = re.match(r"<@!?(\d+)>", query)
 
             if not match:
-                await ctx.send("Please provide a valid user mention.")
-
-                return
+                raise InvalidUserMentionError(query)
 
             user_id = match.group(1)
 
@@ -352,24 +367,24 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(aliases=["nr"])
-    async def new_releases(
-        self,
-        ctx: commands.Context,
-        *,
-        _query: str | None = None,
-    ) -> None:
+    @commands.hybrid_command(name="newreleases", aliases=["nr"], with_app_command=True)
+    @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
+    async def new_releases(self, ctx: commands.Context) -> None:
         """Get the new releases of the week."""
-        channel_id = 725329619515080769
-        channel = self.bot.get_channel(channel_id)
         new_releases = fetch_new_releases()
 
         if not new_releases:
-            await channel.send("💔 No new releases found.")
+            raise SonataError("💔 No new releases found.")
 
-            return
+        for release_name in new_releases:
+            release = await fetch_album(str(ctx.author.id), release_name)
 
-        ctx.channel = channel
+            if (
+                release is None
+                or release.release_year != datetime.now(tz=timezone.utc).year
+            ):
+                continue
 
-        for release in new_releases:
-            await self.release.callback(self, ctx, release_name=release)
+            embed = album_embed(release)
+
+            await ctx.send(embed=embed)

@@ -3,6 +3,7 @@ import logging
 
 import discord
 from core.config import discord_bot_token
+from core.embeds import EmbedBuilder
 from core.events import init_events
 from database import Album, AlbumIndex, Rating, UserInfo, db
 from discord.ext import commands
@@ -23,7 +24,7 @@ intents.members = True  # Enable the members intent
 intents.message_content = True  # Enable the intent to read message content
 
 # Initialize the bot
-bot = SonataBot(command_prefix="!", intents=intents)
+bot = SonataBot(command_prefix="!", intents=intents, help_command=None)
 
 initial_extensions = [
     "cogs.artists",
@@ -31,6 +32,22 @@ initial_extensions = [
     "cogs.tracks",
     "cogs.users",
 ]
+
+
+@bot.hybrid_command(name="help", with_app_command=True)
+async def help_command(ctx: commands.Context) -> None:
+    """Get help and documentation for Sonata Bot."""
+    embed = (
+        EmbedBuilder()
+        .with_title("Help & Documentation")
+        .with_description(
+            "For detailed documentation, commands, and setup instructions, visit: [Sonata Bot Documentation](https://hsc00.github.io/sonata-bot/)"
+        )
+        .with_color(discord.Color.blue())
+        .build()
+    )
+
+    await ctx.send(embed=embed)
 
 
 async def main() -> None:

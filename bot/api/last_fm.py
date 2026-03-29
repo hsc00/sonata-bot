@@ -1,8 +1,11 @@
+from __future__ import annotations
+
 import requests
 from core.config import lastfm_api_key as api_key
+from core.errors import SonataError
 
 
-def get_last_played(username: str) -> tuple[str, str, str] | None:
+def get_last_played(username: str) -> tuple[str, str, str]:
     url = f"http://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user={username}&api_key={api_key}&format=json"
     response = requests.get(url, timeout=10)
     data = response.json()
@@ -16,4 +19,6 @@ def get_last_played(username: str) -> tuple[str, str, str] | None:
 
         return (album_name, artist_name, track_name)
 
-    return None
+    raise SonataError(
+        "Could not retrieve the last played track. Please provide a search term.",
+    )

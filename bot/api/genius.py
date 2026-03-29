@@ -14,7 +14,12 @@ def get_track_relationships(track_name: str) -> dict | None:
     if not song:
         return None
 
-    json_data = json.loads(song.to_json())
+    song_json = song.to_json()
+
+    if not song_json:
+        return None
+
+    json_data = json.loads(song_json)
     relationships = json_data.get("song_relationships", [])
 
     return {

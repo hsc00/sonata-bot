@@ -15,6 +15,7 @@ from core.errors import (
     NoFileAttachedError,
     NoRatingsFoundError,
     RatingsImportFailedError,
+    SonataError,
 )
 from core.utils import store_album
 from database import Album, Rating, UserInfo
@@ -70,6 +71,9 @@ class UsersCog(commands.Cog):
     @commands.hybrid_command(name="ratingsrank", aliases=["rr"])
     async def ratings_rank(self, ctx: commands.Context) -> None:
         """Get a ranking of users by their number of ratings."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         ratings = (
@@ -140,7 +144,7 @@ class UsersCog(commands.Cog):
     async def profile(
         self,
         ctx: commands.Context,
-        user: discord.User | None = None,
+        user: discord.User | discord.Member | None = None,
     ) -> None:
         if user is None:
             user = ctx.author
@@ -258,6 +262,9 @@ class UsersCog(commands.Cog):
         ctx: commands.Context,
         scope: Literal["global", "guild"] | None = "guild",
     ) -> None:
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         if ctx.author.id not in (self.bot.owner_id, 207090194006933505):
             await ctx.send(
                 "You do not have permission to use this command.",

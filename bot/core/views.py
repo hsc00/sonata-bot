@@ -9,12 +9,18 @@ class PaginatorView(discord.ui.View):
         self.pages = pages
         self.current_page = 0
 
+        if len(self.pages) <= 1:
+            self.first_button.disabled = True
+            self.previous_button.disabled = True
+            self.next_button.disabled = True
+            self.last_button.disabled = True
+
     async def update_message(self, interaction: discord.Interaction) -> None:
         embed = self.pages[self.current_page]
 
         await interaction.response.edit_message(embed=embed, view=self)
 
-    @discord.ui.button(label="⏮️", style=discord.ButtonStyle.primary, disabled=False)
+    @discord.ui.button(label="⏮️", style=discord.ButtonStyle.secondary, disabled=False)
     async def first_button(
         self,
         interaction: discord.Interaction,
@@ -29,7 +35,7 @@ class PaginatorView(discord.ui.View):
 
         await self.update_message(interaction)
 
-    @discord.ui.button(label="◀️", style=discord.ButtonStyle.primary, disabled=True)
+    @discord.ui.button(label="◀️", style=discord.ButtonStyle.secondary, disabled=True)
     async def previous_button(
         self,
         interaction: discord.Interaction,
@@ -44,7 +50,7 @@ class PaginatorView(discord.ui.View):
 
         await self.update_message(interaction)
 
-    @discord.ui.button(label="▶️", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="▶️", style=discord.ButtonStyle.secondary)
     async def next_button(
         self,
         interaction: discord.Interaction,
@@ -59,7 +65,7 @@ class PaginatorView(discord.ui.View):
 
         await self.update_message(interaction)
 
-    @discord.ui.button(label="⏭️", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="⏭️", style=discord.ButtonStyle.secondary)
     async def last_button(
         self,
         interaction: discord.Interaction,

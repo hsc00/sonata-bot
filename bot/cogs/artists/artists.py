@@ -4,19 +4,18 @@ from typing import Any
 
 import discord
 from api.last_fm import get_last_played
-from core.errors import NoLastFMUsernameError, NoRatingsFoundError
-from database import AlbumIndex, UserInfo
-from database.models import Album, Rating
-from discord import app_commands
-from discord.ext import commands
-from peewee import fn
-
-from bot.core.embeds import (
+from core.embeds import (
     artist_ratings_embed,
     best_rated_artists_embed,
     most_rated_artists_embed,
     paginate_embeds,
 )
+from core.errors import NoLastFMUsernameError, NoRatingsFoundError, SonataError
+from database import AlbumIndex, UserInfo
+from database.models import Album, Rating
+from discord import app_commands
+from discord.ext import commands
+from peewee import fn
 
 
 class ArtistCog(commands.Cog):
@@ -85,13 +84,14 @@ class ArtistCog(commands.Cog):
             Rating.select()
             .join(Album)
             .where((Rating.user == user_id) & (Album.artist == artist.artist))
-            .order_by(Rating.score.desc())
+            .order_by(Album.release_year.asc(), Rating.score.desc())
             .limit(100)
         )
 
         if len(ratings) == 0:
             raise NoRatingsFoundError(artist_query)
 
+        # TODO: Order by release year
         view, pages = paginate_embeds(
             ratings,
             artist_ratings_embed,
@@ -115,7 +115,11 @@ class ArtistCog(commands.Cog):
         user: discord.User | None = None,
     ) -> None:
         """Get the best rated artists."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
         w1, w2, w3 = 14, 0.07, 0.1
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         best_rated_artists = (
             Album.select(
@@ -124,6 +128,7 @@ class ArtistCog(commands.Cog):
                 fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
             )
             .join(Rating)
+            .where(Rating.user.in_(guild_member_ids))
             .group_by(Album.artist)
             .having(fn.COUNT(Rating.id) > 3)
             .order_by(

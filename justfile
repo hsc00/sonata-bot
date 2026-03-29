@@ -21,6 +21,10 @@ lint:
 lint-fix:
     ruff check --fix .
 
+# Run type checking
+type-check:
+    ty check --exclude "tests/*"
+
 # Format code with ruff
 [group("format")]
 format:
@@ -31,8 +35,9 @@ format:
 format-check:
     ruff format --check .
 
-# Run all checks (lint + format check)
-check: lint format-check
+# Run all checks 
+check: lint format-check type-check
+    @echo "All checks passed!"
 
 # Build documentation
 [group("docs")]
