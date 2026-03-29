@@ -4,8 +4,6 @@
    <br>
 
    <quote>A Discord bot for music lovers</quote>
-
-   <br>
 </div>
 
 ---
