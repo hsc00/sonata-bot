@@ -1,46 +1,84 @@
-# Users commands
+# 👤 User Commands
 
-## !set_lastfm
+Manage your profile, import ratings, and view community statistics.
 
-Sets your Last.fm username to link your Discord account with your Last.fm account. This allows the bot to fetch what you're currently listening to for other commands.
+---
 
-### Options:
+## ⚙️ Setup & Configuration
 
-- **Username** – Your [Last.fm](https://www.last.fm/) username to link with your Discord account.
+### !setlastfm
 
-!!! note "Examples" 
-    `!set_lastfm @username`  
+Link your Last.fm account to enable automatic track detection across many commands.
 
-## !ratings_rank (`!rr`)
+This allows the bot to automatically fetch what you're currently listening to.
 
-Show a ranked list of users based on the number of ratings they have submitted.
+**Options:**
 
-!!! note "Examples" 
-    `!ratings_rank`
+- **Username** – Your [Last.fm](https://www.last.fm/) username
 
-## !profile
+!!! example "Usage Examples"
+    ```
+    !setlastfm myusername
+    ```
 
-Shows your profile with statistics about your ratings.
+### !importratings (`!i`)
 
-### Options:
+Import all your ratings from a CSV file exported from RateYourMusic.
 
-- **User** – Select another user by mention or Discord user.
+This is the core feature that enables all rating-based functionality in Sonata.
 
-!!! note "Examples" 
-    `!profile`  
-    `!profile @user`
+**How to get your CSV file:**
 
-## !import_ratings (`!i`)
+1. Go to [RateYourMusic Export](https://rateyourmusic.com/musicexport)
+2. Click "Begin export..." and wait for the export to complete
+3. Download your CSV file
+4. Attach the file when running this command
 
-Import your ratings from a CSV file exported from RateYourMusic.   
-A file can be obtained by going [here](https://rateyourmusic.com/music_export) and clicking `Begin export...`.  
-Then, attach the downloaded CSV file to the command. You can do this by dragging and dropping the file into the message box or by clicking on the ➕ button left of the message box and then select `Upload a file`.
+**To attach a file:**
 
-!!! note "Examples" 
-    `!import_ratings <file>`
+- Drag and drop the file into Discord, then type the command
+- Or click the ➕ button → "Upload a file" → Select your CSV → Type the command
 
-!!! info 
+!!! example "Usage Examples"
+    ```
+    !importratings (with CSV file attached)
+    !i (with CSV file attached)
+    ```
+
+!!! info "Import Time"
     The import process may take a while depending on the number of ratings you have. Please be patient and do not try to re-run the command while the import is still in progress.
 
-!!! warning 
-    Importing ratings will overwrite any existing ratings you have in the bot. 
+!!! warning "Data Overwrite"
+    Importing ratings will **overwrite** any existing ratings you have in the bot. This ensures your data stays in sync with RateYourMusic.
+
+---
+
+## 📊 Statistics & Profiles
+
+### !profile
+
+View detailed statistics about your (or another user's) music taste, including:
+
+- Average rating score
+- Total releases rated
+- Number of unique artists rated
+
+**Options:**
+
+- **User** (optional) – Select another user by mention or Discord user ID. If not provided, shows your own profile.
+
+!!! example "Usage Examples"
+    ```
+    !profile
+    !profile @user
+    ```
+
+### !ratingsrank (`!rr`)
+
+View a leaderboard of server members ranked by the number of ratings they have submitted.
+
+!!! example "Usage Examples"
+    ```
+    !ratingsrank
+    !rr
+    ```

@@ -1,69 +1,130 @@
-# Releases commands
+# 💿 Release Commands
 
-## release (`!r`)
+Browse albums, discover highly-rated releases, and explore what your server community is listening to.
 
-Shows information about a specific release from RateYourMusic.
+---
 
-### Options:
+## 🔍 Search & Information
 
-- **Name** – The name of the release you want to search for.
+### !release (`!r`, `!a`, `!album`)
 
-!!! note "Examples" 
-    `!release`  
-    `!release OK Computer`  
+Shows detailed information about a specific release from RateYourMusic, including ratings, genres, release date, and more.
 
-## who_rated_release (`!wr`, `!wrr`)
+If no release name is provided, the bot will use the release you're currently listening to on Last.fm.
 
-Shows a list of server members who have rated a specific release.
+**Options:**
 
-### Options:
+- **Name** (optional) – The name of the release you want to search for. Defaults to your currently playing track on Last.fm.
 
-- **Name** – The name of the release you want to search for.
+!!! example "Usage Examples" 
+    ```
+    !release
+    !release OK Computer
+    !album Radiohead OK Computer
+    ```
 
-!!! note "Examples" 
-    `!who_rated_release`  
-    `!who_rated_release OK Computer`  
+---
 
-## best_rated_releases (`!brr`)
+## 👥 Community Ratings
 
-Shows the top-rated releases among server members.
+### !whoratedrelease (`!wr`, `!wa`)
 
-!!! note "Examples" 
-    `!best_rated_releases`
+Shows a list of server members who have rated a specific release, sorted by their rating scores.
 
-## most_rated_releases (`!mrr`)
+The command displays the average rating and total number of ratings for the release within your server.
 
-Shows the most-rated releases among server members.
+**Options:**
 
-!!! note "Examples" 
-    `!most_rated_releases`
+- **Name** (optional) – The name of the release you want to search for. Defaults to your currently playing track on Last.fm.
 
-## random_rating (`!rdr`)
+!!! example "Usage Examples"
+    ```
+    !whoratedrelease
+    !whoratedrelease OK Computer
+    !wr Radiohead In Rainbows
+    ```
 
-Shows a random release rated by server members, with an optional filter for high or low ratings.
+### !bestratedreleases (`!brr`, `!brab`)
 
-### Options:
+Shows the top-rated releases among server members, ranked using a weighted formula that considers both average rating and number of ratings.
 
-- **Filter**: – Filter to apply to the random selection. Possible values are:
-    - `glaze` – Only include releases with high ratings (4 or 5 stars).
-    - `roast` – Only include releases with low ratings (1 or 2 stars).
+Only releases with more than 3 ratings are included to ensure meaningful results.
 
-!!! note "Examples" 
-    `!random_rating`  
-    `!random_rating glaze`  
-    `!random_rating roast`
+!!! example "Usage Examples"
+    ```
+    !bestratedreleases
+    !brr
+    ```
 
-## album_of_the_year (`!aoty`)
+!!! tip
+    This is a great way to discover highly-regarded albums within your community!
 
-Shows the best-rated releases of an year for a specific user.
+### !mostratedreleases (`!mrr`, `!mrab`)
 
-### Options:
+Shows the most-rated releases among server members, sorted by the number of ratings received.
 
-- **Year** – The year you want to search for. If not provided, the current year will be used.
-- **User** – The user whose ratings you want to check. If not provided, the command will check the ratings of the user who invoked the command.
+!!! example "Usage Examples"
+    ```
+    !mostratedreleases
+    !mrr
+    ```
 
-!!! note "Examples" 
-    `!album_of_the_year`  
-    `!album_of_the_year 2025`  
-    `!album_of_the_year 2025 @username`
+---
+
+## 🎲 Discovery & Fun
+
+### !randomrating (`!rdr`)
+
+Shows a random release rated by a server member, with an optional filter for high or low ratings.
+
+**Options:**
+
+- **Filter** (optional) – Filter to apply to the random selection:
+    - `glaze` – Only high ratings (3.0+ out of 5) 
+    - `roast` – Only low ratings (2.0 or lower) 
+
+!!! example "Usage Examples"
+    ```
+    !randomrating
+    !randomrating glaze
+    !randomrating roast
+    ```
+
+### !newreleases (`!nr`)
+
+Displays new releases of the current week from various artists.
+
+This command fetches the latest releases from Sputnikmusic and shows information about them, including ratings if available on RateYourMusic.
+
+!!! example "Usage Examples"
+    ```
+    !newreleases
+    !nr
+    ```
+
+---
+
+## 📅 Year-based
+
+### !albumoftheyear (`!aoty`)
+
+Shows the best-rated releases of a specific year for a user, sorted by rating score.
+
+Discover personal or community favorites from any year!
+
+**Options:**
+
+- **Year** (optional) – The year you want to search for. If not provided, the current year will be used.
+- **User** (optional) – The user whose ratings you want to check. If not provided, shows your own ratings.
+
+!!! example "Usage Examples"
+    ```
+    !albumoftheyear
+    !aoty 2025
+    !aoty 2025 @username
+    ```
+
+!!! info
+    Year must be between 1900 and the current year.
+
 

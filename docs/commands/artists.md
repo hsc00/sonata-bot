@@ -1,41 +1,76 @@
-# Artist commands
+# 🧑‍🎤 Artist Commands
 
-## !artist_ratings (`!ar`)
+Explore artist ratings, discover top-rated artists, and view statistics about your favorite musicians.
 
-Shows user's ratings for a specific artist, ordered by score.
+---
 
-If no artist is provided, the command will use the last artist you listened to on Last.fm.
+## ⭐ Artist Ratings
 
-### Options:
+### !artistratings (`!ar`)
 
-- **User** – Select another user by mention or Discord user.
-- **Artist** – The artist you want to search for.
+View all ratings for a specific artist, organized by release year and score.
 
-!!! note "Examples" 
-	`!artist_ratings Radiohead`  
-	`!artist_ratings @user Radiohead`  
+If no artist is provided, the bot automatically uses the artist you're currently listening to on Last.fm. Results include the average score across all ratings for that artist.
 
-!!! warning "Order of arguments" 
-	If an user is specified, it must come before the artist name.
+**Options:**
 
-## !best_rated_artists (`!bra`)
+- **User** (optional) – Select another user by mention or Discord user ID. If not provided, shows your own ratings.
+- **Artist** (optional) – The artist you want to search for. If not provided, uses your currently playing artist on Last.fm.
 
-Shows the best rated artists, ranked using a weighted formula.
+!!! example "Usage Examples"
+    ```
+    !artistratings
+    !artistratings Radiohead
+    !ar @user Radiohead
+    ```
 
-If no user is specified, this command shows the best rated artists across the entire server.  
-If a user is specified, only that user’s ratings are taken into account.
+!!! warning "Order of Arguments"
+    If specifying a user, they must come **before** the artist name in your command.
 
-!!! note "Examples" 
-	`!best_rated_artists`  
-	`!best_rated_artists @user`  
+!!! info "Last.fm Required"
+    You must have set your Last.fm username with `!setlastfm` to use this command without specifying an artist.
 
-## !most_rated_artists (`!mrr`)
+---
 
-Shows the artists with the most ratings.
+## 🏆 Rankings & Statistics
 
-If no user is specified, this command shows the most rated artists across the entire server.
-If a user is specified, only that user’s ratings are taken into account.
+### !bestratedartists (`!bra`)
 
-!!! note "Examples" 
-	`!most_rated_artists`  
-	`!most_rated_artists @user`
+Discover the best rated artists ranked using a sophisticated weighted formula that considers:
+
+- Average rating score
+- Total number of ratings
+- Number of distinct releases
+
+**Scope:**
+
+- **No user specified**: Shows the best rated artists across the entire server
+- **User specified**: Shows only that user's best rated artists
+
+Only artists with more than 3 ratings are included to ensure meaningful results.
+
+!!! example "Usage Examples"
+    ```
+    !bestratedartists
+    !bra @user
+    ```
+
+!!! tip
+    This is perfect for discovering consensus favorites in your community!
+
+### !mostratedartists (`!mra`)
+
+See which artists have received the most ratings, sorted by total rating count.
+
+Find out which artists are most popular and widely listened to in your server!
+
+**Scope:**
+
+- **No user specified**: Shows the most rated artists across the entire server
+- **User specified**: Shows only that user's most rated artists
+
+!!! example "Usage Examples"
+    ```
+    !mostratedartists
+    !mra @user
+    ```

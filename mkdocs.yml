@@ -1,27 +1,77 @@
 site_name: Sonata
 repo_url: https://github.com/hsc00/sonata-bot
 repo_name: sonata-bot
-site_description: A Discord bot for music lovers
+site_description: A Discord bot for music lovers that brings RateYourMusic ratings to your server
 theme:
   name: material
   logo: assets/logo.png
+  favicon: favicon.ico
   palette:
-    primary: white
+    # Light mode
+    - scheme: default
+      primary: white
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    # Dark mode
+    - scheme: slate
+      primary: black
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   font:
     text: Inter
     code: Roboto Mono
   language: en
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.footer
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
 markdown_extensions:
   - admonition
+  - attr_list
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+  - md_in_html
   - toc:
       permalink: true
-copyright: Sonata is not affiliated with Rate Your Music
+      toc_depth: 3
+
+plugins:
+  - search
+
+copyright: Sonata is not affiliated with "Rate Your Music"
+
 nav:
   - Home: index.md
+  - Setup & Configuration: setup.md
   - Commands:
       - Artists: commands/artists.md
       - Releases: commands/releases.md
       - Tracks: commands/tracks.md
       - Users: commands/users.md
+  - FAQ: faq.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/hsc00/sonata-bot
+      name: Sonata on GitHub
