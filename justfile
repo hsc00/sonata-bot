@@ -2,7 +2,7 @@ run:
     python bot/bot.py
     
 test:
-    echo "No tests defined..."
+    pytest tests/
 
 lint:
     ruff check

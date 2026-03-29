@@ -51,3 +51,6 @@ ignore = [
     "PLR2004",
     "TRY003",
 ]
+
+[lint.per-file-ignores]
+"tests/*.py" = ["S101"] # Use of assert detected
