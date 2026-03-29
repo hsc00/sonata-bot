@@ -18,7 +18,7 @@ def search_google(query: str) -> dict | None:
             release_pattern = re.compile(
                 r"^https:\/\/rateyourmusic.com\/release\/(album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)\/([^\/]*)\/([^\/]*)\/?$",
             )
-            response = session.get(search_url)
+            response = session.get(search_url, timeout=10)
 
             if response.status_code == 200:
                 results = response.json().get("items", None)
@@ -30,12 +30,12 @@ def search_google(query: str) -> dict | None:
 
             else:
                 logger.error(
-                    f"Google search failed with status code: {response.status_code}"
+                    f"Google search failed with status code: {response.status_code}",
                 )
 
                 return None
 
-        except Exception as e:
-            print(f"Failed to search for album: {e}")
+        except Exception:
+            logger.exception("Failed to search for album")
 
             return None

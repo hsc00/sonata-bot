@@ -1,6 +1,5 @@
 import asyncio
 import logging
-import os
 
 import discord
 from core.config import discord_bot_token
@@ -8,10 +7,12 @@ from core.events import init_events
 from database import Album, AlbumIndex, Rating, UserInfo, db
 from discord.ext import commands
 
+logger = logging.getLogger(__name__)
+
 
 class SonataBot(commands.Bot):
     def __init__(self, *args, **kwargs) -> None:
-        super().__init__(command_prefix="!", *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         init_events(self)
 
@@ -22,7 +23,7 @@ intents.members = True  # Enable the members intent
 intents.message_content = True  # Enable the intent to read message content
 
 # Initialize the bot
-bot = SonataBot(intents=intents)
+bot = SonataBot(command_prefix="!", intents=intents)
 
 initial_extensions = [
     "cogs.artists",
@@ -39,9 +40,8 @@ async def main() -> None:
             try:
                 await bot.load_extension(extension)
 
-            except Exception as e:
-                logging.error(f"Failed to load extension {extension}.")
-                logging.error(f"Error: {e}")
+            except Exception:
+                logger.exception(f"Failed to load extension {extension}.")
 
         # Create the database tables
         with db:

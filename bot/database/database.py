@@ -1,10 +1,10 @@
 import os
 
-from peewee import *
+from peewee import Model
 from playhouse.sqlite_ext import SqliteExtDatabase
 
 db_path = os.getenv("SONATA_BOT_DB_PATH", "sonata.db")
-db = SqliteExtDatabase("sonata.db", pragmas=(("journal_mode", "wal"),))
+db = SqliteExtDatabase(db_path, pragmas=(("journal_mode", "wal"),))
 
 
 class BaseModel(Model):

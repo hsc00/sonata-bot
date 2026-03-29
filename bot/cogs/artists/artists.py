@@ -2,14 +2,21 @@ from __future__ import annotations
 
 from typing import Any
 
+import discord
 from api.last_fm import get_last_played
-from core.embeds import *
 from core.errors import NoLastFMUsernameError, NoRatingsFoundError
 from database import AlbumIndex, UserInfo
 from database.models import Album, Rating
 from discord import app_commands
 from discord.ext import commands
 from peewee import fn
+
+from bot.core.embeds import (
+    artist_ratings_embed,
+    best_rated_artists_embed,
+    most_rated_artists_embed,
+    paginate_embeds,
+)
 
 
 class ArtistCog(commands.Cog):
@@ -43,7 +50,7 @@ class ArtistCog(commands.Cog):
             last_fm_username = user_info.lastfm_username if user_info else None
 
             if last_fm_username is None:
-                raise NoLastFMUsernameError()
+                raise NoLastFMUsernameError
 
             _, artist_name, _ = get_last_played(last_fm_username)
             user_id = ctx.message.author.id
@@ -138,7 +145,7 @@ class ArtistCog(commands.Cog):
             best_rated_artists = best_rated_artists.where(Rating.user == user_id)
 
         if not best_rated_artists:
-            raise NoRatingsFoundError()
+            raise NoRatingsFoundError
 
         view, pages = paginate_embeds(
             best_rated_artists,
@@ -177,7 +184,7 @@ class ArtistCog(commands.Cog):
             most_rated_artists = most_rated_artists.where(Rating.user == user.id)
 
         if not most_rated_artists:
-            raise NoRatingsFoundError()
+            raise NoRatingsFoundError
 
         view, pages = paginate_embeds(
             most_rated_artists,

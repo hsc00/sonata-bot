@@ -12,17 +12,16 @@ def init_events(bot: commands.Bot) -> None:
     async def on_command_error(ctx: commands.Context, error: Exception) -> None:
         logger.error(error)
 
-        try:
+        if isinstance(error, CommandNotFound):
+            pass
+
+        else:
             original = getattr(error, "original", error)
 
             if isinstance(original, SonataError):
                 await ctx.send(original.message)
 
             else:
-                raise original
-
-        except CommandNotFound:
-            pass
-
-        except Exception:
-            await ctx.send("❌ An unexpected error occurred. Please try again later.")
+                await ctx.send(
+                    "❌ An unexpected error occurred. Please try again later."
+                )

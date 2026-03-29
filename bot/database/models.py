@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from peewee import Check, FloatField, ForeignKeyField, IntegerField, TextField
 from playhouse.sqlite_ext import FTSModel, RowIDField, SearchField
 
@@ -25,7 +27,7 @@ class AlbumIndex(FTSModel):
 
     class Meta:
         database = db
-        options = {"tokenize": "porter"}
+        options: ClassVar[dict[str, str]] = {"tokenize": "porter"}
 
 
 class Rating(BaseModel):

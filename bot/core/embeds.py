@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from math import ceil
-from typing import Callable, Self, TypedDict
+from typing import TYPE_CHECKING, Self, TypedDict
 
 import discord
 from core.constants import RYM_RATING_COLORS
@@ -11,7 +11,11 @@ from core.utils import (
     score_to_stars,
 )
 from core.views import PaginatorView
-from database.models import Album, Rating
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+    from database.models import Album, Rating
 
 
 class EmbedField(TypedDict):
@@ -364,7 +368,7 @@ def lyrics_embed(
     lyrics: list[str],
     title: str,
     artist: str,
-    start: int = 1,
+    _start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the lyrics."""
     title = f"Lyrics for {artist} - {title}"
@@ -375,13 +379,13 @@ def lyrics_embed(
 
 def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:
     """Create an embed comparing two users' ratings."""
-    description = f'<@{ratings[0]["user1"]}> vs <@{ratings[0]["user2"]}>\n\n'
+    description = f"<@{ratings[0]['user1']}> vs <@{ratings[0]['user2']}>\n\n"
 
     for row in ratings[start : start + 10]:
         user1_score = row["score1"] / 2
         user2_score = row["score2"] / 2
         description += (
-            f"**{row["artist"]}** - *{row["title"]}*\n"
+            f"**{row['artist']}** - *{row['title']}*\n"
             f"{user1_score:.1f} ⭐ | {user2_score:.1f} ⭐ ({user1_score - user2_score:.1f} ⭐)\n\n"
         )
 
@@ -422,7 +426,7 @@ def profile_embed(
     title = f"Profile for {user.name}"
     thumbnail = user.display_avatar.url
 
-    fields = [
+    fields: list[EmbedField] = [
         {
             "name": "📊 Average score",
             "value": format_star_score(average_score),
@@ -443,7 +447,7 @@ def profile_embed(
     return (
         EmbedBuilder()
         .with_title(title)
-        .with_description("test")
+        .with_description("")
         .with_thumbnail(thumbnail)
         .add_fields(fields)
         .build()
@@ -461,14 +465,14 @@ def samples_embed(
     description = ""
 
     for songs, subtitle in zip(
-        relationships, ["Samples", "Interpolations", "Sampled in"]
+        relationships, ["Samples", "Interpolations", "Sampled in"], strict=False
     ):
         if len(songs) > 0:
             description = f"### {subtitle}\n"
 
         for song in songs[:5]:
             description += (
-                f"- [{song["artist_names"]} - {song["title"]}]({song["url"]})\n"
+                f"- [{song['artist_names']} - {song['title']}]({song['url']})\n"
             )
 
     description += "\n*Data retrieved from [Genius](https://genius.com/)*"
@@ -481,6 +485,14 @@ def samples_embed(
         .with_url(url)
         .build()
     )
+
+
+def help_embed() -> discord.Embed:
+    """Create an embed for the help command."""
+
+    description = "You can find a list of commands and how to use them in the [documentation](https://hsc00.github.io/sonata-bot/)."
+
+    return EmbedBuilder().with_title("Help").with_description(description).build()
 
 
 def paginate_embeds(
@@ -505,7 +517,7 @@ def paginate_embeds(
 
 
 def format_release(album: Album) -> str:
-    url = album.url if album.url else create_rym_search_release_url(album.title)
+    url = album.url or create_rym_search_release_url(album.title)
 
     return f"[{album.title}]({url})"
 

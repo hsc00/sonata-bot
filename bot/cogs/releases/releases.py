@@ -218,17 +218,19 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @app_commands.describe(filter="Filter ratings by roast (<= 2.0) or glaze (>= 3.0)")
+    @app_commands.describe(
+        filter_type="Filter ratings by roast (<= 2.0) or glaze (>= 3.0)"
+    )
     @commands.hybrid_command(name="randomrating", aliases=["rdr"])
     async def random_rating(
         self,
         ctx: commands.Context,
-        filter: Literal["roast", "glaze"] | None = None,
+        filter_type: Literal["roast", "glaze"] | None = None,
     ) -> None:
         """Get a random rating."""
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
-        if filter == "roast":
+        if filter_type == "roast":
             rating = (
                 Rating.select()
                 .where(
@@ -238,7 +240,7 @@ class ReleasesCog(commands.Cog):
                 .first()
             )
 
-        elif filter == "glaze":
+        elif filter_type == "glaze":
             rating = (
                 Rating.select()
                 .where(
@@ -355,7 +357,7 @@ class ReleasesCog(commands.Cog):
         self,
         ctx: commands.Context,
         *,
-        query: str | None = None,
+        _query: str | None = None,
     ) -> None:
         """Get the new releases of the week."""
         channel_id = 725329619515080769

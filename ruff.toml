@@ -28,11 +28,15 @@ exclude = [
     "venv",
 ]
 
-select = [
+lint.select = [
     "ALL", # include all the rules, including new ones
 ]
 
-ignore = [
+lint.ignore = [
+    "ANN002",   # Missing type args
+    "ANN003",   # Missing type kwargs
+    "ASYNC210", # Blocking HTTP call in async function
+    "COM812",
     # Missing docstring
     "D100",
     "D101",
@@ -43,12 +47,20 @@ ignore = [
     "D106",
     "D107",
     "D202",
+    "D203",    # Incorrect blank line before class
+    "D212",    # Multi-line summary first line
     "E501",    # Line too long
     "EM101",
     "F405",    # Name may be undefined, or defined from star imports: <module>
+    "FIX001",  # Line contains FIXME
+    "FIX002",  # Line contains TODO
     "G004",
     "PERF203",
     "PLR2004",
+    "PLR0913", # Too many arguments
+    "TD001",   # Invalid TODO tag
+    "TD002",   # Missing TODO author
+    "TD003",   # Missing TODO link
     "TRY003",
 ]
 

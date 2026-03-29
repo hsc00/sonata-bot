@@ -52,7 +52,7 @@ def search_album(album_name: str, artist_name: str = "") -> Album | None:
     return query.first().album if query.exists() else None
 
 
-async def fetch_album(user_id: str | None, query: str) -> Album | None:
+async def fetch_album(user_id: str | None, query: str | None) -> Album | None:
     logger = logging.getLogger(__name__)
 
     # Get last played album if no query is provided
@@ -145,10 +145,10 @@ def album_from_google_result(result: dict) -> Album:
     release_year = int(release_year_match.group(1)) if release_year_match else None
 
     if "cse_image" in pagemap:
-        cover_url = f'{pagemap["cse_image"][0]["src"]}/cover.jpg'
+        cover_url = f"{pagemap['cse_image'][0]['src']}/cover.jpg"
 
     elif "og:image" in pagemap["metatags"][0]:
-        cover_url = f'{pagemap["metatags"][0]["og:image"]}/cover.jpg'
+        cover_url = f"{pagemap['metatags'][0]['og:image']}/cover.jpg"
 
     else:
         cover_url = None
@@ -160,8 +160,11 @@ def album_from_google_result(result: dict) -> Album:
     rating = pagemap.get("aggregaterating", [None])[0]
 
     if rating is not None:
-        rating_score, rating_count = float(rating["ratingvalue"]), int(
-            rating["ratingcount"],
+        rating_score, rating_count = (
+            float(rating["ratingvalue"]),
+            int(
+                rating["ratingcount"],
+            ),
         )
 
     else:

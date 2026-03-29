@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import csv
 import html
+import logging
 import re
 from typing import Literal
-from venv import logger
 
 import discord
 import requests
@@ -21,6 +21,8 @@ from database import Album, Rating, UserInfo
 from discord import app_commands
 from discord.ext import commands
 from peewee import IntegrityError, fn
+
+logger = logging.getLogger(__name__)
 
 
 class UsersCog(commands.Cog):
@@ -44,7 +46,6 @@ class UsersCog(commands.Cog):
 
     @commands.hybrid_command(
         name="setlastfm",
-        aliases=["set_lastfm"],
         with_app_command=True,
     )
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
@@ -141,7 +142,9 @@ class UsersCog(commands.Cog):
         ctx: commands.Context,
         user: discord.User | None = None,
     ) -> None:
-        user = ctx.author if user is None else user
+        if user is None:
+            user = ctx.author
+
         average_score = (
             Rating.select(fn.AVG(Rating.score).alias("average_rating"))
             .where(Rating.user == user.id)
@@ -165,7 +168,7 @@ class UsersCog(commands.Cog):
 
         await ctx.send(embed=embed)
 
-    @commands.command(name="import", aliases=["i"])
+    @commands.command(name="importratings", aliases=["i"])
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     async def import_ratings(self, ctx: commands.Context) -> None:
         """Import ratings from RYM."""
@@ -196,7 +199,7 @@ class UsersCog(commands.Cog):
             raise RatingsImportFailedError from e
 
     @staticmethod
-    async def import_rating(user_id: int, row) -> None:
+    async def import_rating(user_id: int, row: dict) -> None:
         """Import a single rating."""
         score = int(row["Rating"])
 
@@ -211,7 +214,7 @@ class UsersCog(commands.Cog):
 
         first_name = row[" First Name"] or None
         last_name = row["Last Name"]
-        artist = html.unescape(f"{first_name + " " if first_name else ""}{last_name}")
+        artist = html.unescape(f"{first_name + ' ' if first_name else ''}{last_name}")
         release_year = int(row.get("Release_Date") or "0")
 
         # Search for the album in the database
@@ -241,8 +244,10 @@ class UsersCog(commands.Cog):
                 album=album,
             )
 
-        except IntegrityError as e:
-            logger.error(e, album.title, album.artist, album.release_year)
+        except IntegrityError:
+            logger.exception(
+                f"Failed to create rating for {album.title} by {album.artist} ({album.release_year})"
+            )
 
     @commands.hybrid_command(
         name="sync",

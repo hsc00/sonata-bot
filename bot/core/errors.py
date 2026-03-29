@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class SonataError(Exception):
@@ -44,7 +44,7 @@ class NoLyricsFoundError(SonataError):
 class InvalidYearError(SonataError):
     def __init__(self, year: int) -> None:
         super().__init__(
-            f"❌ Invalid year: {year}. Please provide a value between 1900 and {datetime.now().year}.",
+            f"❌ Invalid year: {year}. Please provide a value between 1900 and {datetime.now(timezone.utc).year}.",
         )
 
 

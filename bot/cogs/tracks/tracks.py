@@ -25,7 +25,7 @@ class TracksCog(commands.Cog):
         last_fm_username = user.lastfm_username if user else None
 
         if last_fm_username is None:
-            raise NoLastFMUsernameError()
+            raise NoLastFMUsernameError
 
         # TODO: This can be refactored to use "fetch_album" (which should be renamed)
         #       to get the last played track with album and artist data
@@ -34,7 +34,7 @@ class TracksCog(commands.Cog):
             synced_lyrics = search(f"{artist_name} - {track_name}")
 
             if not synced_lyrics or synced_lyrics == "":
-                raise NoLyricsFoundError()
+                raise NoLyricsFoundError
 
             # Remove the timestamp from the lyrics
             lyrics_lines = [
@@ -73,7 +73,7 @@ class TracksCog(commands.Cog):
 
         async with ctx.typing():
             relationships_data = get_track_relationships(
-                track_name if artist_name is None else f"{artist_name} - {track_name}"
+                track_name if artist_name is None else f"{artist_name} - {track_name}",
             )
 
             if relationships_data is None or (

@@ -1,19 +1,25 @@
 from __future__ import annotations
 
+import logging
+
 import requests
 from bs4 import BeautifulSoup
+
+logger = logging.getLogger(__name__)
 
 SPUTNIK_URL = "https://www.sputnikmusic.com/newreleases.php"
 
 
-def fetch_new_releases() -> dict | None:
+def fetch_new_releases() -> list | None:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         "Accept-Language": "en-US,en;q=0.9",
     }
 
     try:
-        response = requests.get(f"{SPUTNIK_URL}/newreleases.php", headers=headers)
+        response = requests.get(
+            f"{SPUTNIK_URL}/newreleases.php", headers=headers, timeout=10
+        )
         response.raise_for_status()
         soup = BeautifulSoup(response.content, "html.parser")
         elements = soup.find_all("td", class_="hi")
@@ -29,9 +35,9 @@ def fetch_new_releases() -> dict | None:
 
                 releases.append(f"{artist_name} - {release_name}")
 
-        return releases
-
-    except requests.RequestException as e:
-        print(f"Request failed: {e}")
-
+    except requests.RequestException:
+        logger.exception("Failed to fetch new releases from Sputnikmusic")
         return None
+
+    else:
+        return releases

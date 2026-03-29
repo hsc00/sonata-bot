@@ -4,7 +4,6 @@ import pytest
 
 from bot.core.constants import FULL_STAR, HALF_STAR
 from bot.core.utils import (
-    fetch_album,
     score_to_stars,
 )
 
