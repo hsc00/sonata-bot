@@ -1,8 +1,54 @@
+# List commands
+default:
+    @just --list
+
+# Run the Discord bot
 run:
     python bot/bot.py
-    
+
+# Install dependencies
+[group("dependencies")]
+install:
+    pip install -r requirements.txt
+
+# Run linting checks
+[group("lint")]
+lint:
+    ruff check .
+
+# Run linting and auto-fix issues
+[group("lint")]
+lint-fix:
+    ruff check --fix .
+
+# Format code with ruff
+[group("format")]
+format:
+    ruff format .
+
+# Check formatting without making changes
+[group("format")]
+format-check:
+    ruff format --check .
+
+# Run all checks (lint + format check)
+check: lint format-check
+
+# Build documentation
+[group("docs")]
+docs-build:
+    mkdocs build
+
+# Serve documentation locally
+[group("docs")]
+docs-serve:
+    mkdocs serve
+
+# Run tests
 test:
     pytest tests/
 
-lint:
-    ruff check
+# Setup development environment
+setup: install
+    @echo "Development environment setup complete!"
+    @echo "Run 'just run' to start the bot"
