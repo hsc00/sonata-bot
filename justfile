@@ -44,6 +44,11 @@ docs-build:
 docs-serve:
     mkdocs serve
 
+# Deploy documentation to GitHub Pages
+[group("docs")]
+docs-deploy:
+    mkdocs gh-deploy 
+
 # Run tests
 test:
     pytest tests/
