@@ -9,6 +9,7 @@ from core.embeds import (
     best_rated_artists_embed,
     most_rated_artists_embed,
     paginate_embeds,
+    worst_rated_artists_embed,
 )
 from core.errors import NoLastFMUsernameError, NoRatingsFoundError, SonataError
 from database import AlbumIndex, UserInfo
@@ -153,6 +154,65 @@ class ArtistCog(commands.Cog):
         view, pages = paginate_embeds(
             best_rated_artists,
             best_rated_artists_embed,
+            per_page=10,
+            server_name=getattr(ctx.guild, "name", ""),
+            user_name=user_name,
+        )
+
+        await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="worstratedartists",
+        aliases=["wra"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def worst_rated_artists(
+        self,
+        ctx: commands.Context,
+        user: discord.User | None = None,
+    ) -> None:
+        """Get the worst rated artists."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
+        w1, w2, w3 = 14, 0.07, 0.1
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
+        worst_rated_artists = (
+            Album.select(
+                Album.artist,
+                fn.AVG(Rating.score).alias("average_score"),
+                fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
+            )
+            .join(Rating)
+            .where(Rating.user.in_(guild_member_ids))
+            .group_by(Album.artist)
+            .having(fn.COUNT(Rating.id) > 3)
+            .order_by(
+                (
+                    w1 * fn.AVG(Rating.score)
+                    + w2 * fn.COUNT(Rating.id)
+                    + w3 * fn.COUNT(fn.DISTINCT(Album.id)) * fn.AVG(Rating.score)
+                ).asc(),
+            )
+            .limit(100)
+        )
+
+        user_name = None
+
+        if user:
+            user_id = user.id
+            user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
+
+            worst_rated_artists = worst_rated_artists.where(Rating.user == user_id)
+
+        if not worst_rated_artists:
+            raise NoRatingsFoundError
+
+        view, pages = paginate_embeds(
+            worst_rated_artists,
+            worst_rated_artists_embed,
             per_page=10,
             server_name=getattr(ctx.guild, "name", ""),
             user_name=user_name,

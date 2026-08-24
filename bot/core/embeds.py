@@ -363,6 +363,26 @@ def best_rated_artists_embed(
     return EmbedBuilder().with_title(title).with_description(description).build()
 
 
+def worst_rated_artists_embed(
+    worst_rated_artists: list,
+    server_name: str | None = None,
+    user_name: str | None = None,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for the worst rated artists."""
+    title = (
+        f"Worst rated artists for user {user_name}"
+        if user_name
+        else f"Worst rated artists in {server_name}"
+    )
+    description = "\n".join(
+        f"{i}. {format_artist(row.artist)} (**{format_star_score(row.average_score)}** from **{row.releases_count}** releases)"
+        for i, row in enumerate(worst_rated_artists, start=start)
+    )
+
+    return EmbedBuilder().with_title(title).with_description(description).build()
+
+
 def most_rated_artists_embed(
     most_rated_artists: list,
     user_name: str | None,

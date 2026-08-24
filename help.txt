@@ -16,20 +16,14 @@ These are the Sonata bible commands:
 - `wrr or worstratedreleases`: Check the worst rated releases. ✅
 
 # Artists
-- `a or artist`: Check RYM and last.fm info for an artist.
 - `st or setlist`: Check an artist last concert setlist.
 - `sts or setlists`: Get the info and links to an artist latest concerts setlists.
 - `inf` or `influences`: Check an artist influences.
 - `fl` or `followers`: Check artists influenced by an artist.
-- `wla or wholikesartist`: Check who likes an artist.
-- `mla or mostlovedartists`: Check the most loved artists.
-- `wda or whodislikesartist`: Check who dislikes an artist.
-- `mha or mosthatedartists`: Check the most hated artists.
-# Artists
 - `ar or artistratings (user)` : Checks your artist ratings. ✅
 - `mra or mostratedartists` : Checks the server most rated artists. ✅
 - `bra or bestratedartists (user)` : Checks the best rated artists. ✅
-- `wra or worstratedartists (user)` : Checks the worst rated artists.
+- `wra or worstratedartists (user)` : Checks the worst rated artists. ✅
 
 # Tracks
 - `tr` or `trackinfo`: Check track info.

@@ -58,6 +58,23 @@ Only artists with more than 3 ratings are included to ensure meaningful results.
 !!! tip
     This is perfect for discovering consensus favorites in your community!
 
+### !worstratedartists (`!wra`)
+
+Discover the worst rated artists ranked using the same weighted formula as best rated artists, considering average rating, total number of ratings, and number of distinct releases, sorted from lowest to highest.
+
+**Scope:**
+
+- **No user specified**: Shows the worst rated artists across the entire server
+- **User specified**: Shows only that user's worst rated artists
+
+Only artists with more than 3 ratings are included to ensure meaningful results.
+
+!!! example "Usage Examples"
+    ```
+    !worstratedartists
+    !wra @user
+    ```
+
 ### !mostratedartists (`!mra`)
 
 See which artists have received the most ratings, sorted by total rating count.
