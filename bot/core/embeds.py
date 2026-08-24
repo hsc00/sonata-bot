@@ -181,6 +181,28 @@ def who_rated_release_embed(
     )
 
 
+def worst_rated_releases_embed(
+    worst_releases: list[tuple[Album, float, float, int]],
+    server_name: str,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for the worst rated releases."""
+    lines = []
+
+    for i, (album, average_score, _, num_ratings) in enumerate(
+        worst_releases,
+        start=start,
+    ):
+        lines.append(
+            f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",
+        )
+
+    title = f"Worst rated albums in {server_name}"
+    description = "\n".join(lines)
+
+    return EmbedBuilder().with_title(title).with_description(description).build()
+
+
 def best_rated_releases_embed(
     top_releases: list[tuple[Album, float, float, int]],
     server_name: str,

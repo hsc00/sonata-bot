@@ -56,6 +56,17 @@ Only releases with more than 3 ratings are included to ensure meaningful results
 !!! tip
 This is a great way to discover highly-regarded albums within your community!
 
+### !worstratedreleases (`!wrr`, `!wrab`)
+
+Shows the lowest-rated releases among server members, ranked using a weighted formula that considers both average rating and number of ratings.
+
+Only releases with more than 3 ratings are included to ensure meaningful results.
+
+!!! example "Usage Examples"
+`     !worstratedreleases
+     !wrr
+     `
+
 ### !mostratedreleases (`!mrr`, `!mrab`)
 
 Shows the most-rated releases among server members, sorted by the number of ratings received.

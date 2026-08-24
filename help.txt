@@ -10,14 +10,10 @@ These are the Sonata bible commands:
 - `wa or whoknowsalbum`: Check who rated a release ✅
 - `ratingchanges or rc`: Check the rating changes for a release. ⌛
 - `rdr (roast/glaze) or randomrating` (roast/glaze): Check a random rating/roast/glaze from available users. ✅
-- `wlr or wholikesrelease`: Check who likes a release. 🚫
-- `mlr or mostlovedreleases`: Check the most loved releases.
-- `wdr or whodislikesrelease`: Check who dislikes a release. 🚫
-- `mhr or mosthatedreleases`: Check the most hated releases.
-- `new or newreleases` : Searches for new releases. ✅
-# Albums
+- `newreleases` : Searches for new releases. ✅
 - `mrr or mostratedreleases` : Checks the server most rated albums. ✅
 - `brr or bestratedreleases` : Checks the server best rated albums. ✅
+- `wrr or worstratedreleases`: Check the worst rated releases. ✅
 
 # Artists
 - `a or artist`: Check RYM and last.fm info for an artist.
@@ -53,3 +49,4 @@ These are the Sonata bible commands:
 
 roadmap:
 randomrating of the day (cronjob that triggers a random rating every 24h)
+!newreleases cron job

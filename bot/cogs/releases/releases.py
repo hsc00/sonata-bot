@@ -16,6 +16,7 @@ from core.embeds import (
     rating_embed,
     ratings_per_year_embed,
     who_rated_release_embed,
+    worst_rated_releases_embed,
 )
 from core.errors import (
     InvalidUserMentionError,
@@ -187,6 +188,65 @@ class ReleasesCog(commands.Cog):
             view, pages = paginate_embeds(
                 top_releases,
                 best_rated_releases_embed,
+                per_page=10,
+                server_name=getattr(ctx.guild, "name", ""),
+            )
+
+            await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="worstratedreleases",
+        aliases=["wrr", "wrab", "worst_rated_albums"],
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
+    async def worst_rated_releases(self, ctx: commands.Context) -> None:
+        """Get the worst rated releases in the server."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
+        async with ctx.typing():
+            albums = (
+                Album.select(
+                    Album,
+                    fn.SUM(Rating.score).alias("rating_sum"),
+                    fn.COUNT(Rating.id).alias("rating_count"),
+                )
+                .join(Rating)
+                .where(Rating.user.in_(guild_member_ids))
+                .group_by(Album.id)
+                .having(fn.COUNT(Rating.id) > 3)
+            )
+
+            if len(albums) == 0:
+                await ctx.send("No albums found with more than 3 ratings.")
+
+                return
+
+            w1, w2 = 7, 0.4
+
+            albums_with_weighted_rating = []
+
+            for album in albums:
+                average_rating = album.rating_sum / album.rating_count
+                weighted_rating = (average_rating * w1) + (album.rating_count * w2)
+
+                albums_with_weighted_rating.append(
+                    (album, average_rating, weighted_rating, album.rating_count),
+                )
+
+            sorted_releases = sorted(
+                albums_with_weighted_rating,
+                key=lambda x: x[2],
+                reverse=False,
+            )
+
+            worst_releases = sorted_releases[:100]
+
+            view, pages = paginate_embeds(
+                worst_releases,
+                worst_rated_releases_embed,
                 per_page=10,
                 server_name=getattr(ctx.guild, "name", ""),
             )
