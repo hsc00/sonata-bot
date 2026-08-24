@@ -225,6 +225,32 @@ def best_rated_releases_embed(
     return EmbedBuilder().with_title(title).with_description(description).build()
 
 
+def lowest_rated_albums_of_the_year_embed(
+    ratings: list[Rating],
+    user_name: str,
+    year: int,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for the lowest rated albums of a year."""
+    lines = []
+
+    for i, rating in enumerate(ratings[:10], start=start):
+        lines.append(
+            f"{i}. {format_artist(rating.album.album_artist or rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐",  # type: ignore[arg-type]
+        )
+
+    title = f"Lowest {year} releases for {user_name}"
+    description = "\n".join(lines)
+
+    return (
+        EmbedBuilder()
+        .with_title(title)
+        .with_description(description)
+        .with_thumbnail(ratings[0].album.cover_url)
+        .build()
+    )
+
+
 def album_of_the_year_embed(
     ratings: list[Rating],
     user_name: str,

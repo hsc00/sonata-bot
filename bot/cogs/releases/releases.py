@@ -18,6 +18,7 @@ from core.embeds import (
     album_embed,
     album_of_the_year_embed,
     best_rated_releases_embed,
+    lowest_rated_albums_of_the_year_embed,
     most_rated_releases_embed,
     paginate_embeds,
     rating_embed,
@@ -401,6 +402,55 @@ class ReleasesCog(commands.Cog):
         view, pages = paginate_embeds(
             ratings,
             album_of_the_year_embed,
+            per_page=10,
+            user_name=user_name,
+            year=year,
+        )
+
+        await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(name="laoty", with_app_command=True)
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    @app_commands.describe(
+        year="Year to get the worst rated albums from (defaults to current year)",
+        user="User to get the ratings from (defaults to the command author)",
+    )
+    async def lowest_rated_albums_of_the_year(
+        self,
+        ctx: commands.Context,
+        year: int | None,
+        user: User | Member | None = None,
+    ) -> None:
+        """Get the lowest rated albums of a given year."""
+
+        if year is None:
+            year = datetime.now(tz=timezone.utc).year
+
+        elif year < 1900 or year > datetime.now(tz=timezone.utc).year:
+            raise InvalidYearError(year)
+
+        if not user:
+            user = ctx.author
+
+        user_id = str(user.id)
+        user_name = user.display_name
+
+        # Select ratings from the given year, sorted by lowest score first
+        ratings = (
+            Rating.select()
+            .join(Album)
+            .where((Album.release_year == year) & (Rating.user == user_id))
+            .order_by(Rating.score.asc())
+        )
+
+        if len(ratings) == 0:
+            await ctx.send(f"❌ No ratings found for the year {year}.")
+
+            return
+
+        view, pages = paginate_embeds(
+            ratings,
+            lowest_rated_albums_of_the_year_embed,
             per_page=10,
             user_name=user_name,
             year=year,

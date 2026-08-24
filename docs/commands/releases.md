@@ -137,3 +137,23 @@ Discover personal or community favorites from any year!
 
 !!! info
 Year must be between 1900 and the current year.
+
+### !lowestratedalbumsoftheyear (`!laoty`, `!aotyl`)
+
+Shows the lowest-rated releases of a specific year for a user, sorted by rating score from lowest to highest.
+
+Discover your least favorite releases from any year!
+
+**Options:**
+
+- **Year** (optional) – The year you want to search for. If not provided, the current year will be used.
+- **User** (optional) – The user whose ratings you want to check. If not provided, shows your own ratings.
+
+!!! example "Usage Examples"
+`     !lowestratedalbumsoftheyear
+     !laoty 2025
+     !laoty 2025 @username
+     `
+
+!!! info
+Year must be between 1900 and the current year.
