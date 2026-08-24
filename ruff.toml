@@ -58,6 +58,7 @@ lint.ignore = [
     "PERF203",
     "PLR2004",
     "PLR0913", # Too many arguments
+    "CPY001",   # Missing copyright notice
     "TD001",   # Invalid TODO tag
     "TD002",   # Missing TODO author
     "TD003",   # Missing TODO link

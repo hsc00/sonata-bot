@@ -23,7 +23,7 @@ lint-fix:
 
 # Run type checking
 type-check:
-    ty check --exclude "tests/*"
+    PYTHONPATH=bot ty check --exclude "tests/*"
 
 # Format code with ruff
 [group("format")]
