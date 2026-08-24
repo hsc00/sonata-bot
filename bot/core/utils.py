@@ -6,14 +6,15 @@ from urllib.parse import quote
 
 from api.google_search import search_google
 from api.last_fm import get_last_played
-from core.constants import FULL_STAR, HALF_STAR
+from core.constants import FULL_STAR, HALF_STAR, RATING_SCORE_MAX, RATING_SCORE_MIN
 from core.errors import NoLastFMUsernameError, SonataError
 from database import Album, AlbumIndex, UserInfo
 
 
 def score_to_stars(score: int) -> str:
-    if not (1 <= score <= 10):
-        raise ValueError("Score must be between 1 and 10")
+    if not (RATING_SCORE_MIN <= score <= RATING_SCORE_MAX):
+        message = f"Score must be between {RATING_SCORE_MIN} and {RATING_SCORE_MAX}"
+        raise ValueError(message)
 
     normalized_score = score / 2
     full_stars = int(normalized_score)

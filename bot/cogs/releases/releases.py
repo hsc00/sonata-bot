@@ -6,6 +6,13 @@ from datetime import datetime, timezone
 from typing import Literal
 
 from api.sputnik import fetch_new_releases
+from core.constants import (
+    RANDOM_RATING_GLAZE_THRESHOLD,
+    RANDOM_RATING_ROAST_THRESHOLD,
+    RATINGS_MIN_THRESHOLD,
+    RELEASE_RATING_W1,
+    RELEASE_RATING_W2,
+)
 from core.decorators import disabled
 from core.embeds import (
     album_embed,
@@ -155,16 +162,18 @@ class ReleasesCog(commands.Cog):
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
                 .group_by(Album.id)
-                .having(fn.COUNT(Rating.id) > 3)
+                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
             )
 
             if len(albums) == 0:
-                await ctx.send("No albums found with more than 3 ratings.")
+                await ctx.send(
+                    f"No albums found with more than {RATINGS_MIN_THRESHOLD} ratings.",
+                )
 
                 return
 
             # Compute average rating and weighted rating for each release
-            w1, w2 = 7, 0.4
+            w1, w2 = RELEASE_RATING_W1, RELEASE_RATING_W2
 
             albums_with_weighted_rating = []
 
@@ -224,7 +233,7 @@ class ReleasesCog(commands.Cog):
 
                 return
 
-            w1, w2 = 7, 0.4
+            w1, w2 = RELEASE_RATING_W1, RELEASE_RATING_W2
 
             albums_with_weighted_rating = []
 
@@ -317,7 +326,8 @@ class ReleasesCog(commands.Cog):
             rating = (
                 Rating.select()
                 .where(
-                    (Rating.score <= 4) & (Rating.user.in_(guild_member_ids)),
+                    (Rating.score <= RANDOM_RATING_ROAST_THRESHOLD)
+                    & (Rating.user.in_(guild_member_ids)),
                 )
                 .order_by(fn.Random())
                 .first()
@@ -327,7 +337,8 @@ class ReleasesCog(commands.Cog):
             rating = (
                 Rating.select()
                 .where(
-                    (Rating.score >= 9) & (Rating.user.in_(guild_member_ids)),
+                    (Rating.score >= RANDOM_RATING_GLAZE_THRESHOLD)
+                    & (Rating.user.in_(guild_member_ids)),
                 )
                 .order_by(fn.Random())
                 .first()

@@ -8,6 +8,7 @@ from typing import Literal
 
 import discord
 import requests
+from core.constants import RATING_SCORE_MAX, RATING_SCORE_MIN
 from core.decorators import disabled
 from core.embeds import comparison_embed, profile_embed, ratings_rank_view
 from core.errors import (
@@ -221,8 +222,9 @@ class UsersCog(commands.Cog):
         if score == 0:
             return
 
-        if score < 1 or score > 10:
-            raise ValueError("Score must be between 1 and 10")
+        if score < RATING_SCORE_MIN or score > RATING_SCORE_MAX:
+            message = f"Score must be between {RATING_SCORE_MIN} and {RATING_SCORE_MAX}"
+            raise ValueError(message)
 
         title = html.unescape(row["Title"])
 

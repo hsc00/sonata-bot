@@ -1,5 +1,6 @@
 from typing import ClassVar
 
+from core.constants import RATING_SCORE_MAX, RATING_SCORE_MIN
 from peewee import Check, FloatField, ForeignKeyField, IntegerField, TextField
 from playhouse.sqlite_ext import FTSModel, RowIDField, SearchField
 
@@ -32,7 +33,9 @@ class AlbumIndex(FTSModel):
 
 class Rating(BaseModel):
     user = TextField()
-    score = IntegerField(constraints=[Check("score BETWEEN 1 AND 10")])
+    score = IntegerField(
+        constraints=[Check(f"score BETWEEN {RATING_SCORE_MIN} AND {RATING_SCORE_MAX}")]
+    )
     album = ForeignKeyField(Album, backref="ratings")
     review = TextField(null=True)
 

@@ -56,9 +56,16 @@ Only releases with more than 3 ratings are included to ensure meaningful results
 !!! tip
 This is a great way to discover highly-regarded albums within your community!
 
+!!! info "Weighted Rating Formula"
+    Releases are ranked using a weighted formula to balance quality with popularity:
+    ```
+    weighted_rating = (average_rating × 7) + (rating_count × 0.4)
+    ```
+    This prevents albums with only a few perfect scores from dominating the rankings.
+
 ### !worstratedreleases (`!wrr`, `!wrab`)
 
-Shows the lowest-rated releases among server members, ranked using a weighted formula that considers both average rating and number of ratings.
+Shows the lowest-rated releases among server members, ranked using the same weighted formula as `!bestratedreleases`, but sorted from lowest to highest score.
 
 Only releases with more than 3 ratings are included to ensure meaningful results.
 

@@ -4,6 +4,12 @@ from typing import Any
 
 import discord
 from api.last_fm import get_last_played
+from core.constants import (
+    ARTIST_RATING_W1,
+    ARTIST_RATING_W2,
+    ARTIST_RATING_W3,
+    RATINGS_MIN_THRESHOLD,
+)
 from core.embeds import (
     artist_ratings_embed,
     best_rated_artists_embed,
@@ -117,7 +123,7 @@ class ArtistCog(commands.Cog):
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
-        w1, w2, w3 = 14, 0.07, 0.1
+        w1, w2, w3 = ARTIST_RATING_W1, ARTIST_RATING_W2, ARTIST_RATING_W3
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         best_rated_artists = (
@@ -129,7 +135,7 @@ class ArtistCog(commands.Cog):
             .join(Rating)
             .where(Rating.user.in_(guild_member_ids))
             .group_by(Album.artist)
-            .having(fn.COUNT(Rating.id) > 3)
+            .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
             .order_by(
                 (
                     w1 * fn.AVG(Rating.score)
@@ -176,7 +182,7 @@ class ArtistCog(commands.Cog):
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
-        w1, w2, w3 = 14, 0.07, 0.1
+        w1, w2, w3 = ARTIST_RATING_W1, ARTIST_RATING_W2, ARTIST_RATING_W3
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         worst_rated_artists = (
@@ -188,7 +194,7 @@ class ArtistCog(commands.Cog):
             .join(Rating)
             .where(Rating.user.in_(guild_member_ids))
             .group_by(Album.artist)
-            .having(fn.COUNT(Rating.id) > 3)
+            .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
             .order_by(
                 (
                     w1 * fn.AVG(Rating.score)
