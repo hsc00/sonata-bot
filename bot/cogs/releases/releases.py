@@ -232,10 +232,10 @@ class ReleasesCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @app_commands.describe(
-        filter_type="Filter ratings by roast (<= 2.0) or glaze (>= 3.0)"
-    )
     @commands.hybrid_command(name="randomrating", aliases=["rdr"])
+    @app_commands.describe(
+        filter_type="Filter ratings by roast (<= 2.0) or glaze (>= 4.5)",
+    )
     async def random_rating(
         self,
         ctx: commands.Context,
@@ -245,13 +245,19 @@ class ReleasesCog(commands.Cog):
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
+        if ctx.message and filter_type is None:
+            parts = ctx.message.content.split(maxsplit=1)
+
+            if len(parts) > 1:
+                filter_type = parts[1].strip().lower()
+
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         if filter_type == "roast":
             rating = (
                 Rating.select()
                 .where(
-                    Rating.score <= 2.0 & (Rating.user.in_(guild_member_ids)),
+                    (Rating.score <= 4) & (Rating.user.in_(guild_member_ids)),
                 )
                 .order_by(fn.Random())
                 .first()
@@ -261,7 +267,7 @@ class ReleasesCog(commands.Cog):
             rating = (
                 Rating.select()
                 .where(
-                    Rating.score >= 3.0 & (Rating.user.in_(guild_member_ids)),
+                    (Rating.score >= 9) & (Rating.user.in_(guild_member_ids)),
                 )
                 .order_by(fn.Random())
                 .first()
