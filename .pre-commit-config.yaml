@@ -14,3 +14,5 @@ repos:
         language: system
         pass_filenames: false
         types: [python]
+        env:
+          PYTHONPATH: bot
