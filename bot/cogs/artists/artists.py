@@ -84,14 +84,12 @@ class ArtistCog(commands.Cog):
             Rating.select()
             .join(Album)
             .where((Rating.user == user_id) & (Album.artist == artist.artist))
-            .order_by(Album.release_year.asc(), Rating.score.desc())
+            .order_by(Rating.score.desc())
             .limit(100)
         )
 
         if len(ratings) == 0:
             raise NoRatingsFoundError(artist_query)
-
-        # TODO: Order by release year
         view, pages = paginate_embeds(
             ratings,
             artist_ratings_embed,
