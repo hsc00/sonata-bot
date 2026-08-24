@@ -30,9 +30,12 @@ class UsersCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
-    @disabled()
-    @commands.command()
-    async def set_rym(self, ctx: commands.Context, username: str) -> None:
+    @commands.hybrid_command(
+        name="setrym",
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def set_rym(self, ctx: commands.Context, *, username: str | None) -> None:
         """Set your RYM username."""
         if not username:
             await ctx.send(
@@ -41,7 +44,14 @@ class UsersCog(commands.Cog):
 
             return
 
-        UserInfo.create(user_id=ctx.author.id, rym_username=username)
+        user_info, created = UserInfo.get_or_create(
+            user_id=str(ctx.author.id),
+            defaults={"rym_username": username},
+        )
+
+        if not created:
+            user_info.rym_username = username
+            user_info.save()
 
         await ctx.send(f"Your RateYourMusic username has been set to **{username}**.")
 
