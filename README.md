@@ -72,3 +72,20 @@ just lint       # Check code quality
 just format     # Format code
 just docs-serve # Serve documentation locally
 ```
+
+### Pre-commit Hooks
+
+Pre-commit hooks are configured to run linting, formatting, and type checks before each commit. To enable them:
+
+```bash
+# On Windows PowerShell, use the module form if the command isn't found
+python -m pre_commit install
+```
+
+Run hooks manually against all files:
+
+```bash
+pre-commit run --all-files
+# or on Windows PowerShell
+python -m pre_commit run --all-files
+```
