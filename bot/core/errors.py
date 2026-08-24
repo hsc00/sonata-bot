@@ -12,7 +12,7 @@ class SonataError(Exception):
 class NoLastFMUsernameError(SonataError):
     def __init__(self) -> None:
         super().__init__(
-            "❌ No last.fm username set. Please provide a search term or set your last.fm username by running `!set_lastfm <username>`.",
+            "❌ No last.fm username set. Please provide a search term or set your last.fm username by running `!setlastfm <username>`.",
         )
 
 
