@@ -189,20 +189,30 @@ def who_rated_release_embed(
 def worst_rated_releases_embed(
     worst_releases: list[tuple[Album, float, float, int]],
     server_name: str,
+    user_name: str | None = None,
     start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the worst rated releases."""
+    title = (
+        f"Worst rated albums for user {user_name}"
+        if user_name
+        else f"Worst rated albums in {server_name}"
+    )
     lines = []
 
     for i, (album, average_score, _, num_ratings) in enumerate(
         worst_releases,
         start=start,
     ):
-        lines.append(
-            f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",
-        )
+        if user_name:
+            lines.append(
+                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)",
+            )
+        else:
+            lines.append(
+                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",
+            )
 
-    title = f"Worst rated albums in {server_name}"
     description = "\n".join(lines)
 
     return EmbedBuilder().with_title(title).with_description(description).build()
@@ -211,20 +221,30 @@ def worst_rated_releases_embed(
 def best_rated_releases_embed(
     top_releases: list[tuple[Album, float, float, int]],
     server_name: str,
+    user_name: str | None = None,
     start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the album ratings."""
+    title = (
+        f"Best rated albums for user {user_name}"
+        if user_name
+        else f"Best rated albums in {server_name}"
+    )
     lines = []
 
     for i, (album, average_score, _, num_ratings) in enumerate(
         top_releases,
         start=start,
     ):
-        lines.append(
-            f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",
-        )
+        if user_name:
+            lines.append(
+                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)",
+            )
+        else:
+            lines.append(
+                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐ from **{num_ratings:,d}** ratings)",
+            )
 
-    title = f"Best rated albums in {server_name}"
     description = "\n".join(lines)
 
     return EmbedBuilder().with_title(title).with_description(description).build()
@@ -343,6 +363,44 @@ def ratinks_rank_embed(
     description = "\n".join(lines)
 
     return EmbedBuilder().with_title(title).with_description(description).build()
+
+
+def glazers_haters_rank_embed(
+    rows: list,
+    title: str,
+    start: int = 1,
+) -> discord.Embed:
+    lines = []
+
+    for i, row in enumerate(rows, start=start):
+        lines.append(
+            f"{i}. <@{row.user}> - **{format_star_score(row.average_score)}** avg ({row.rating_count:,d} ratings)"
+        )
+
+    description = "\n".join(lines)
+
+    return EmbedBuilder().with_title(title).with_description(description).build()
+
+
+def glazers_haters_rank_view(
+    rows: list,
+    title: str,
+) -> PaginatorView:
+    pages = []
+    num_pages = ceil(len(rows) / 10)
+
+    for i in range(num_pages):
+        page_rows = rows[i * 10 : (i + 1) * 10]
+        page = glazers_haters_rank_embed(
+            page_rows,
+            title,
+            start=i * 10 + 1,
+        )
+        page.set_footer(text=f"Page {i + 1}/{num_pages}")
+
+        pages.append(page)
+
+    return PaginatorView(pages)
 
 
 def ratings_rank_view(server_name: str, ratings: list[Rating]) -> PaginatorView:

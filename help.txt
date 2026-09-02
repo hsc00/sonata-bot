@@ -16,6 +16,7 @@ These are the Sonata bible commands:
 - `brr or bestratedreleases` user : Checks the user best rated albums.
 - `wrr or worstratedreleases` : Checks the user best rated albums.
 - `wrr or worstratedreleases`: Check the worst rated releases. ✅
+- 'history`: check a release rating history (use a TTL cache, after a cache hit when the cache is invalid update the rating, probably a TTL of 7 days is the best)
 
 # Artists
 - `st or setlist`: Check an artist last concert setlist.
@@ -36,10 +37,9 @@ These are the Sonata bible commands:
 # User Stats 
 - `profile`: Check your own or another person's profile. ✅
 - `users`: Check RYM users list. ✅
-- also in `profile` at the bottom: Check your rating curve.
 - `rr` or `ratingsrank`: Checks the ratings rank. ✅
-- `rg` or `ratingsglazers`: Checks the ratings glazers rank.
-- `rh` or `ratingshaters`: Checks the ratings haters rank.
+- `rg` or `ratingsglazers`: Checks the ratings glazers rank. ✅
+- `rh` or `ratingshaters`: Checks the ratings haters rank. ✅
 - `aoty (year) (user)`: Checks the highest rated releases from a year. ✅
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
 

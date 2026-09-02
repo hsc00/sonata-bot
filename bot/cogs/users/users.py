@@ -12,6 +12,7 @@ from core.constants import RATING_SCORE_MAX, RATING_SCORE_MIN
 from core.decorators import disabled
 from core.embeds import (
     comparison_embed,
+    glazers_haters_rank_view,
     paginate_embeds,
     profile_embed,
     ratings_rank_view,
@@ -105,6 +106,66 @@ class UsersCog(commands.Cog):
             raise NoRatingsFoundError
 
         view = ratings_rank_view(ctx.guild.name, ratings)
+
+        await ctx.send(embed=view.pages[0], view=view)
+
+    @commands.hybrid_command(name="ratingsglazers", aliases=["rg"])
+    async def ratings_glazers(self, ctx: commands.Context) -> None:
+        """Get a ranking of users by their average rating score."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
+        rows = (
+            Rating.select(
+                Rating.user,
+                fn.AVG(Rating.score).alias("average_score"),
+                fn.COUNT(Rating.id).alias("rating_count"),
+            )
+            .where(Rating.user.in_(guild_member_ids))
+            .group_by(Rating.user)
+            .order_by(fn.AVG(Rating.score).desc())
+            .limit(100)
+        )
+
+        if not rows:
+            raise NoRatingsFoundError
+
+        view = glazers_haters_rank_view(
+            list(rows),
+            f"{ctx.guild.name} Glazers",
+        )
+
+        await ctx.send(embed=view.pages[0], view=view)
+
+    @commands.hybrid_command(name="ratingshaters", aliases=["rh"])
+    async def ratings_haters(self, ctx: commands.Context) -> None:
+        """Get a ranking of users by their average rating score."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
+        rows = (
+            Rating.select(
+                Rating.user,
+                fn.AVG(Rating.score).alias("average_score"),
+                fn.COUNT(Rating.id).alias("rating_count"),
+            )
+            .where(Rating.user.in_(guild_member_ids))
+            .group_by(Rating.user)
+            .order_by(fn.AVG(Rating.score).asc())
+            .limit(100)
+        )
+
+        if not rows:
+            raise NoRatingsFoundError
+
+        view = glazers_haters_rank_view(
+            list(rows),
+            f"{ctx.guild.name} Haters",
+        )
 
         await ctx.send(embed=view.pages[0], view=view)
 
