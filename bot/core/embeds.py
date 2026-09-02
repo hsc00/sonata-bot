@@ -141,14 +141,17 @@ def album_embed(album: Album) -> discord.Embed:
     if album.overall_position:
         description += f", **#{album.overall_position}** [overall](https://rateyourmusic.com/charts/top/album/all-time/)\n\n"
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description or " ")
-        .with_url(str(album.url))
-        .with_thumbnail(str(album.cover_url))
-        .build()
+    embed_builder = (
+        EmbedBuilder().with_title(title).with_description(description or " ")
     )
+
+    if album.url:
+        embed_builder.with_url(str(album.url))
+
+    if album.cover_url:
+        embed_builder.with_thumbnail(str(album.cover_url))
+
+    return embed_builder.build()
 
 
 def who_rated_release_embed(
@@ -172,14 +175,15 @@ def who_rated_release_embed(
 
         description += f"{position} <@{rating.user}> - **{rating.score / 2:.1f}** ⭐\n"
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .with_url(str(album.url))
-        .with_thumbnail(str(album.cover_url))
-        .build()
-    )
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    if album.url:
+        embed_builder.with_url(str(album.url))
+
+    if album.cover_url:
+        embed_builder.with_thumbnail(str(album.cover_url))
+
+    return embed_builder.build()
 
 
 def worst_rated_releases_embed(
@@ -243,13 +247,12 @@ def lowest_rated_albums_of_the_year_embed(
     title = f"Lowest {year} releases for {user_name}"
     description = "\n".join(lines)
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .with_thumbnail(ratings[0].album.cover_url)
-        .build()
-    )
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    if ratings[0].album.cover_url:
+        embed_builder.with_thumbnail(ratings[0].album.cover_url)
+
+    return embed_builder.build()
 
 
 def album_of_the_year_embed(
@@ -269,13 +272,12 @@ def album_of_the_year_embed(
     title = f"Top {year} releases for {user_name}"
     description = "\n".join(lines)
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .with_thumbnail(ratings[0].album.cover_url)
-        .build()
-    )
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    if ratings[0].album.cover_url:
+        embed_builder.with_thumbnail(ratings[0].album.cover_url)
+
+    return embed_builder.build()
 
 
 def rating_embed(user: discord.user.User, rating: Rating) -> discord.Embed:
@@ -285,16 +287,19 @@ def rating_embed(user: discord.user.User, rating: Rating) -> discord.Embed:
     title = f"{album.artist} - {album.title} ({album.release_year})"
     description = f"{score_to_stars(int(rating.score))}\n\n"  # type: ignore[arg-type]
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .with_url(album.url or create_rym_search_release_url(album.title))
-        .with_thumbnail(album.cover_url)
-        .with_author(f"{user.name} rated...", str(user.avatar))
-        .with_color(discord.Color(int(RYM_RATING_COLORS[rating.score].lstrip("#"), 16)))
-        .build()
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    embed_builder.with_url(album.url or create_rym_search_release_url(album.title))
+
+    if album.cover_url:
+        embed_builder.with_thumbnail(album.cover_url)
+
+    embed_builder.with_author(f"{user.name} rated...", str(user.avatar))
+    embed_builder.with_color(
+        discord.Color(int(RYM_RATING_COLORS[rating.score].lstrip("#"), 16))
     )
+
+    return embed_builder.build()
 
 
 def artist_ratings_embed(
@@ -316,13 +321,12 @@ def artist_ratings_embed(
     description = f"Average score: **{format_star_score(average_score)}**\n\n"
     description += "\n".join(lines)
 
-    return (
-        EmbedBuilder()
-        .with_title(title)
-        .with_description(description)
-        .with_thumbnail(ratings[0].album.cover_url)
-        .build()
-    )
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    if ratings[0].album.cover_url:
+        embed_builder.with_thumbnail(ratings[0].album.cover_url)
+
+    return embed_builder.build()
 
 
 def ratinks_rank_embed(
@@ -556,14 +560,23 @@ def samples_embed(
 def users_list_embed(
     users: list[UserInfo],
     server_name: str,
+    user_display_names: dict[str, str] | None = None,
     start: int = 1,
 ) -> discord.Embed:
     """Create an embed for the users list."""
-    lines = [
-        f"{i}. [{user.rym_username}]({create_rym_user_url(user.rym_username)})"
-        for i, user in enumerate(users, start=start)
-        if user.rym_username
-    ]
+    lines = []
+
+    for i, user in enumerate(users, start=start):
+        if not user.rym_username:
+            continue
+
+        display_name = (
+            user_display_names.get(user.user_id, user.rym_username)
+            if user_display_names
+            else user.rym_username
+        )
+
+        lines.append(f"{i}. [{display_name}]({create_rym_user_url(user.rym_username)})")
 
     description = "\n".join(lines)
 
