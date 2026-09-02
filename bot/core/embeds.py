@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from math import ceil
+from math import ceil, sqrt
 from typing import TYPE_CHECKING, Self, TypedDict
 
 import discord
@@ -491,6 +491,7 @@ def profile_embed(
     average_score: float,
     releases_rated: int,
     artists_rated: int,
+    rating_distribution: dict[int, int] | None = None,
 ) -> discord.Embed:
     """Create an embed for the user profile."""
     title = f"Profile for {user.name}"
@@ -513,6 +514,35 @@ def profile_embed(
             "inline": True,
         },
     ]
+
+    if rating_distribution:
+        frontend_scores: dict[float, int] = {}
+
+        for score, count in rating_distribution.items():
+            frontend_score = score / 2
+            frontend_scores[frontend_score] = (
+                frontend_scores.get(frontend_score, 0) + count
+            )
+
+        max_count = max(frontend_scores.values(), default=1)
+        curve_lines = []
+
+        for i in range(10, 0, -1):
+            frontend_score = i / 2
+            count = frontend_scores.get(frontend_score, 0)
+            bar_length = (
+                round(sqrt(count) / sqrt(max_count) * 10) if max_count > 0 else 0
+            )
+            bar = "█" * bar_length
+            curve_lines.append(f"{frontend_score:4.1f} {bar} {count}")
+
+        fields.append(
+            {
+                "name": "",
+                "value": "```\n" + "\n".join(curve_lines) + "\n```",
+                "inline": False,
+            }
+        )
 
     return (
         EmbedBuilder()

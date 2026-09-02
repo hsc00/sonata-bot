@@ -217,7 +217,22 @@ class UsersCog(commands.Cog):
             .group_by(Album.artist)
         ).count()
 
-        embed = profile_embed(user, average_score, releases_rated, artists_rated)
+        rating_distribution = (
+            Rating.select(Rating.score, fn.COUNT(Rating.id).alias("count"))
+            .where(Rating.user == user.id)
+            .group_by(Rating.score)
+            .order_by(Rating.score.asc())
+        )
+
+        distribution_dict = {row.score: row.count for row in rating_distribution}
+
+        embed = profile_embed(
+            user,
+            average_score,
+            releases_rated,
+            artists_rated,
+            distribution_dict,
+        )
 
         await ctx.send(embed=embed)
 
