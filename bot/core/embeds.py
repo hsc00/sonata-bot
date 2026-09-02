@@ -496,13 +496,14 @@ def lyrics_embed(
     lyrics: list[str],
     title: str,
     artist: str,
-    _start: int = 1,
+    start: int = 1,  # noqa: ARG001
 ) -> discord.Embed:
     """Create an embed for the lyrics."""
-    title = f"Lyrics for {artist} - {title}"
+    embed_title = f"{artist} - {title}" if artist else title
+
     description = "\n".join(lyrics)
 
-    return EmbedBuilder().with_title(title).with_description(description).build()
+    return EmbedBuilder().with_title(embed_title).with_description(description).build()
 
 
 def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:

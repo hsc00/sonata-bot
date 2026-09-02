@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import asyncio
+import logging
 import re
 
 from api.genius import get_track_relationships
@@ -11,6 +13,8 @@ from discord import app_commands
 from discord.ext import commands
 from syncedlyrics import search
 
+logger = logging.getLogger(__name__)
+
 
 class TracksCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
@@ -18,20 +22,31 @@ class TracksCog(commands.Cog):
 
     @commands.hybrid_command(name="lyrics", aliases=["lr"], with_app_command=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
-    async def lyrics(self, ctx: commands.Context) -> None:
+    async def lyrics(
+        self,
+        ctx: commands.Context,
+        *,
+        query: str | None = None,
+    ) -> None:
         """Get the lyrics for a given track."""
-        user_id = str(ctx.author.id)
-        user = UserInfo.get_or_none(UserInfo.user_id == user_id)
-        last_fm_username = user.lastfm_username if user else None
+        artist_name = None
+        track_name = query
 
-        if last_fm_username is None:
-            raise NoLastFMUsernameError
+        if query is None:
+            user_id = str(ctx.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
 
-        # TODO: This can be refactored to use "fetch_album" (which should be renamed)
-        #       to get the last played track with album and artist data
-        async with ctx.typing():
+            if last_fm_username is None:
+                raise NoLastFMUsernameError
+
             _, artist_name, track_name = get_last_played(last_fm_username)
-            synced_lyrics = search(f"{artist_name} - {track_name}")
+
+        elif " - " in query:
+            artist_name, track_name = query.split(" - ", 1)
+
+        async with ctx.typing():
+            synced_lyrics = await asyncio.to_thread(search, track_name)
 
             if not synced_lyrics or synced_lyrics == "":
                 raise NoLyricsFoundError
@@ -46,8 +61,8 @@ class TracksCog(commands.Cog):
                 lyrics_lines,
                 lyrics_embed,
                 per_page=20,
-                title=track_name,
-                artist=artist_name,
+                title=track_name.title(),
+                artist=artist_name.title() if artist_name else "",
             )
 
         await ctx.send(embed=pages[0], view=view)

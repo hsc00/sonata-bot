@@ -13,8 +13,8 @@ These are the Sonata bible commands:
 - `newreleases` : Searches for new releases. ✅
 - `mrr or mostratedreleases` : Checks the server most rated albums. ✅
 - `brr or bestratedreleases` : Checks the server best rated albums. ✅
-- `brr or bestratedreleases` user : Checks the user best rated albums.
-- `wrr or worstratedreleases` user : Checks the user best rated albums.
+- `brr or bestratedreleases` user : Checks the user best rated albums. ✅
+- `wrr or worstratedreleases` user : Checks the user best rated albums.✅
 - `wrr or worstratedreleases`: Check the worst rated releases. ✅
 - 'history`: check a release rating history (use a TTL cache, after a cache hit when the cache is invalid update the rating, probably a TTL of 7 days is the best)
 
@@ -32,7 +32,7 @@ These are the Sonata bible commands:
 - `tr` or `trackinfo`: Check track info.
 - `samples`: Check samples and interpolations used/being used in a track. ✅
 - `covers`: Check if a track is a cover or has covers.
-- `lyrics` or `lr`: Check the current lyrics for the current or a specific track, you can input a timestamp. 
+- `lyrics` or `lr`: Check the current lyrics for the current or a specific track. ✅
 
 # User Stats 
 - `profile`: Check your own or another person's profile. ✅
