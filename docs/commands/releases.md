@@ -34,13 +34,13 @@ The command displays the average rating and total number of ratings for the rele
 
 **Options:**
 
-- **Name** (optional) – The name of the release you want to search for. Defaults to your currently playing track on Last.fm.
+- **Name** (optional) – The name of the release you want to search for. You can use `artist - album` or `album by artist` to disambiguate releases with the same name.
 
 !!! example "Usage Examples"
 `     !whoratedrelease
-    !whoratedrelease OK Computer
-    !wr Radiohead In Rainbows
-    `
+     !whoratedrelease OK Computer
+     !wr Radiohead - In Rainbows
+     `
 
 ### !bestratedreleases (`!brr`, `!brab`)
 
@@ -57,11 +57,10 @@ Only releases with more than 3 ratings are included to ensure meaningful results
 This is a great way to discover highly-regarded albums within your community!
 
 !!! info "Bayesian Average Formula"
-    Releases are ranked using a Bayesian average, inspired by RYM's chart approach:
-    ```
-    bayesian_avg = (rating_count × average_rating + 3 × global_avg) / (rating_count + 3)
-    ```
-    Where `global_avg` is the server's overall average rating. This prevents albums with only a few ratings from dominating the rankings by pulling them toward the server average.
+Releases are ranked using a Bayesian average, inspired by RYM's chart approach:
+`     bayesian_avg = (rating_count × average_rating + 3 × global_avg) / (rating_count + 3)
+    `
+Where `global_avg` is the server's overall average rating. This prevents albums with only a few ratings from dominating the rankings by pulling them toward the server average.
 
 ### !worstratedreleases (`!wrr`, `!wrab`)
 

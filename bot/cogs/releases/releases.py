@@ -32,7 +32,7 @@ from core.errors import (
     NoRatingsFoundError,
     SonataError,
 )
-from core.utils import fetch_album
+from core.utils import fetch_album, search_album
 from database.models import Album, Rating
 from discord import Member, Message, User, app_commands
 from discord.ext import commands
@@ -94,7 +94,7 @@ class ReleasesCog(commands.Cog):
         aliases=["wr", "wa", "who_rated_album", "who_rated_release"],
     )
     @app_commands.describe(
-        release_name="Name of release (defaults to last played album)",
+        release_name="Release name, or 'artist - album' to disambiguate",
     )
     async def who_rated_release(
         self,
@@ -106,12 +106,25 @@ class ReleasesCog(commands.Cog):
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
-        release = await fetch_album(str(ctx.author.id), release_name)
+        query = release_name or ""
+        album_name, artist_name = query, ""
+
+        if release_name is None:
+            release = await fetch_album(str(ctx.author.id), None)
+
+        elif " - " in query:
+            artist_name, album_name = query.split(" - ", 1)
+            release = search_album(album_name.strip(), artist_name.strip())
+
+        elif " by " in query:
+            album_name, artist_name = query.split(" by ", 1)
+            release = search_album(album_name.strip(), artist_name.strip())
+
+        else:
+            release = search_album(album_name.strip(), artist_name.strip())
 
         if release is None:
-            logger.error("No album found for %s", release_name)
-
-            return
+            raise NoRatingsFoundError(release_name or "Unknown")
 
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
