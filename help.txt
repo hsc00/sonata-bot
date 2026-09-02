@@ -3,7 +3,7 @@ These are the Sonata bible commands:
 - `setfm <username>`: Set your last.fm username. ✅
 - `setrym <username>`: Set your RYM username. ✅
 - `setspotify`: Set your connection between Spotify and Sonata bot.
-- `i or import`: Import your RYM ratings to the bot. Check instructions [here]. ✅
+- `i or import`: Import your RYM or AOTY ratings to the bot. Check instructions [here]. ✅
 
 # Albums
 - `ab or album`: Check RYM info for an album or release. ✅

@@ -197,26 +197,89 @@ class UsersCog(commands.Cog):
             raise RatingsImportFailedError
 
         try:
+            rows = list(csv.DictReader(response.text.splitlines()))
+
+            if not rows:
+                await ctx.send("The CSV file appears to be empty.")
+                return
+
+            headers = rows[0].keys()
+
+            if "Release_Date" in headers:
+                format_type = "rym"
+                normalize = self._normalize_rym_row
+
+            elif "Date Rated" in headers:
+                format_type = "aoty"
+                normalize = self._normalize_aoty_row
+
+            else:
+                await ctx.send(
+                    "❌ Unknown CSV format. Expected RYM or AOTY export file."
+                )
+
+                return
+
             # Clean existing ratings for the user
             Rating.delete().where(Rating.user == ctx.author.id).execute()
 
-            rows = list(csv.DictReader(response.text.splitlines()))
-
             async with ctx.typing():
+                imported = 0
+                skipped = 0
+
                 for row in rows:
-                    await self.import_rating(ctx.author.id, row)
+                    try:
+                        normalized = normalize(row)
+
+                        if normalized["score"] == 0:
+                            skipped += 1
+                            continue
+
+                        await self.import_rating(ctx.author.id, normalized)
+                        imported += 1
+
+                    except Exception:  # noqa: BLE001
+                        skipped += 1
+                        continue
 
                 await ctx.send(
-                    content=f"✅ Imported ratings successfully for user {ctx.message.author.name}.",
+                    content=f"✅ Imported **{imported}** ratings from {format_type.upper()} export"
+                    f" for user {ctx.message.author.name}."
+                    + (f" Skipped **{skipped}** rows." if skipped else ""),
                 )
 
         except Exception as e:
             raise RatingsImportFailedError from e
 
     @staticmethod
+    def _normalize_rym_row(row: dict) -> dict:
+        first_name = row.get(" First Name") or row.get(" First Name localized") or ""
+        last_name = row.get("Last Name") or row.get("Last Name localized") or ""
+        artist = html.unescape(f"{first_name + ' ' if first_name else ''}{last_name}")
+
+        return {
+            "title": html.unescape(row.get("Title", "")),
+            "artist": artist,
+            "score": int(row.get("Rating", 0)),
+            "year": int(row.get("Release_Date") or "0"),
+        }
+
+    @staticmethod
+    def _normalize_aoty_row(row: dict) -> dict:
+        raw_score = int(row.get("Rating", 0))
+        score = max(RATING_SCORE_MIN, min(RATING_SCORE_MAX, round(raw_score / 10)))
+
+        return {
+            "title": row.get("Album", ""),
+            "artist": row.get("Artist", ""),
+            "score": score,
+            "year": int(row.get("Year") or "0"),
+        }
+
+    @staticmethod
     async def import_rating(user_id: int, row: dict) -> None:
-        """Import a single rating."""
-        score = int(row["Rating"])
+        """Import a single normalized rating row."""
+        score = int(row["score"])
 
         # Skip wishlisted albums
         if score == 0:
@@ -226,12 +289,9 @@ class UsersCog(commands.Cog):
             message = f"Score must be between {RATING_SCORE_MIN} and {RATING_SCORE_MAX}"
             raise ValueError(message)
 
-        title = html.unescape(row["Title"])
-
-        first_name = row[" First Name"] or None
-        last_name = row["Last Name"]
-        artist = html.unescape(f"{first_name + ' ' if first_name else ''}{last_name}")
-        release_year = int(row.get("Release_Date") or "0")
+        title = html.unescape(row["title"])
+        artist = html.unescape(row["artist"])
+        release_year = int(row.get("year") or "0")
 
         # Search for the album in the database
         try:
@@ -254,11 +314,15 @@ class UsersCog(commands.Cog):
             store_album(album)
 
         try:
-            Rating.create(
+            rating, created = Rating.get_or_create(
                 user=user_id,
-                score=score,
                 album=album,
+                defaults={"score": score},
             )
+
+            if not created:
+                rating.score = score
+                rating.save()
 
         except IntegrityError:
             logger.exception(

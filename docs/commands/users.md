@@ -17,20 +17,24 @@ This allows the bot to automatically fetch what you're currently listening to.
 - **Username** – Your [Last.fm](https://www.last.fm/) username
 
 !!! example "Usage Examples"
-    ```
-    !setlastfm myusername
-    ```
+`     !setlastfm myusername
+    `
 
 ### !importratings (`!i`)
 
-Import all your ratings from a CSV file exported from RateYourMusic.
+Import all your ratings from a CSV file exported from RateYourMusic or Album of the Year (AOTY).
 
 This is the core feature that enables all rating-based functionality in Sonata.
 
+**Supported formats:**
+
+- **RYM** - Export from [RateYourMusic Export](https://rateyourmusic.com/music_export)
+- **AOTY** - Export from [Album of the Year](https://www.albumoftheyear.org/scripts/exportRatings.php/)
+
 **How to get your CSV file:**
 
-1. Go to [RateYourMusic Export](https://rateyourmusic.com/musicexport)
-2. Click "Begin export..." and wait for the export to complete
+1. Go to your account settings on the respective site
+2. Look for "Export" or "Download ratings"
 3. Download your CSV file
 4. Attach the file when running this command
 
@@ -40,16 +44,15 @@ This is the core feature that enables all rating-based functionality in Sonata.
 - Or click the ➕ button → "Upload a file" → Select your CSV → Type the command
 
 !!! example "Usage Examples"
-    ```
-    !importratings (with CSV file attached)
+`     !importratings (with CSV file attached)
     !i (with CSV file attached)
-    ```
+    `
 
 !!! info "Import Time"
-    The import process may take a while depending on the number of ratings you have. Please be patient and do not try to re-run the command while the import is still in progress.
+The import process may take a while depending on the number of ratings you have. Please be patient and do not try to re-run the command while the import is still in progress.
 
 !!! warning "Data Overwrite"
-    Importing ratings will **overwrite** any existing ratings you have in the bot. This ensures your data stays in sync with RateYourMusic.
+Importing ratings will **overwrite** any existing ratings you have in the bot. This ensures your data stays in sync with the source.
 
 ---
 
@@ -68,17 +71,15 @@ View detailed statistics about your (or another user's) music taste, including:
 - **User** (optional) – Select another user by mention or Discord user ID. If not provided, shows your own profile.
 
 !!! example "Usage Examples"
-    ```
-    !profile
+`     !profile
     !profile @user
-    ```
+    `
 
 ### !ratingsrank (`!rr`)
 
 View a leaderboard of server members ranked by the number of ratings they have submitted.
 
 !!! example "Usage Examples"
-    ```
-    !ratingsrank
+`     !ratingsrank
     !rr
-    ```
+    `
