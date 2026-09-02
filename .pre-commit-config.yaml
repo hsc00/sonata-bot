@@ -10,7 +10,7 @@ repos:
     hooks:
       - id: ty-check
         name: ty type check
-        entry: ty check --exclude "tests/*"
+        entry: python -m ty check --exclude "tests/*"
         language: system
         pass_filenames: false
         types: [python]

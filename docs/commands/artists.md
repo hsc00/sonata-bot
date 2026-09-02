@@ -58,15 +58,16 @@ Only artists with more than 3 ratings are included to ensure meaningful results.
 !!! tip
     This is perfect for discovering consensus favorites in your community!
 
-!!! info "Weighted Rating Formula"
-    Artists are ranked using a weighted formula that balances average rating, total ratings, and the number of distinct releases rated:
+!!! info "Bayesian Average Formula"
+    Artists are ranked using a Bayesian average, inspired by RYM's chart approach:
     ```
-    weighted_rating = (average_score × 14) + (rating_count × 0.07) + (releases_count × average_score × 0.1)
+    bayesian_avg = (distinct_user_count × average_score + 3 × global_avg) / (distinct_user_count + 3)
     ```
+    Where `global_avg` is the server's overall average rating. Using `distinct_user_count` prevents a single user from artificially inflating an artist's ranking.
 
 ### !worstratedartists (`!wra`)
 
-Discover the worst rated artists ranked using the same weighted formula as best rated artists, considering average rating, total number of ratings, and number of distinct releases, sorted from lowest to highest.
+Discover the worst rated artists ranked using the same Bayesian average formula as `!bestratedartists`, sorted from lowest to highest score.
 
 **Scope:**
 

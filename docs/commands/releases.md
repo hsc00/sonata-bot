@@ -56,12 +56,12 @@ Only releases with more than 3 ratings are included to ensure meaningful results
 !!! tip
 This is a great way to discover highly-regarded albums within your community!
 
-!!! info "Weighted Rating Formula"
-    Releases are ranked using a weighted formula to balance quality with popularity:
+!!! info "Bayesian Average Formula"
+    Releases are ranked using a Bayesian average, inspired by RYM's chart approach:
     ```
-    weighted_rating = (average_rating × 7) + (rating_count × 0.4)
+    bayesian_avg = (rating_count × average_rating + 3 × global_avg) / (rating_count + 3)
     ```
-    This prevents albums with only a few perfect scores from dominating the rankings.
+    Where `global_avg` is the server's overall average rating. This prevents albums with only a few ratings from dominating the rankings by pulling them toward the server average.
 
 ### !worstratedreleases (`!wrr`, `!wrab`)
 

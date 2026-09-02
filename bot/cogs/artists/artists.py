@@ -5,9 +5,8 @@ from typing import Any
 import discord
 from api.last_fm import get_last_played
 from core.constants import (
-    ARTIST_RATING_W1,
-    ARTIST_RATING_W2,
-    ARTIST_RATING_W3,
+    BAYESIAN_CONFIDENCE,
+    BAYESIAN_PRIOR,
     RATINGS_MIN_THRESHOLD,
 )
 from core.embeds import (
@@ -123,49 +122,62 @@ class ArtistCog(commands.Cog):
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
-        w1, w2, w3 = ARTIST_RATING_W1, ARTIST_RATING_W2, ARTIST_RATING_W3
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
-        best_rated_artists = (
-            Album.select(
-                Album.artist,
-                fn.AVG(Rating.score).alias("average_score"),
-                fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
+        async with ctx.typing():
+            # Compute server-wide global average rating
+            global_avg = (
+                Rating.select(fn.AVG(Rating.score))
+                .where(Rating.user.in_(guild_member_ids))
+                .scalar()
             )
-            .join(Rating)
-            .where(Rating.user.in_(guild_member_ids))
-            .group_by(Album.artist)
-            .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
-            .order_by(
-                (
-                    w1 * fn.AVG(Rating.score)
-                    + w2 * fn.COUNT(Rating.id)
-                    + w3 * fn.COUNT(fn.DISTINCT(Album.id)) * fn.AVG(Rating.score)
-                ).desc(),
+            if global_avg is None:
+                global_avg = BAYESIAN_PRIOR
+
+            best_rated_artists = (
+                Album.select(
+                    Album.artist,
+                    fn.AVG(Rating.score).alias("average_score"),
+                    fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
+                    fn.COUNT(fn.DISTINCT(Rating.user)).alias("distinct_user_count"),
+                )
+                .join(Rating)
+                .where(Rating.user.in_(guild_member_ids))
+                .group_by(Album.artist)
+                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
+                .limit(100)
             )
-            .limit(100)
-        )
 
-        user_name = None
+            user_name = None
 
-        if user:
-            user_id = user.id
-            user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
+            if user:
+                user_id = user.id
+                user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
-            best_rated_artists = best_rated_artists.where(Rating.user == user_id)
+                best_rated_artists = best_rated_artists.where(Rating.user == user_id)
 
-        if not best_rated_artists:
-            raise NoRatingsFoundError
+            sorted_artists = sorted(
+                best_rated_artists,
+                key=lambda row: (
+                    row.distinct_user_count * row.average_score
+                    + BAYESIAN_CONFIDENCE * global_avg
+                )
+                / (row.distinct_user_count + BAYESIAN_CONFIDENCE),
+                reverse=True,
+            )
 
-        view, pages = paginate_embeds(
-            best_rated_artists,
-            best_rated_artists_embed,
-            per_page=10,
-            server_name=getattr(ctx.guild, "name", ""),
-            user_name=user_name,
-        )
+            if not sorted_artists:
+                raise NoRatingsFoundError
 
-        await ctx.send(embed=pages[0], view=view)
+            view, pages = paginate_embeds(
+                sorted_artists,
+                best_rated_artists_embed,
+                per_page=10,
+                server_name=getattr(ctx.guild, "name", ""),
+                user_name=user_name,
+            )
+
+            await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(
         name="worstratedartists",
@@ -182,49 +194,62 @@ class ArtistCog(commands.Cog):
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
-        w1, w2, w3 = ARTIST_RATING_W1, ARTIST_RATING_W2, ARTIST_RATING_W3
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
-        worst_rated_artists = (
-            Album.select(
-                Album.artist,
-                fn.AVG(Rating.score).alias("average_score"),
-                fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
+        async with ctx.typing():
+            # Compute server-wide global average rating
+            global_avg = (
+                Rating.select(fn.AVG(Rating.score))
+                .where(Rating.user.in_(guild_member_ids))
+                .scalar()
             )
-            .join(Rating)
-            .where(Rating.user.in_(guild_member_ids))
-            .group_by(Album.artist)
-            .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
-            .order_by(
-                (
-                    w1 * fn.AVG(Rating.score)
-                    + w2 * fn.COUNT(Rating.id)
-                    + w3 * fn.COUNT(fn.DISTINCT(Album.id)) * fn.AVG(Rating.score)
-                ).asc(),
+            if global_avg is None:
+                global_avg = BAYESIAN_PRIOR
+
+            worst_rated_artists = (
+                Album.select(
+                    Album.artist,
+                    fn.AVG(Rating.score).alias("average_score"),
+                    fn.COUNT(fn.DISTINCT(Album.id)).alias("releases_count"),
+                    fn.COUNT(fn.DISTINCT(Rating.user)).alias("distinct_user_count"),
+                )
+                .join(Rating)
+                .where(Rating.user.in_(guild_member_ids))
+                .group_by(Album.artist)
+                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
+                .limit(100)
             )
-            .limit(100)
-        )
 
-        user_name = None
+            user_name = None
 
-        if user:
-            user_id = user.id
-            user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
+            if user:
+                user_id = user.id
+                user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
-            worst_rated_artists = worst_rated_artists.where(Rating.user == user_id)
+                worst_rated_artists = worst_rated_artists.where(Rating.user == user_id)
 
-        if not worst_rated_artists:
-            raise NoRatingsFoundError
+            sorted_artists = sorted(
+                worst_rated_artists,
+                key=lambda row: (
+                    row.distinct_user_count * row.average_score
+                    + BAYESIAN_CONFIDENCE * global_avg
+                )
+                / (row.distinct_user_count + BAYESIAN_CONFIDENCE),
+                reverse=False,
+            )
 
-        view, pages = paginate_embeds(
-            worst_rated_artists,
-            worst_rated_artists_embed,
-            per_page=10,
-            server_name=getattr(ctx.guild, "name", ""),
-            user_name=user_name,
-        )
+            if not sorted_artists:
+                raise NoRatingsFoundError
 
-        await ctx.send(embed=pages[0], view=view)
+            view, pages = paginate_embeds(
+                sorted_artists,
+                worst_rated_artists_embed,
+                per_page=10,
+                server_name=getattr(ctx.guild, "name", ""),
+                user_name=user_name,
+            )
+
+            await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(
         name="mostratedartists",

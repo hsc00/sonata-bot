@@ -42,6 +42,5 @@ These are the Sonata bible commands:
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
 
 roadmap:
-fix rating weights since one user can overcrowd the bot making his releases higher
 randomrating of the day (cronjob that triggers a random rating every 24h)
 !newreleases cron job

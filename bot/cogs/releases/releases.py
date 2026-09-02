@@ -7,11 +7,11 @@ from typing import Literal
 
 from api.sputnik import fetch_new_releases
 from core.constants import (
+    BAYESIAN_CONFIDENCE,
+    BAYESIAN_PRIOR,
     RANDOM_RATING_GLAZE_THRESHOLD,
     RANDOM_RATING_ROAST_THRESHOLD,
     RATINGS_MIN_THRESHOLD,
-    RELEASE_RATING_W1,
-    RELEASE_RATING_W2,
 )
 from core.decorators import disabled
 from core.embeds import (
@@ -153,12 +153,22 @@ class ReleasesCog(commands.Cog):
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         async with ctx.typing():
+            # Compute server-wide global average rating
+            global_avg = (
+                Rating.select(fn.AVG(Rating.score))
+                .where(Rating.user.in_(guild_member_ids))
+                .scalar()
+            )
+            if global_avg is None:
+                global_avg = BAYESIAN_PRIOR
+
             # Select releases with more than 3 ratings
             albums = (
                 Album.select(
                     Album,
                     fn.SUM(Rating.score).alias("rating_sum"),
                     fn.COUNT(Rating.id).alias("rating_count"),
+                    fn.COUNT(fn.DISTINCT(Rating.user)).alias("distinct_user_count"),
                 )
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
@@ -173,22 +183,22 @@ class ReleasesCog(commands.Cog):
 
                 return
 
-            # Compute average rating and weighted rating for each release
-            w1, w2 = RELEASE_RATING_W1, RELEASE_RATING_W2
-
-            albums_with_weighted_rating = []
+            albums_with_bayesian = []
 
             for album in albums:
                 average_rating = album.rating_sum / album.rating_count
-                weighted_rating = (average_rating * w1) + (album.rating_count * w2)
+                bayesian_avg = (
+                    album.rating_count * average_rating
+                    + BAYESIAN_CONFIDENCE * global_avg
+                ) / (album.rating_count + BAYESIAN_CONFIDENCE)
 
-                albums_with_weighted_rating.append(
-                    (album, average_rating, weighted_rating, album.rating_count),
+                albums_with_bayesian.append(
+                    (album, average_rating, bayesian_avg, album.rating_count),
                 )
 
-            # Sort releases by their weighted rating in descending order
+            # Sort releases by their Bayesian average in descending order
             sorted_releases = sorted(
-                albums_with_weighted_rating,
+                albums_with_bayesian,
                 key=lambda x: x[2],
                 reverse=True,
             )
@@ -217,37 +227,51 @@ class ReleasesCog(commands.Cog):
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
         async with ctx.typing():
+            # Compute server-wide global average rating
+            global_avg = (
+                Rating.select(fn.AVG(Rating.score))
+                .where(Rating.user.in_(guild_member_ids))
+                .scalar()
+            )
+            if global_avg is None:
+                global_avg = BAYESIAN_PRIOR
+
             albums = (
                 Album.select(
                     Album,
                     fn.SUM(Rating.score).alias("rating_sum"),
                     fn.COUNT(Rating.id).alias("rating_count"),
+                    fn.COUNT(fn.DISTINCT(Rating.user)).alias("distinct_user_count"),
                 )
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
                 .group_by(Album.id)
-                .having(fn.COUNT(Rating.id) > 3)
+                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
             )
 
             if len(albums) == 0:
-                await ctx.send("No albums found with more than 3 ratings.")
+                await ctx.send(
+                    f"No albums found with more than {RATINGS_MIN_THRESHOLD} ratings.",
+                )
 
                 return
 
-            w1, w2 = RELEASE_RATING_W1, RELEASE_RATING_W2
-
-            albums_with_weighted_rating = []
+            albums_with_bayesian = []
 
             for album in albums:
                 average_rating = album.rating_sum / album.rating_count
-                weighted_rating = (average_rating * w1) + (album.rating_count * w2)
+                bayesian_avg = (
+                    album.rating_count * average_rating
+                    + BAYESIAN_CONFIDENCE * global_avg
+                ) / (album.rating_count + BAYESIAN_CONFIDENCE)
 
-                albums_with_weighted_rating.append(
-                    (album, average_rating, weighted_rating, album.rating_count),
+                albums_with_bayesian.append(
+                    (album, average_rating, bayesian_avg, album.rating_count),
                 )
 
+            # Sort releases by their Bayesian average in ascending order
             sorted_releases = sorted(
-                albums_with_weighted_rating,
+                albums_with_bayesian,
                 key=lambda x: x[2],
                 reverse=False,
             )
