@@ -4,11 +4,23 @@ import logging
 import re
 from urllib.parse import quote
 
+import discord  # noqa: TC002
 from api.google_search import search_google
 from api.last_fm import get_last_played
 from core.constants import FULL_STAR, HALF_STAR, RATING_SCORE_MAX, RATING_SCORE_MIN
 from core.errors import NoLastFMUsernameError, SonataError
 from database import Album, AlbumIndex, UserInfo
+
+
+def get_user_display_names(guild: discord.Guild, user_ids: set[str]) -> dict[str, str]:
+    """Resolve Discord display names for a set of user IDs in a guild."""
+    display_names: dict[str, str] = {}
+
+    for member in guild.members:
+        if str(member.id) in user_ids:
+            display_names[str(member.id)] = member.display_name
+
+    return display_names
 
 
 def score_to_stars(score: int) -> str:
@@ -209,3 +221,8 @@ def create_rym_search_artist_url(artist_name: str) -> str:
 def create_rym_search_release_url(release_name: str) -> str:
     """Create a RateYourMusic search URL for the given release name."""
     return f"https://rateyourmusic.com/search?searchtype=l&searchterm={quote(release_name)}"
+
+
+def create_rym_user_url(username: str) -> str:
+    """Create a RateYourMusic user profile URL."""
+    return f"https://rateyourmusic.com/~{quote(username)}"

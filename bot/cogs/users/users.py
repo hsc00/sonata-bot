@@ -10,7 +10,13 @@ import discord
 import requests
 from core.constants import RATING_SCORE_MAX, RATING_SCORE_MIN
 from core.decorators import disabled
-from core.embeds import comparison_embed, profile_embed, ratings_rank_view
+from core.embeds import (
+    comparison_embed,
+    paginate_embeds,
+    profile_embed,
+    ratings_rank_view,
+    users_list_embed,
+)
 from core.errors import (
     InvalidUserMentionError,
     NoFileAttachedError,
@@ -18,7 +24,7 @@ from core.errors import (
     RatingsImportFailedError,
     SonataError,
 )
-from core.utils import store_album
+from core.utils import get_user_display_names, store_album
 from database import Album, Rating, UserInfo
 from discord import app_commands
 from discord.ext import commands
@@ -101,6 +107,38 @@ class UsersCog(commands.Cog):
         view = ratings_rank_view(ctx.guild.name, ratings)
 
         await ctx.send(embed=view.pages[0], view=view)
+
+    @commands.hybrid_command(name="users")
+    async def users_list(self, ctx: commands.Context) -> None:
+        """List all users who have set their RYM username."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
+
+        users = (
+            UserInfo.select()
+            .where(UserInfo.rym_username.is_null(False))  # noqa: FBT003
+            .order_by(UserInfo.rym_username)
+        )
+
+        users_list = list(users)
+
+        if not users_list:
+            await ctx.send("No users have set their RYM username yet.")
+
+            return
+
+        user_ids = {user.user_id for user in users_list}
+        display_names = get_user_display_names(ctx.guild, user_ids)
+
+        view, pages = paginate_embeds(
+            users_list,
+            users_list_embed,
+            per_page=10,
+            server_name=getattr(ctx.guild, "name", ""),
+            user_display_names=display_names,
+        )
+
+        await ctx.send(embed=pages[0], view=view)
 
     @disabled()
     @commands.command(aliases=["c"])

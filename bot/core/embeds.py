@@ -8,6 +8,7 @@ from core.constants import RYM_RATING_COLORS
 from core.utils import (
     create_rym_search_artist_url,
     create_rym_search_release_url,
+    create_rym_user_url,
     score_to_stars,
 )
 from core.views import PaginatorView
@@ -15,7 +16,7 @@ from core.views import PaginatorView
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from database.models import Album, Rating
+    from database.models import Album, Rating, UserInfo
 
 
 class EmbedField(TypedDict):
@@ -548,6 +549,28 @@ def samples_embed(
         .with_description(description)
         .with_thumbnail(cover_url)
         .with_url(url)
+        .build()
+    )
+
+
+def users_list_embed(
+    users: list[UserInfo],
+    server_name: str,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for the users list."""
+    lines = [
+        f"{i}. [{user.rym_username}]({create_rym_user_url(user.rym_username)})"
+        for i, user in enumerate(users, start=start)
+        if user.rym_username
+    ]
+
+    description = "\n".join(lines)
+
+    return (
+        EmbedBuilder()
+        .with_title(f"RYM Users in {server_name}")
+        .with_description(description)
         .build()
     )
 

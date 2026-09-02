@@ -13,6 +13,8 @@ These are the Sonata bible commands:
 - `newreleases` : Searches for new releases. ✅
 - `mrr or mostratedreleases` : Checks the server most rated albums. ✅
 - `brr or bestratedreleases` : Checks the server best rated albums. ✅
+- `brr or bestratedreleases` user : Checks the user best rated albums.
+- `wrr or worstratedreleases` : Checks the user best rated albums.
 - `wrr or worstratedreleases`: Check the worst rated releases. ✅
 
 # Artists
@@ -32,8 +34,8 @@ These are the Sonata bible commands:
 - `lyrics` or `lr`: Check the current lyrics for the current or a specific track, you can input a timestamp. 
 
 # User Stats 
-- `profile`: Check your own or another person's profile.
-- `users`: Check RYM users list.
+- `profile`: Check your own or another person's profile. ✅
+- `users`: Check RYM users list. ✅
 - `ratings`: Check your rating curve.
 - `rr` or `ratingsrank`: Checks the ratings rank. ✅
 - `rg` or `ratingsglazers`: Checks the ratings glazers rank.
