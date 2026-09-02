@@ -256,12 +256,15 @@ class UsersCog(commands.Cog):
         first_name = row.get(" First Name") or row.get(" First Name localized") or ""
         last_name = row.get("Last Name") or row.get("Last Name localized") or ""
         artist = html.unescape(f"{first_name + ' ' if first_name else ''}{last_name}")
+        review = row.get("Review") or row.get(" Review") or None
+        review = html.unescape(review) if review else None
 
         return {
             "title": html.unescape(row.get("Title", "")),
             "artist": artist,
             "score": int(row.get("Rating", 0)),
             "year": int(row.get("Release_Date") or "0"),
+            "review": review,
         }
 
     @staticmethod
@@ -274,6 +277,7 @@ class UsersCog(commands.Cog):
             "artist": row.get("Artist", ""),
             "score": score,
             "year": int(row.get("Year") or "0"),
+            "review": None,
         }
 
     @staticmethod
@@ -317,11 +321,12 @@ class UsersCog(commands.Cog):
             rating, created = Rating.get_or_create(
                 user=user_id,
                 album=album,
-                defaults={"score": score},
+                defaults={"score": score, "review": row.get("review")},
             )
 
             if not created:
                 rating.score = score
+                rating.review = row.get("review")
                 rating.save()
 
         except IntegrityError:
