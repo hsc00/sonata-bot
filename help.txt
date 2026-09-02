@@ -45,5 +45,4 @@ These are the Sonata bible commands:
 
 roadmap:
 randomrating of the day (cronjob that triggers a random rating every 24h)
-!newreleases cron job and fix errors
-aoty (>=3.5) and laoty(<=2) only show some ratings
+!newreleases cron job

@@ -206,7 +206,7 @@ def worst_rated_releases_embed(
     ):
         if user_name:
             lines.append(
-                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)",
+                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} - **{(average_score / 2):.2f}** ⭐",
             )
         else:
             lines.append(
@@ -238,7 +238,7 @@ def best_rated_releases_embed(
     ):
         if user_name:
             lines.append(
-                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} (**{(average_score / 2):.2f}** ⭐)",
+                f"{i}. {format_artist(str(album.artist))} - {format_release(album)} - **{(average_score / 2):.2f}** ⭐",
             )
         else:
             lines.append(
@@ -250,52 +250,80 @@ def best_rated_releases_embed(
     return EmbedBuilder().with_title(title).with_description(description).build()
 
 
-def lowest_rated_albums_of_the_year_embed(
-    ratings: list[Rating],
-    user_name: str,
+def album_of_the_year_embed(
+    items: list,
     year: int,
+    server_name: str,
+    user_name: str | None = None,
     start: int = 1,
 ) -> discord.Embed:
-    """Create an embed for the lowest rated albums of a year."""
+    """Create an embed for the best rated albums of a year."""
+    if user_name:
+        title = f"Top {year} releases for {user_name}"
+    else:
+        title = f"Top {year} releases in {server_name}"
+
     lines = []
 
-    for i, rating in enumerate(ratings[:10], start=start):
-        lines.append(
-            f"{i}. {format_artist(rating.album.album_artist or rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐",  # type: ignore[arg-type]
-        )
+    for i, item in enumerate(items, start=start):
+        if hasattr(item, "rating_sum") and hasattr(item, "rating_count"):
+            average_score = item.rating_sum / item.rating_count
+            lines.append(
+                f"{i}. {format_artist(str(item.artist))} - {format_release(item)} (**{(average_score / 2):.2f}** ⭐ from **{item.rating_count:,d}** ratings)",
+            )
+        else:
+            rating = item
+            lines.append(
+                f"{i}. {format_artist(rating.album.album_artist or rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐",  # type: ignore[arg-type]
+            )
 
-    title = f"Lowest {year} releases for {user_name}"
     description = "\n".join(lines)
 
     embed_builder = EmbedBuilder().with_title(title).with_description(description)
 
-    if ratings[0].album.cover_url:
-        embed_builder.with_thumbnail(ratings[0].album.cover_url)
+    if items and hasattr(items[0], "cover_url") and items[0].cover_url:
+        embed_builder.with_thumbnail(items[0].cover_url)
+    elif items and hasattr(items[0], "album") and items[0].album.cover_url:
+        embed_builder.with_thumbnail(items[0].album.cover_url)
 
     return embed_builder.build()
 
 
-def album_of_the_year_embed(
-    ratings: list[Rating],
-    user_name: str,
+def lowest_rated_albums_of_the_year_embed(
+    items: list,
     year: int,
+    server_name: str,
+    user_name: str | None = None,
     start: int = 1,
 ) -> discord.Embed:
-    """Create an embed for the album ratings."""
+    """Create an embed for the lowest rated albums of a year."""
+    if user_name:
+        title = f"Lowest {year} releases for {user_name}"
+    else:
+        title = f"Lowest {year} releases in {server_name}"
+
     lines = []
 
-    for i, rating in enumerate(ratings[:10], start=start):
-        lines.append(
-            f"{i}. {format_artist(rating.album.album_artist or rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐",  # type: ignore[arg-type]
-        )
+    for i, item in enumerate(items, start=start):
+        if hasattr(item, "rating_sum") and hasattr(item, "rating_count"):
+            average_score = item.rating_sum / item.rating_count
+            lines.append(
+                f"{i}. {format_artist(str(item.artist))} - {format_release(item)} (**{(average_score / 2):.2f}** ⭐ from **{item.rating_count:,d}** ratings)",
+            )
+        else:
+            rating = item
+            lines.append(
+                f"{i}. {format_artist(rating.album.album_artist or rating.album.artist)} - {format_release(rating.album)} \\- **{(rating.score / 2):.2f}** ⭐",  # type: ignore[arg-type]
+            )
 
-    title = f"Top {year} releases for {user_name}"
     description = "\n".join(lines)
 
     embed_builder = EmbedBuilder().with_title(title).with_description(description)
 
-    if ratings[0].album.cover_url:
-        embed_builder.with_thumbnail(ratings[0].album.cover_url)
+    if items and hasattr(items[0], "cover_url") and items[0].cover_url:
+        embed_builder.with_thumbnail(items[0].cover_url)
+    elif items and hasattr(items[0], "album") and items[0].album.cover_url:
+        embed_builder.with_thumbnail(items[0].album.cover_url)
 
     return embed_builder.build()
 

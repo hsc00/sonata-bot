@@ -7,8 +7,10 @@ from typing import Literal
 
 from api.sputnik import fetch_new_releases
 from core.constants import (
+    AOTY_MIN_THRESHOLD,
     BAYESIAN_CONFIDENCE,
     BAYESIAN_PRIOR,
+    LAOTY_MAX_THRESHOLD,
     RANDOM_RATING_GLAZE_THRESHOLD,
     RANDOM_RATING_ROAST_THRESHOLD,
     RATINGS_MIN_THRESHOLD,
@@ -445,7 +447,7 @@ class ReleasesCog(commands.Cog):
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     @app_commands.describe(
         year="Year to get the best rated albums from (defaults to current year)",
-        user="User to get the ratings from (defaults to the command author)",
+        user="User to get the ratings from (optional, defaults to server-wide)",
     )
     async def album_of_the_year(
         self,
@@ -454,6 +456,8 @@ class ReleasesCog(commands.Cog):
         user: User | Member | None = None,
     ) -> None:
         """Get the best rated albums of a given year."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
 
         if year is None:
             year = datetime.now(tz=timezone.utc).year
@@ -461,40 +465,103 @@ class ReleasesCog(commands.Cog):
         elif year < 1900 or year > datetime.now(tz=timezone.utc).year:
             raise InvalidYearError(year)
 
-        if not user:
-            user = ctx.author
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
-        user_id = str(user.id)
-        user_name = user.display_name
+        async with ctx.typing():
+            if user is None:
+                global_avg = (
+                    Rating.select(fn.AVG(Rating.score))
+                    .where(Rating.user.in_(guild_member_ids))
+                    .scalar()
+                )
+                if global_avg is None:
+                    global_avg = BAYESIAN_PRIOR
 
-        # Select ratings from the given year
-        ratings = (
-            Rating.select()
-            .join(Album)
-            .where((Album.release_year == year) & (Rating.user == user_id))
-            .order_by(Rating.score.desc())
-        )
+                albums_query = (
+                    Album.select(
+                        Album,
+                        fn.SUM(Rating.score).alias("rating_sum"),
+                        fn.COUNT(Rating.id).alias("rating_count"),
+                        fn.COUNT(fn.DISTINCT(Rating.user)).alias("distinct_user_count"),
+                    )
+                    .join(Rating)
+                    .where(
+                        (Album.release_year == year)
+                        & (Rating.user.in_(guild_member_ids))
+                        & (Rating.score >= AOTY_MIN_THRESHOLD),
+                    )
+                    .group_by(Album.id)
+                )
 
-        if len(ratings) == 0:
-            await ctx.send(f"❌ No ratings found for the year {year}.")
+                albums_with_bayesian = []
 
-            return
+                for album in albums_query:
+                    average_rating = album.rating_sum / album.rating_count
+                    bayesian_avg = (
+                        album.rating_count * average_rating
+                        + BAYESIAN_CONFIDENCE * global_avg
+                    ) / (album.rating_count + BAYESIAN_CONFIDENCE)
 
-        view, pages = paginate_embeds(
-            ratings,
-            album_of_the_year_embed,
-            per_page=10,
-            user_name=user_name,
-            year=year,
-        )
+                    albums_with_bayesian.append(
+                        (album, average_rating, bayesian_avg, album.rating_count),
+                    )
 
-        await ctx.send(embed=pages[0], view=view)
+                sorted_albums = sorted(
+                    albums_with_bayesian,
+                    key=lambda x: x[2],
+                    reverse=True,
+                )
+
+                top_albums = sorted_albums[:100]
+
+                view, pages = paginate_embeds(
+                    [album for album, _, _, _ in top_albums],
+                    album_of_the_year_embed,
+                    per_page=10,
+                    year=year,
+                    server_name=getattr(ctx.guild, "name", ""),
+                )
+
+                await ctx.send(embed=pages[0], view=view)
+
+            else:
+                user_id = str(user.id)
+                user_name = user.display_name
+
+                ratings = (
+                    Rating.select()
+                    .join(Album)
+                    .where(
+                        (Album.release_year == year)
+                        & (Rating.user == user_id)
+                        & (Rating.score >= AOTY_MIN_THRESHOLD),
+                    )
+                    .order_by(Rating.score.desc())
+                )
+
+                if len(ratings) == 0:
+                    await ctx.send(
+                        f"❌ No ratings found for the year {year} for user {user_name}."
+                    )
+
+                    return
+
+                view, pages = paginate_embeds(
+                    list(ratings),
+                    album_of_the_year_embed,
+                    per_page=10,
+                    user_name=user_name,
+                    year=year,
+                    server_name=getattr(ctx.guild, "name", ""),
+                )
+
+                await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(name="laoty", with_app_command=True)
     @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
     @app_commands.describe(
         year="Year to get the worst rated albums from (defaults to current year)",
-        user="User to get the ratings from (defaults to the command author)",
+        user="User to get the ratings from (optional, defaults to server-wide)",
     )
     async def lowest_rated_albums_of_the_year(
         self,
@@ -503,6 +570,8 @@ class ReleasesCog(commands.Cog):
         user: User | Member | None = None,
     ) -> None:
         """Get the lowest rated albums of a given year."""
+        if ctx.guild is None:
+            raise SonataError("This command can only be used in a guild.")
 
         if year is None:
             year = datetime.now(tz=timezone.utc).year
@@ -510,34 +579,97 @@ class ReleasesCog(commands.Cog):
         elif year < 1900 or year > datetime.now(tz=timezone.utc).year:
             raise InvalidYearError(year)
 
-        if not user:
-            user = ctx.author
+        guild_member_ids = {str(member.id) for member in ctx.guild.members}
 
-        user_id = str(user.id)
-        user_name = user.display_name
+        async with ctx.typing():
+            if user is None:
+                global_avg = (
+                    Rating.select(fn.AVG(Rating.score))
+                    .where(Rating.user.in_(guild_member_ids))
+                    .scalar()
+                )
+                if global_avg is None:
+                    global_avg = BAYESIAN_PRIOR
 
-        # Select ratings from the given year, sorted by lowest score first
-        ratings = (
-            Rating.select()
-            .join(Album)
-            .where((Album.release_year == year) & (Rating.user == user_id))
-            .order_by(Rating.score.asc())
-        )
+                albums_query = (
+                    Album.select(
+                        Album,
+                        fn.SUM(Rating.score).alias("rating_sum"),
+                        fn.COUNT(Rating.id).alias("rating_count"),
+                        fn.COUNT(fn.DISTINCT(Rating.user)).alias("distinct_user_count"),
+                    )
+                    .join(Rating)
+                    .where(
+                        (Album.release_year == year)
+                        & (Rating.user.in_(guild_member_ids))
+                        & (Rating.score <= LAOTY_MAX_THRESHOLD),
+                    )
+                    .group_by(Album.id)
+                )
 
-        if len(ratings) == 0:
-            await ctx.send(f"❌ No ratings found for the year {year}.")
+                albums_with_bayesian = []
 
-            return
+                for album in albums_query:
+                    average_rating = album.rating_sum / album.rating_count
+                    bayesian_avg = (
+                        album.rating_count * average_rating
+                        + BAYESIAN_CONFIDENCE * global_avg
+                    ) / (album.rating_count + BAYESIAN_CONFIDENCE)
 
-        view, pages = paginate_embeds(
-            ratings,
-            lowest_rated_albums_of_the_year_embed,
-            per_page=10,
-            user_name=user_name,
-            year=year,
-        )
+                    albums_with_bayesian.append(
+                        (album, average_rating, bayesian_avg, album.rating_count),
+                    )
 
-        await ctx.send(embed=pages[0], view=view)
+                sorted_albums = sorted(
+                    albums_with_bayesian,
+                    key=lambda x: x[2],
+                    reverse=False,
+                )
+
+                worst_albums = sorted_albums[:100]
+
+                view, pages = paginate_embeds(
+                    [album for album, _, _, _ in worst_albums],
+                    lowest_rated_albums_of_the_year_embed,
+                    per_page=10,
+                    year=year,
+                    server_name=getattr(ctx.guild, "name", ""),
+                )
+
+                await ctx.send(embed=pages[0], view=view)
+
+            else:
+                user_id = str(user.id)
+                user_name = user.display_name
+
+                ratings = (
+                    Rating.select()
+                    .join(Album)
+                    .where(
+                        (Album.release_year == year)
+                        & (Rating.user == user_id)
+                        & (Rating.score <= LAOTY_MAX_THRESHOLD),
+                    )
+                    .order_by(Rating.score.asc())
+                )
+
+                if len(ratings) == 0:
+                    await ctx.send(
+                        f"❌ No ratings found for the year {year} for user {user_name}."
+                    )
+
+                    return
+
+                view, pages = paginate_embeds(
+                    list(ratings),
+                    lowest_rated_albums_of_the_year_embed,
+                    per_page=10,
+                    user_name=user_name,
+                    year=year,
+                    server_name=getattr(ctx.guild, "name", ""),
+                )
+
+                await ctx.send(embed=pages[0], view=view)
 
     @disabled()
     @commands.command(aliases=["rpy"])

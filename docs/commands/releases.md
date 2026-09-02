@@ -119,40 +119,48 @@ This command fetches the latest releases from Sputnikmusic and shows information
 
 ### !albumoftheyear (`!aoty`)
 
-Shows the best-rated releases of a specific year for a user, sorted by rating score.
+Shows the best-rated releases of a specific year for the server or a specific user, sorted by rating score.
 
 Discover personal or community favorites from any year!
+
+When no user is specified, shows the server's highest-rated releases of that year using Bayesian averaging. When a user is specified, shows only that user's ratings.
+
+Only ratings of **3.5 or higher** are included to ensure meaningful results.
 
 **Options:**
 
 - **Year** (optional) – The year you want to search for. If not provided, the current year will be used.
-- **User** (optional) – The user whose ratings you want to check. If not provided, shows your own ratings.
+- **User** (optional) – The user whose ratings you want to check. If not provided, shows the server-wide best rated releases.
 
 !!! example "Usage Examples"
 `     !albumoftheyear
-    !aoty 2025
-    !aoty 2025 @username
-    `
+     !aoty 2025
+     !aoty 2025 @username
+     `
 
 !!! info
 Year must be between 1900 and the current year.
 
 ### !lowestratedalbumsoftheyear (`!laoty`, `!aotyl`)
 
-Shows the lowest-rated releases of a specific year for a user, sorted by rating score from lowest to highest.
+Shows the lowest-rated releases of a specific year for the server or a specific user, sorted by rating score from lowest to highest.
 
-Discover your least favorite releases from any year!
+Discover the most divisive releases from any year!
+
+When no user is specified, shows the server's lowest-rated releases of that year using Bayesian averaging. When a user is specified, shows only that user's ratings.
+
+Only ratings of **2.0 or lower** are included to ensure meaningful results.
 
 **Options:**
 
 - **Year** (optional) – The year you want to search for. If not provided, the current year will be used.
-- **User** (optional) – The user whose ratings you want to check. If not provided, shows your own ratings.
+- **User** (optional) – The user whose ratings you want to check. If not provided, shows the server-wide worst rated releases.
 
 !!! example "Usage Examples"
 `     !lowestratedalbumsoftheyear
-     !laoty 2025
-     !laoty 2025 @username
-     `
+      !laoty 2025
+      !laoty 2025 @username
+      `
 
 !!! info
 Year must be between 1900 and the current year.
