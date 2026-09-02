@@ -158,7 +158,14 @@ class ReleasesCog(commands.Cog):
         aliases=["brr", "brab", "best_rated_albums"],
     )
     @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
-    async def best_rated_releases(self, ctx: commands.Context) -> None:
+    @app_commands.describe(
+        user="User to filter by (defaults to all server members)",
+    )
+    async def best_rated_releases(
+        self,
+        ctx: commands.Context,
+        user: User | None = None,
+    ) -> None:
         """Get the best rated releases in the server."""
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
@@ -176,7 +183,7 @@ class ReleasesCog(commands.Cog):
                 global_avg = BAYESIAN_PRIOR
 
             # Select releases with more than 3 ratings
-            albums = (
+            albums_query = (
                 Album.select(
                     Album,
                     fn.SUM(Rating.score).alias("rating_sum"),
@@ -186,12 +193,26 @@ class ReleasesCog(commands.Cog):
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
                 .group_by(Album.id)
-                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
             )
+
+            user_name = None
+
+            if user:
+                user_id = str(user.id)
+                user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
+
+                albums_query = albums_query.where(Rating.user == user_id)
+            else:
+                albums_query = albums_query.having(
+                    fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD
+                )
+
+            albums = list(albums_query)
 
             if len(albums) == 0:
                 await ctx.send(
-                    f"No albums found with more than {RATINGS_MIN_THRESHOLD} ratings.",
+                    f"No albums found with more than {RATINGS_MIN_THRESHOLD} ratings."
+                    + (f" for user {user_name}." if user_name else "."),
                 )
 
                 return
@@ -223,6 +244,7 @@ class ReleasesCog(commands.Cog):
                 best_rated_releases_embed,
                 per_page=10,
                 server_name=getattr(ctx.guild, "name", ""),
+                user_name=user_name,
             )
 
             await ctx.send(embed=pages[0], view=view)
@@ -232,7 +254,14 @@ class ReleasesCog(commands.Cog):
         aliases=["wrr", "wrab", "worst_rated_albums"],
     )
     @app_commands.allowed_contexts(guilds=True, dms=False, private_channels=False)
-    async def worst_rated_releases(self, ctx: commands.Context) -> None:
+    @app_commands.describe(
+        user="User to filter by (defaults to all server members)",
+    )
+    async def worst_rated_releases(
+        self,
+        ctx: commands.Context,
+        user: User | None = None,
+    ) -> None:
         """Get the worst rated releases in the server."""
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
@@ -249,7 +278,7 @@ class ReleasesCog(commands.Cog):
             if global_avg is None:
                 global_avg = BAYESIAN_PRIOR
 
-            albums = (
+            albums_query = (
                 Album.select(
                     Album,
                     fn.SUM(Rating.score).alias("rating_sum"),
@@ -259,12 +288,26 @@ class ReleasesCog(commands.Cog):
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
                 .group_by(Album.id)
-                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
             )
+
+            user_name = None
+
+            if user:
+                user_id = str(user.id)
+                user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
+
+                albums_query = albums_query.where(Rating.user == user_id)
+            else:
+                albums_query = albums_query.having(
+                    fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD
+                )
+
+            albums = list(albums_query)
 
             if len(albums) == 0:
                 await ctx.send(
-                    f"No albums found with more than {RATINGS_MIN_THRESHOLD} ratings.",
+                    f"No albums found with more than {RATINGS_MIN_THRESHOLD} ratings."
+                    + (f" for user {user_name}." if user_name else "."),
                 )
 
                 return
@@ -296,6 +339,7 @@ class ReleasesCog(commands.Cog):
                 worst_rated_releases_embed,
                 per_page=10,
                 server_name=getattr(ctx.guild, "name", ""),
+                user_name=user_name,
             )
 
             await ctx.send(embed=pages[0], view=view)

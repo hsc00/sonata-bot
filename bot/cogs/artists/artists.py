@@ -134,7 +134,7 @@ class ArtistCog(commands.Cog):
             if global_avg is None:
                 global_avg = BAYESIAN_PRIOR
 
-            best_rated_artists = (
+            best_rated_artists_query = (
                 Album.select(
                     Album.artist,
                     fn.AVG(Rating.score).alias("average_score"),
@@ -144,17 +144,23 @@ class ArtistCog(commands.Cog):
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
                 .group_by(Album.artist)
-                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
-                .limit(100)
             )
 
             user_name = None
 
             if user:
-                user_id = user.id
+                user_id = str(user.id)
                 user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
-                best_rated_artists = best_rated_artists.where(Rating.user == user_id)
+                best_rated_artists_query = best_rated_artists_query.where(
+                    Rating.user == user_id
+                )
+            else:
+                best_rated_artists_query = best_rated_artists_query.having(
+                    fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD
+                )
+
+            best_rated_artists = list(best_rated_artists_query.limit(100))
 
             sorted_artists = sorted(
                 best_rated_artists,
@@ -206,7 +212,7 @@ class ArtistCog(commands.Cog):
             if global_avg is None:
                 global_avg = BAYESIAN_PRIOR
 
-            worst_rated_artists = (
+            worst_rated_artists_query = (
                 Album.select(
                     Album.artist,
                     fn.AVG(Rating.score).alias("average_score"),
@@ -216,17 +222,23 @@ class ArtistCog(commands.Cog):
                 .join(Rating)
                 .where(Rating.user.in_(guild_member_ids))
                 .group_by(Album.artist)
-                .having(fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD)
-                .limit(100)
             )
 
             user_name = None
 
             if user:
-                user_id = user.id
+                user_id = str(user.id)
                 user_name = (await ctx.guild.fetch_member(int(user_id))).display_name
 
-                worst_rated_artists = worst_rated_artists.where(Rating.user == user_id)
+                worst_rated_artists_query = worst_rated_artists_query.where(
+                    Rating.user == user_id
+                )
+            else:
+                worst_rated_artists_query = worst_rated_artists_query.having(
+                    fn.COUNT(Rating.id) > RATINGS_MIN_THRESHOLD
+                )
+
+            worst_rated_artists = list(worst_rated_artists_query.limit(100))
 
             sorted_artists = sorted(
                 worst_rated_artists,
