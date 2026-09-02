@@ -374,7 +374,7 @@ def glazers_haters_rank_embed(
 
     for i, row in enumerate(rows, start=start):
         lines.append(
-            f"{i}. <@{row.user}> - **{format_star_score(row.average_score)}** avg ({row.rating_count:,d} ratings)"
+            f"{i}. <@{row.user}> - **{format_star_score(row.bayesian_avg)}** avg ({row.rating_count:,d} ratings)"
         )
 
     description = "\n".join(lines)

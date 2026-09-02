@@ -8,7 +8,12 @@ from typing import Literal
 
 import discord
 import requests
-from core.constants import RATING_SCORE_MAX, RATING_SCORE_MIN
+from core.constants import (
+    BAYESIAN_CONFIDENCE,
+    BAYESIAN_PRIOR,
+    RATING_SCORE_MAX,
+    RATING_SCORE_MIN,
+)
 from core.decorators import disabled
 from core.embeds import (
     comparison_embed,
@@ -111,11 +116,19 @@ class UsersCog(commands.Cog):
 
     @commands.hybrid_command(name="ratingsglazers", aliases=["rg"])
     async def ratings_glazers(self, ctx: commands.Context) -> None:
-        """Get a ranking of users by their average rating score."""
+        """Get a ranking of users by their Bayesian average rating score."""
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
+        global_avg = (
+            Rating.select(fn.AVG(Rating.score))
+            .where(Rating.user.in_(guild_member_ids))
+            .scalar()
+        )
+        if global_avg is None:
+            global_avg = BAYESIAN_PRIOR
 
         rows = (
             Rating.select(
@@ -125,15 +138,28 @@ class UsersCog(commands.Cog):
             )
             .where(Rating.user.in_(guild_member_ids))
             .group_by(Rating.user)
-            .order_by(fn.AVG(Rating.score).desc())
-            .limit(100)
         )
 
-        if not rows:
+        users_with_bayesian = []
+
+        for row in rows:
+            bayesian_avg = (
+                row.rating_count * row.average_score + BAYESIAN_CONFIDENCE * global_avg
+            ) / (row.rating_count + BAYESIAN_CONFIDENCE)
+            row.bayesian_avg = bayesian_avg
+            users_with_bayesian.append(row)
+
+        sorted_users = sorted(
+            users_with_bayesian,
+            key=lambda row: row.bayesian_avg,
+            reverse=True,
+        )
+
+        if not sorted_users:
             raise NoRatingsFoundError
 
         view = glazers_haters_rank_view(
-            list(rows),
+            sorted_users,
             f"{ctx.guild.name} Glazers",
         )
 
@@ -141,11 +167,19 @@ class UsersCog(commands.Cog):
 
     @commands.hybrid_command(name="ratingshaters", aliases=["rh"])
     async def ratings_haters(self, ctx: commands.Context) -> None:
-        """Get a ranking of users by their average rating score."""
+        """Get a ranking of users by their Bayesian average rating score."""
         if ctx.guild is None:
             raise SonataError("This command can only be used in a guild.")
 
         guild_member_ids = {str(member.id) for member in ctx.guild.members}
+
+        global_avg = (
+            Rating.select(fn.AVG(Rating.score))
+            .where(Rating.user.in_(guild_member_ids))
+            .scalar()
+        )
+        if global_avg is None:
+            global_avg = BAYESIAN_PRIOR
 
         rows = (
             Rating.select(
@@ -155,15 +189,28 @@ class UsersCog(commands.Cog):
             )
             .where(Rating.user.in_(guild_member_ids))
             .group_by(Rating.user)
-            .order_by(fn.AVG(Rating.score).asc())
-            .limit(100)
         )
 
-        if not rows:
+        users_with_bayesian = []
+
+        for row in rows:
+            bayesian_avg = (
+                row.rating_count * row.average_score + BAYESIAN_CONFIDENCE * global_avg
+            ) / (row.rating_count + BAYESIAN_CONFIDENCE)
+            row.bayesian_avg = bayesian_avg
+            users_with_bayesian.append(row)
+
+        sorted_users = sorted(
+            users_with_bayesian,
+            key=lambda row: row.bayesian_avg,
+            reverse=False,
+        )
+
+        if not sorted_users:
             raise NoRatingsFoundError
 
         view = glazers_haters_rank_view(
-            list(rows),
+            sorted_users,
             f"{ctx.guild.name} Haters",
         )
 
