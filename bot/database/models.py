@@ -1,7 +1,14 @@
 from typing import ClassVar
 
 from core.constants import RATING_SCORE_MAX, RATING_SCORE_MIN
-from peewee import Check, FloatField, ForeignKeyField, IntegerField, TextField
+from peewee import (
+    Check,
+    DateTimeField,
+    FloatField,
+    ForeignKeyField,
+    IntegerField,
+    TextField,
+)
 from playhouse.sqlite_ext import FTSModel, RowIDField, SearchField
 
 from .database import BaseModel, db
@@ -19,6 +26,7 @@ class Album(BaseModel):
     year_position = IntegerField(null=True)
     overall_position = IntegerField(null=True)
     url = TextField(null=True)
+    last_rating_refresh = DateTimeField(null=True)
 
 
 class AlbumIndex(FTSModel):
@@ -47,3 +55,13 @@ class UserInfo(BaseModel):
     user_id = TextField(unique=True)
     rym_username = TextField(null=True)
     lastfm_username = TextField(null=True)
+
+
+class RatingHistory(BaseModel):
+    album = ForeignKeyField(Album, backref="rating_histories")
+    rating_score = FloatField()
+    rating_count = IntegerField()
+    timestamp = DateTimeField()
+
+    class Meta:
+        indexes = ((("album", "timestamp"), False),)

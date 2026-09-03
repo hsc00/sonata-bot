@@ -16,7 +16,7 @@ These are the Sonata bible commands:
 - `brr or bestratedreleases` user : Checks the user best rated albums. ✅
 - `wrr or worstratedreleases` user : Checks the user best rated albums.✅
 - `wrr or worstratedreleases`: Check the worst rated releases. ✅
-- 'history`: check a release rating history (use a TTL cache, after a cache hit when the cache is invalid update the rating, probably a TTL of 7 days is the best)
+- `h or history`: Check a release rating history ✅
 
 # Artists
 - `st or setlist`: Check an artist last concert setlist.
@@ -46,3 +46,4 @@ These are the Sonata bible commands:
 roadmap:
 randomrating of the day (cronjob that triggers a random rating every 24h)
 !newreleases cron job
+implement graphs for rating history

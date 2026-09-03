@@ -2,13 +2,15 @@ from __future__ import annotations
 
 import logging
 import re
+from datetime import datetime, timezone
 from urllib.parse import quote
 
 import discord  # noqa: TC002
-from api.google_search import search_google
+from api.google_search import search_google, search_google_async
 from api.last_fm import get_last_played
 from core.constants import FULL_STAR, HALF_STAR, RATING_SCORE_MAX, RATING_SCORE_MIN
 from core.errors import NoLastFMUsernameError, SonataError
+from core.rating_history import maybe_schedule_refresh
 from database import Album, AlbumIndex, UserInfo
 
 
@@ -33,6 +35,21 @@ def score_to_stars(score: int) -> str:
     half_star = HALF_STAR if normalized_score - full_stars >= 0.5 else ""
 
     return FULL_STAR * full_stars + half_star
+
+
+def format_timestamp(value: object) -> str:
+    if value is None:
+        return "Unknown"
+
+    if hasattr(value, "strftime"):
+        return value.strftime("%Y-%m-%d")
+
+    text = str(value)
+
+    if len(text) >= 10:
+        return text[:10]
+
+    return text
 
 
 def store_album(album: Album) -> None:
@@ -66,9 +83,21 @@ def search_album(album_name: str, artist_name: str = "") -> Album | None:
 
 
 async def fetch_album(user_id: str | None, query: str | None) -> Album | None:
-    logger = logging.getLogger(__name__)
+    album_name, artist_name = await _resolve_album_query(user_id, query)
+    album = await _fetch_or_create_album(album_name, artist_name)
+    if album is None:
+        return None
+    album = _update_missing_album_details(album, album_name, artist_name)
+    needs_refresh = await maybe_schedule_refresh(album)
+    if not needs_refresh:
+        album.last_rating_refresh = datetime.now(timezone.utc)
+        album.save()
+    return album
 
-    # Get last played album if no query is provided
+
+async def _resolve_album_query(
+    user_id: str | None, query: str | None
+) -> tuple[str, str]:
     if query is None:
         user = UserInfo.get_or_none(UserInfo.user_id == user_id)
         last_fm_username = user.lastfm_username if user else None
@@ -83,31 +112,20 @@ async def fetch_album(user_id: str | None, query: str | None) -> Album | None:
                 "❌ Could not retrieve the last played album. Please provide a search term.",
             )
 
-        album_name, artist_name, _ = last_played
+        return last_played[0], last_played[1]
 
-    else:
-        album_name, artist_name = query, ""
+    return query, ""
 
-    # Search for the album in the database
+
+async def _fetch_or_create_album(album_name: str, artist_name: str) -> Album | None:
     album = search_album(album_name, artist_name)
 
-    # If the album is not found in the database, search for it on Google
     if not album:
-        logger.info(
-            f'Album "{album_name}" not found in the database. Searching on Google...',
-        )
-
-        # Search for the album on Google
-        result = search_google(f"{artist_name} - {album_name}")
+        result = await search_google_async(f"{artist_name} - {album_name}")
 
         if result is None:
-            logger.info(
-                f'❌ No results found for "{artist_name} - {album_name}".',
-            )
-
             return None
 
-        # Search again with the result name
         album = search_album(
             result["pagemap"]["musicalbum"][0]["name"],
             result["pagemap"]["musicgroup"][0]["name"],
@@ -115,8 +133,18 @@ async def fetch_album(user_id: str | None, query: str | None) -> Album | None:
 
         if not album:
             album = album_from_google_result(result)
+            album.last_rating_refresh = datetime.now(timezone.utc)
+            album.save()
+            store_album(album)
 
-    # Update album details if they are missing
+    return album
+
+
+def _update_missing_album_details(
+    album: Album, album_name: str, artist_name: str
+) -> Album:
+    logger = logging.getLogger(__name__)
+
     if album.rating_count is None:
         logger.info(f'Album "{album_name}" found, but missing details. Updating...')
         result = search_google(
@@ -139,6 +167,14 @@ async def fetch_album(user_id: str | None, query: str | None) -> Album | None:
                 setattr(album, field, getattr(updated_album, field))
 
             album.save()
+
+    return album
+
+
+def _finalize_album(album: Album) -> Album:
+    if album.last_rating_refresh is None:
+        album.last_rating_refresh = datetime.now(timezone.utc)
+        album.save()
 
     return album
 

@@ -24,6 +24,7 @@ from core.embeds import (
     most_rated_releases_embed,
     paginate_embeds,
     rating_embed,
+    rating_history_embed,
     ratings_per_year_embed,
     who_rated_release_embed,
     worst_rated_releases_embed,
@@ -35,7 +36,7 @@ from core.errors import (
     SonataError,
 )
 from core.utils import fetch_album, search_album
-from database.models import Album, Rating
+from database.models import Album, Rating, RatingHistory
 from discord import Member, Message, User, app_commands
 from discord.ext import commands
 from peewee import fn
@@ -90,6 +91,47 @@ class ReleasesCog(commands.Cog):
         embed = album_embed(release)
 
         await ctx.send(embed=embed)
+
+    @commands.hybrid_command(
+        name="history",
+        aliases=["h"],
+    )
+    @app_commands.describe(
+        release_name="Release name, or 'artist - album' to disambiguate",
+    )
+    async def history(
+        self,
+        ctx: commands.Context,
+        *,
+        release_name: str | None = None,
+    ) -> None:
+        """Check the rating history for a given release."""
+        release = await fetch_album(str(ctx.author.id), release_name)
+
+        if release is None:
+            logger.error("No album found for %s", release_name)
+
+            return
+
+        history = list(
+            RatingHistory.select()
+            .where(RatingHistory.album == release.id)
+            .order_by(RatingHistory.timestamp.desc())
+        )
+
+        if not history:
+            await ctx.send(f"No rating history available for **{release.title}**.")
+
+            return
+
+        view, pages = paginate_embeds(
+            history,
+            rating_history_embed,
+            per_page=10,
+            album=release,
+        )
+
+        await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(
         name="whoratedrelease",

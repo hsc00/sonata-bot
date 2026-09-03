@@ -9,6 +9,7 @@ from core.utils import (
     create_rym_search_artist_url,
     create_rym_search_release_url,
     create_rym_user_url,
+    format_timestamp,
     score_to_stars,
 )
 from core.views import PaginatorView
@@ -16,7 +17,7 @@ from core.views import PaginatorView
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from database.models import Album, Rating, UserInfo
+    from database.models import Album, Rating, RatingHistory, UserInfo
 
 
 class EmbedField(TypedDict):
@@ -711,6 +712,34 @@ def help_embed() -> discord.Embed:
     description = "You can find a list of commands and how to use them in the [documentation](https://hsc00.github.io/sonata-bot/)."
 
     return EmbedBuilder().with_title("Help").with_description(description).build()
+
+
+def rating_history_embed(
+    history: list[RatingHistory],
+    album: Album,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for a release rating history."""
+    title = format_album_title(album)
+    lines = []
+
+    for i, entry in enumerate(history, start=start):
+        timestamp = format_timestamp(entry.timestamp)
+        lines.append(
+            f"**{i + 1}.** {timestamp} — **{entry.rating_score:.2f}** ({entry.rating_count:,d} ratings)"
+        )
+
+    description = "\n".join(lines) if lines else "No rating history available."
+
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    if album.url:
+        embed_builder.with_url(str(album.url))
+
+    if album.cover_url:
+        embed_builder.with_thumbnail(str(album.cover_url))
+
+    return embed_builder.build()
 
 
 def paginate_embeds(
