@@ -4,9 +4,9 @@ import asyncio
 import logging
 import re
 
-from api.genius import get_track_relationships
+from api.genius import get_track_covers, get_track_relationships
 from api.last_fm import get_last_played
-from core.embeds import lyrics_embed, paginate_embeds, samples_embed
+from core.embeds import covers_embed, lyrics_embed, paginate_embeds, samples_embed
 from core.errors import NoLastFMUsernameError, NoLyricsFoundError
 from database import UserInfo
 from discord import app_commands
@@ -113,3 +113,50 @@ class TracksCog(commands.Cog):
             )
 
             await ctx.send(embed=embed)
+
+    @commands.hybrid_command(name="covers", with_app_command=True)
+    async def covers(
+        self,
+        ctx: commands.Context,
+        *,
+        track_name: str | None = None,
+    ) -> None:
+        artist_name = None
+
+        if track_name is None:
+            user_id = str(ctx.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
+
+            if last_fm_username is None:
+                raise NoLastFMUsernameError
+
+            _, artist_name, track_name = get_last_played(last_fm_username)
+
+        async with ctx.typing():
+            covers_data = get_track_covers(
+                track_name if artist_name is None else f"{artist_name} - {track_name}",
+            )
+
+            if covers_data is None or (
+                len(covers_data["cover_of"]) == 0 and len(covers_data["covers"]) == 0
+            ):
+                await ctx.send("💔 No covers found for this track.")
+
+                return
+
+            cover_items = [
+                {"category": "cover_of", **song} for song in covers_data["cover_of"]
+            ] + [{"category": "covers", **song} for song in covers_data["covers"]]
+
+            view, pages = paginate_embeds(
+                cover_items,
+                covers_embed,
+                per_page=10,
+                artist_name=covers_data["artist_name"],
+                track_name=covers_data["track_name"],
+                cover_url=covers_data["cover_url"],
+                url=covers_data["url"],
+            )
+
+            await ctx.send(embed=pages[0], view=view)

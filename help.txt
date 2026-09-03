@@ -8,7 +8,6 @@ These are the Sonata bible commands:
 # Albums
 - `ab or album`: Check RYM info for an album or release. ✅
 - `wa or whoknowsalbum`: Check who rated a release ✅
-- `ratingchanges or rc`: Check the rating changes for a release. ⌛
 - `rdr (roast/glaze) or randomrating` (roast/glaze): Check a random rating/roast/glaze from available users. ✅
 - `newreleases` : Searches for new releases. ✅
 - `mrr or mostratedreleases` : Checks the server most rated albums. ✅
@@ -31,7 +30,7 @@ These are the Sonata bible commands:
 # Tracks
 - `tr` or `trackinfo`: Check track info.
 - `samples`: Check samples and interpolations used/being used in a track. ✅
-- `covers`: Check if a track is a cover or has covers.
+- `covers`: Check if a track is a cover or has covers. ✅
 - `lyrics` or `lr`: Check the current lyrics for the current or a specific track. ✅
 
 # User Stats 

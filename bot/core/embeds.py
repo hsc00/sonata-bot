@@ -675,6 +675,48 @@ def samples_embed(
     )
 
 
+def covers_embed(
+    cover_items: list[dict],
+    artist_name: str,
+    track_name: str,
+    cover_url: str,
+    url: str,
+    start: int = 0,  # noqa: ARG001
+) -> discord.Embed:
+    """Create an embed for track covers."""
+    sections = []
+    current_section = None
+    lines: list[str] = []
+
+    for item in cover_items:
+        category = item.get("category", "")
+        header = "### Cover of" if category == "cover_of" else "### Covers"
+
+        if header != current_section:
+            if lines:
+                sections.append("\n".join(lines))
+
+            lines = [header]
+            current_section = header
+
+        lines.append(f"- [{item['artist_names']} - {item['title']}]({item['url']})")
+
+    if lines:
+        sections.append("\n".join(lines))
+
+    description = "\n\n".join(sections)
+    description += "\n\n*Data retrieved from [Genius](https://genius.com/)*"
+
+    return (
+        EmbedBuilder()
+        .with_title(f"{artist_name} - {track_name}")
+        .with_description(description)
+        .with_thumbnail(cover_url)
+        .with_url(url)
+        .build()
+    )
+
+
 def users_list_embed(
     users: list[UserInfo],
     server_name: str,

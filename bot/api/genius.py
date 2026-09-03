@@ -29,3 +29,44 @@ def get_track_relationships(track_name: str) -> dict | None:
         "url": json_data["url"],
         "relationships": {x["relationship_type"]: x["songs"] for x in relationships},
     }
+
+
+def get_track_covers(track_name: str) -> dict | None:
+    song = genius.search_song(track_name)
+
+    if not song:
+        return None
+
+    song_json = song.to_json()
+
+    if not song_json:
+        return None
+
+    json_data = json.loads(song_json)
+    relationships = json_data.get("song_relationships", [])
+    cover_of: list[dict] = []
+    covers: list[dict] = []
+
+    for rel in relationships:
+        rel_type = rel.get("relationship_type", "").lower()
+
+        if "cover" not in rel_type:
+            continue
+
+        songs = rel.get("songs", [])
+
+        if rel_type == "cover_of":
+            cover_of.extend(songs)
+        elif rel_type in ("covered_by", "covers"):
+            covers.extend(songs)
+        else:
+            covers.extend(songs)
+
+    return {
+        "artist_name": json_data["artist_names"],
+        "track_name": json_data["title"],
+        "cover_url": json_data["song_art_image_url"],
+        "url": json_data["url"],
+        "cover_of": cover_of,
+        "covers": covers,
+    }
