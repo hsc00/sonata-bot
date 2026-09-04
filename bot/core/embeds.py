@@ -667,12 +667,52 @@ def samples_embed(
 
     return (
         EmbedBuilder()
-        .with_title(f"{artist_name} - {track_name}")
+        .with_title(f"{artist_name.title()} - {track_name}")
         .with_description(description)
         .with_thumbnail(cover_url)
         .with_url(url)
         .build()
     )
+
+
+def followers_embed(
+    followers: list[str],
+    artist_name: str,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for artist followers."""
+    title = f"{artist_name.title()} — Followers"
+    lines = []
+
+    for i, follower in enumerate(followers, start=start + 1):
+        lines.append(f"**{i}.** [{follower}]({create_rym_search_artist_url(follower)})")
+
+    description = "\n".join(lines) if lines else "No followers found."
+
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    return embed_builder.build()
+
+
+def influences_embed(
+    influences: list[str],
+    artist_name: str,
+    start: int = 1,
+) -> discord.Embed:
+    """Create an embed for artist influences."""
+    title = f"{artist_name.title()} — Influences"
+    lines = []
+
+    for i, influence in enumerate(influences, start=start + 1):
+        lines.append(
+            f"**{i}.** [{influence}]({create_rym_search_artist_url(influence)})"
+        )
+
+    description = "\n".join(lines) if lines else "No influences found."
+
+    embed_builder = EmbedBuilder().with_title(title).with_description(description)
+
+    return embed_builder.build()
 
 
 def covers_embed(
@@ -709,7 +749,7 @@ def covers_embed(
 
     return (
         EmbedBuilder()
-        .with_title(f"{artist_name} - {track_name}")
+        .with_title(f"{artist_name.title()} - {track_name}")
         .with_description(description)
         .with_thumbnail(cover_url)
         .with_url(url)

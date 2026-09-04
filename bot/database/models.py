@@ -65,3 +65,20 @@ class RatingHistory(BaseModel):
 
     class Meta:
         indexes = ((("album", "timestamp"), False),)
+
+
+class Artist(BaseModel):
+    name = TextField(null=True)
+    wikidata_qid = TextField(unique=True)
+    last_influences_refresh = DateTimeField(null=True)
+
+    class Meta:
+        indexes = ((("wikidata_qid",), True),)
+
+
+class Influence(BaseModel):
+    from_artist = ForeignKeyField(Artist, backref="outgoing_influences")
+    to_artist = ForeignKeyField(Artist, backref="incoming_influences")
+
+    class Meta:
+        indexes = ((("from_artist", "to_artist"), True),)

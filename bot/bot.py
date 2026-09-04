@@ -5,7 +5,16 @@ import discord
 from core.config import discord_bot_token
 from core.embeds import EmbedBuilder
 from core.events import init_events
-from database import Album, AlbumIndex, Rating, RatingHistory, UserInfo, db
+from database import (
+    Album,
+    AlbumIndex,
+    Artist,
+    Influence,
+    Rating,
+    RatingHistory,
+    UserInfo,
+    db,
+)
 from database.migrations import get_pending_migrations
 from discord.ext import commands
 from playhouse.migrate import migrate
@@ -64,7 +73,9 @@ async def main() -> None:
 
         # Create the database tables
         with db:
-            db.create_tables([Album, AlbumIndex, Rating, RatingHistory, UserInfo])
+            db.create_tables(
+                [Album, AlbumIndex, Artist, Influence, Rating, RatingHistory, UserInfo]
+            )
             pending = get_pending_migrations()
 
             if pending:

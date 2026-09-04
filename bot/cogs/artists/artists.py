@@ -4,6 +4,7 @@ from typing import Any
 
 import discord
 from api.last_fm import get_last_played
+from api.wikidata import get_followers, get_influences, search_artist_wikidata
 from core.constants import (
     BAYESIAN_CONFIDENCE,
     BAYESIAN_PRIOR,
@@ -12,6 +13,8 @@ from core.constants import (
 from core.embeds import (
     artist_ratings_embed,
     best_rated_artists_embed,
+    followers_embed,
+    influences_embed,
     most_rated_artists_embed,
     paginate_embeds,
     worst_rated_artists_embed,
@@ -301,3 +304,101 @@ class ArtistCog(commands.Cog):
         )
 
         await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="influences",
+        aliases=["inf"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def influences(
+        self,
+        ctx: commands.Context,
+        *,
+        artist_name: str | None = None,
+    ) -> None:
+        """Check an artist's influences."""
+        if artist_name is None:
+            user_id = str(ctx.message.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
+
+            if last_fm_username is None:
+                raise NoLastFMUsernameError
+
+            _, artist_name, _ = get_last_played(last_fm_username)
+
+        async with ctx.typing():
+            qid = await search_artist_wikidata(artist_name)
+
+            if qid is None:
+                await ctx.send(
+                    f"❌ Could not find Wikidata item for **{artist_name}**."
+                )
+
+                return
+
+            influences = await get_influences(qid)
+
+            if not influences:
+                await ctx.send(f"💔 No influences found for **{artist_name}**.")
+
+                return
+
+            view, pages = paginate_embeds(
+                influences,
+                influences_embed,
+                per_page=10,
+                artist_name=artist_name,
+            )
+
+            await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="followers",
+        aliases=["fl"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def followers(
+        self,
+        ctx: commands.Context,
+        *,
+        artist_name: str | None = None,
+    ) -> None:
+        """Check artists influenced by an artist."""
+        if artist_name is None:
+            user_id = str(ctx.message.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
+
+            if last_fm_username is None:
+                raise NoLastFMUsernameError
+
+            _, artist_name, _ = get_last_played(last_fm_username)
+
+        async with ctx.typing():
+            qid = await search_artist_wikidata(artist_name)
+
+            if qid is None:
+                await ctx.send(
+                    f"❌ Could not find Wikidata item for **{artist_name}**."
+                )
+
+                return
+
+            followers = await get_followers(qid)
+
+            if not followers:
+                await ctx.send(f"💔 No followers found for **{artist_name}**.")
+
+                return
+
+            view, pages = paginate_embeds(
+                followers,
+                followers_embed,
+                per_page=10,
+                artist_name=artist_name,
+            )
+
+            await ctx.send(embed=pages[0], view=view)
