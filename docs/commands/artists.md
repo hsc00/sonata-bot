@@ -98,3 +98,45 @@ Find out which artists are most popular and widely listened to in your server!
     !mostratedartists
     !mra @user
     ```
+
+---
+
+## 🔗 Influences & Followers
+
+### !influences (`!inf`)
+
+Check an artist's influences from Wikidata.
+
+Displays artists that have influenced the queried artist, based on Wikidata's `P737` property.
+
+**Options:**
+
+- **Artist** (optional) – The artist you want to search for. Defaults to your currently playing artist on Last.fm.
+
+!!! example "Usage Examples"
+    ```
+    !influences
+    !inf Radiohead
+    ```
+
+!!! info "Data Source"
+    Data is sourced from Wikidata and cached for 7 days. Coverage varies by artist.
+
+### !followers (`!fl`)
+
+Check artists influenced by an artist.
+
+Displays artists that were influenced by the queried artist, based on Wikidata's `P737` property (reverse lookup).
+
+**Options:**
+
+- **Artist** (optional) – The artist you want to search for. Defaults to your currently playing artist on Last.fm.
+
+!!! example "Usage Examples"
+    ```
+    !followers
+    !fl Radiohead
+    ```
+
+!!! info "Data Source"
+    Data is sourced from Wikidata and cached for 7 days. Coverage varies by artist.

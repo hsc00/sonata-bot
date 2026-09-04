@@ -41,9 +41,10 @@ These are the Sonata bible commands:
 - `rh` or `ratingshaters`: Checks the ratings haters rank. ✅
 - `aoty (year) (user)`: Checks the highest rated releases from a year. ✅
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
+- `compare`: compare ratings between users
 
 roadmap:
 randomrating of the day (cronjob that triggers a random rating every 24h)
 !newreleases cron job
 implement graphs for rating history
-!compare ratings between users
+more user stats (like rym page)

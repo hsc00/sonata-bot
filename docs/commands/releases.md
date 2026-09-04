@@ -141,6 +141,30 @@ Only ratings of **3.5 or higher** are included to ensure meaningful results.
 !!! info
 Year must be between 1900 and the current year.
 
+---
+
+## 📈 Rating History
+
+### !history (`!h`)
+
+Check the rating history for a specific release. The bot tracks rating score changes over time and displays them in a paginated embed.
+
+**Options:**
+
+- **Name** (optional) – The name of the release you want to search for. Defaults to your currently playing track on Last.fm.
+
+!!! example "Usage Examples"
+    ```
+    !history
+    !h OK Computer
+    !history Radiohead - In Rainbows
+    ```
+
+!!! info
+    The bot refreshes album ratings every 7 days in the background. If no history is available, it means the rating hasn't changed since tracking began.
+
+---
+
 ### !lowestratedalbumsoftheyear (`!laoty`, `!aotyl`)
 
 Shows the lowest-rated releases of a specific year for the server or a specific user, sorted by rating score from lowest to highest.
