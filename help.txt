@@ -18,8 +18,8 @@ These are the Sonata bible commands:
 - `h or history`: Check a release rating history ✅
 
 # Artists
-- `st or setlist`: Check an artist last concert setlist.
-- `sts or setlists`: Get the info and links to an artist latest concerts setlists.
+- `st or setlist`: Check an artist last concert setlist. ✅
+- `sts or setlists`: Get the info and links to an artist latest concerts setlists. ✅
 - `inf` or `influences`: Check an artist influences. ✅
 - `fl` or `followers`: Check artists influenced by an artist. ✅
 - `ar or artistratings (user)` : Checks your artist ratings. ✅
@@ -42,8 +42,10 @@ These are the Sonata bible commands:
 - `aoty (year) (user)`: Checks the highest rated releases from a year. ✅
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
 - `compare`: compare ratings between users
+- `diff`: check releases I've listened that other user hasn't
 
 roadmap:
+embed user links (show their profile page from database)
 randomrating of the day (cronjob that triggers a random rating every 24h)
 !newreleases cron job
 implement graphs for rating history

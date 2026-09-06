@@ -853,3 +853,64 @@ def format_release(album: Album) -> str:
 
 def format_artist(artist: str) -> str:
     return f"[{artist}]({create_rym_search_artist_url(artist)})"
+
+
+def setlist_songs_embed(
+    songs: list[str],
+    artist_name: str,
+    setlist: dict,
+    start: int = 1,
+) -> discord.Embed:
+    event_date = setlist.get("eventDate", "Unknown date")
+    venue = setlist.get("venue", {}).get("name", "Unknown venue")
+    city = setlist.get("venue", {}).get("city", {}).get("name", "Unknown city")
+    url = setlist.get("url", "")
+
+    lines = []
+
+    for i, song in enumerate(songs, start=start):
+        lines.append(f"**{i}.** {song}")
+
+    description = f"**Venue:** {venue} ({city})\n**Date:** {event_date}\n\n**Songs:**\n"
+    description += "\n".join(lines) if lines else "No songs listed."
+
+    embed = (
+        EmbedBuilder()
+        .with_title(f"{artist_name} - Setlist")
+        .with_description(description)
+    )
+
+    if url:
+        embed.with_url(url)
+
+    return embed.build()
+
+
+def setlists_embed(
+    setlists: list[dict],
+    artist_name: str,
+    start: int = 1,
+) -> discord.Embed:
+    lines = []
+
+    for i, setlist in enumerate(setlists, start=start):
+        event_date = setlist.get("eventDate", "Unknown date")
+        venue = setlist.get("venue", {}).get("name", "Unknown venue")
+        city = setlist.get("venue", {}).get("city", {}).get("name", "Unknown city")
+        url = setlist.get("url", "")
+
+        line = f"**{i}.** {event_date} — {venue} ({city})"
+
+        if url:
+            line = f"[{line}]({url})"
+
+        lines.append(line)
+
+    description = "\n".join(lines) if lines else "No setlists found."
+
+    return (
+        EmbedBuilder()
+        .with_title(f"{artist_name} - Latest Setlists")
+        .with_description(description)
+        .build()
+    )

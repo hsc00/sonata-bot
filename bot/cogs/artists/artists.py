@@ -4,6 +4,7 @@ from typing import Any
 
 import discord
 from api.last_fm import get_last_played
+from api.setlist import get_artist_setlists, search_artist
 from api.wikidata import get_followers, get_influences, search_artist_wikidata
 from core.constants import (
     BAYESIAN_CONFIDENCE,
@@ -17,6 +18,8 @@ from core.embeds import (
     influences_embed,
     most_rated_artists_embed,
     paginate_embeds,
+    setlist_songs_embed,
+    setlists_embed,
     worst_rated_artists_embed,
 )
 from core.errors import NoLastFMUsernameError, NoRatingsFoundError, SonataError
@@ -397,6 +400,129 @@ class ArtistCog(commands.Cog):
             view, pages = paginate_embeds(
                 followers,
                 followers_embed,
+                per_page=10,
+                artist_name=artist_name,
+            )
+
+            await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="setlist",
+        aliases=["st"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def setlist(
+        self,
+        ctx: commands.Context,
+        *,
+        artist_name: str | None = None,
+    ) -> None:
+        """Check an artist last concert setlist."""
+        if artist_name is None:
+            user_id = str(ctx.message.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
+
+            if last_fm_username is None:
+                raise NoLastFMUsernameError
+
+            _, artist_name, _ = get_last_played(last_fm_username)
+
+        async with ctx.typing():
+            artist = await search_artist(artist_name)
+
+            if not artist:
+                await ctx.send(
+                    f"❌ Could not find artist **{artist_name}** on setlist.fm."
+                )
+
+                return
+
+            mbid = artist.get("mbid")
+            setlists = await get_artist_setlists(mbid)
+
+            if not setlists:
+                await ctx.send(f"💔 No setlists found for **{artist_name}**.")
+
+                return
+
+            latest_setlist = None
+            songs = []
+
+            for setlist in setlists:
+                sets = setlist.get("sets", {}).get("set", [])
+                songs = []
+
+                for s in sets:
+                    for song in s.get("song", []):
+                        songs.append(song.get("name", "Unknown"))
+
+                if songs:
+                    latest_setlist = setlist
+                    break
+
+            if not latest_setlist or not songs:
+                await ctx.send(
+                    f"💔 No setlists with tracks found for **{artist_name}**."
+                )
+
+                return
+
+            view, pages = paginate_embeds(
+                songs,
+                setlist_songs_embed,
+                per_page=10,
+                artist_name=artist_name,
+                setlist=latest_setlist,
+            )
+
+            await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="setlists",
+        aliases=["sts"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    async def setlists(
+        self,
+        ctx: commands.Context,
+        *,
+        artist_name: str | None = None,
+    ) -> None:
+        """Get the info and links to an artist latest concerts setlists."""
+        if artist_name is None:
+            user_id = str(ctx.message.author.id)
+            user = UserInfo.get_or_none(UserInfo.user_id == user_id)
+            last_fm_username = user.lastfm_username if user else None
+
+            if last_fm_username is None:
+                raise NoLastFMUsernameError
+
+            _, artist_name, _ = get_last_played(last_fm_username)
+
+        async with ctx.typing():
+            artist = await search_artist(artist_name)
+
+            if not artist:
+                await ctx.send(
+                    f"❌ Could not find artist **{artist_name}** on setlist.fm."
+                )
+
+                return
+
+            mbid = artist.get("mbid")
+            setlists = await get_artist_setlists(mbid)
+
+            if not setlists:
+                await ctx.send(f"💔 No setlists found for **{artist_name}**.")
+
+                return
+
+            view, pages = paginate_embeds(
+                setlists,
+                setlists_embed,
                 per_page=10,
                 artist_name=artist_name,
             )
