@@ -580,10 +580,12 @@ def profile_embed(
     releases_rated: int,
     artists_rated: int,
     rating_distribution: dict[int, int] | None = None,
+    rym_username: str | None = None,
 ) -> discord.Embed:
     """Create an embed for the user profile."""
     title = f"Profile for {user.name}"
     thumbnail = user.display_avatar.url
+    url = create_rym_user_url(rym_username) if rym_username else None
 
     fields: list[EmbedField] = [
         {
@@ -637,6 +639,7 @@ def profile_embed(
         .with_title(title)
         .with_description("")
         .with_thumbnail(thumbnail)
+        .with_url(url)
         .add_fields(fields)
         .build()
     )

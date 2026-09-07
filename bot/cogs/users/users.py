@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import csv
 import html
 import logging
@@ -8,6 +9,7 @@ from typing import Literal
 
 import discord
 import requests
+from api.rym import fetch_rym_user_info
 from core.constants import (
     BAYESIAN_CONFIDENCE,
     BAYESIAN_PRIOR,
@@ -16,6 +18,7 @@ from core.constants import (
 )
 from core.decorators import disabled
 from core.embeds import (
+    EmbedBuilder,
     comparison_embed,
     glazers_haters_rank_view,
     paginate_embeds,
@@ -30,9 +33,9 @@ from core.errors import (
     RatingsImportFailedError,
     SonataError,
 )
-from core.utils import get_user_display_names, store_album
+from core.utils import create_rym_user_url, get_user_display_names, store_album
 from database import Album, Rating, UserInfo
-from discord import app_commands
+from discord import Message, app_commands
 from discord.ext import commands
 from peewee import IntegrityError, fn
 
@@ -42,6 +45,111 @@ logger = logging.getLogger(__name__)
 class UsersCog(commands.Cog):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
+
+    @staticmethod
+    def _build_rym_embed(
+        rym_username: str,
+        rym_info: dict,
+    ) -> discord.Embed:
+        url = create_rym_user_url(rym_username)
+        title = rym_info.get("title") or f"RYM User: {rym_username}"
+        snippet = rym_info.get("snippet", "")
+        thumbnail = rym_info.get("thumbnail")
+
+        embed = (
+            EmbedBuilder()
+            .with_title(title)
+            .with_description(snippet or " ")
+            .with_url(url)
+            .build()
+        )
+
+        if thumbnail:
+            with contextlib.suppress(discord.HTTPException):
+                embed.set_thumbnail(url=thumbnail)
+
+        return embed
+
+    @commands.Cog.listener()
+    async def on_message(self, message: Message) -> None:
+        if message.author == self.bot.user:
+            return
+
+        user_url_pattern = re.compile(
+            r"https?://(?:www\.)?rateyourmusic\.com/~([^/?#]+)",
+        )
+
+        if not (matches := user_url_pattern.search(message.content)):
+            return
+
+        rym_username = matches.group(1)
+        user_info = UserInfo.get_or_none(
+            UserInfo.rym_username == rym_username,
+        )
+
+        if user_info:
+            discord_user = None
+
+            if message.guild:
+                discord_user = message.guild.get_member(int(user_info.user_id))
+
+            if discord_user is None:
+                with contextlib.suppress(discord.HTTPException):
+                    discord_user = await self.bot.fetch_user(int(user_info.user_id))
+
+            if discord_user:
+                average_score = (
+                    Rating.select(fn.AVG(Rating.score).alias("average_rating"))
+                    .where(Rating.user == user_info.user_id)
+                    .scalar()
+                )
+
+                releases_rated = (
+                    Rating.select(fn.COUNT(Rating.id).alias("rating_count"))
+                    .where(Rating.user == user_info.user_id)
+                    .scalar()
+                )
+
+                artists_rated = (
+                    Rating.select(Rating.album, Album.artist)
+                    .join(Album, on=(Rating.album == Album.id))
+                    .where(Rating.user == user_info.user_id)
+                    .group_by(Album.artist)
+                ).count()
+
+                rating_distribution = (
+                    Rating.select(Rating.score, fn.COUNT(Rating.id).alias("count"))
+                    .where(Rating.user == user_info.user_id)
+                    .group_by(Rating.score)
+                    .order_by(Rating.score.asc())
+                )
+
+                distribution_dict = {
+                    row.score: row.count for row in rating_distribution
+                }
+
+                embed = profile_embed(
+                    discord_user,
+                    average_score,
+                    releases_rated,
+                    artists_rated,
+                    distribution_dict,
+                    rym_username=rym_username,
+                )
+
+                await message.channel.send(embed=embed)
+                return
+
+        rym_info = await fetch_rym_user_info(rym_username)
+
+        if rym_info:
+            embed = self._build_rym_embed(rym_username, rym_info)
+            await message.channel.send(embed=embed)
+
+        else:
+            await message.channel.send(
+                content=f"💔 No RateYourMusic profile found for **{rym_username}**."
+            )
 
     @commands.hybrid_command(
         name="setrym",
@@ -334,12 +442,16 @@ class UsersCog(commands.Cog):
 
         distribution_dict = {row.score: row.count for row in rating_distribution}
 
+        user_info = UserInfo.get_or_none(UserInfo.user_id == str(user.id))
+        rym_username = user_info.rym_username if user_info else None
+
         embed = profile_embed(
             user,
             average_score,
             releases_rated,
             artists_rated,
             distribution_dict,
+            rym_username=rym_username,
         )
 
         await ctx.send(embed=embed)

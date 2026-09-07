@@ -46,6 +46,35 @@ async def search_google_async(query: str) -> dict | None:
         return None
 
 
+async def search_google_general_async(query: str) -> list[dict] | None:
+    """Search for anything on Google asynchronously and return all results."""
+    url = f"https://www.googleapis.com/customsearch/v1?q={quote(query)}&key={google_token}&cx={cse_id}"
+
+    try:
+        async with (
+            aiohttp.ClientSession() as session,
+            session.get(
+                url,
+                timeout=aiohttp.ClientTimeout(total=10),
+            ) as response,
+        ):
+            if response.status == 200:
+                results = (await response.json()).get("items", None)
+
+                return results if results else None
+
+            logger.error(
+                f"Google search failed with status code: {response.status}",
+            )
+
+            return None
+
+    except Exception:
+        logger.exception("Failed to search Google")
+
+        return None
+
+
 def search_google(query: str) -> dict | None:
     """Search for a RYM album on Google."""
     with requests.Session() as session:

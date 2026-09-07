@@ -45,8 +45,8 @@ These are the Sonata bible commands:
 - `diff`: check releases I've listened that other user hasn't
 
 roadmap:
-embed user links (show their profile page from database)
-randomrating of the day (cronjob that triggers a random rating every 24h)
-!newreleases cron job
+randomrating of the day (cronjob that triggers a random rating every 24h - configurable by guild and channel)
+!newreleases cron job (configurable by guild and channel)
 implement graphs for rating history
 more user stats (like rym page)
+if the requested info for the release or user is not retrieved correctly dont embed that info
