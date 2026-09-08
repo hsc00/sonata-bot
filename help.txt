@@ -49,4 +49,3 @@ randomrating of the day (cronjob that triggers a random rating every 24h - confi
 !newreleases cron job (configurable by guild and channel)
 implement graphs for rating history
 more user stats (like rym page)
-if the requested info for the release or user is not retrieved correctly dont embed that info

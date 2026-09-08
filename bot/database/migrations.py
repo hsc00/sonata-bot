@@ -11,8 +11,19 @@ migrator = SqliteMigrator(db)
 
 
 def get_pending_migrations() -> list:
-    album_columns = {column.name for column in db.get_columns(Album._meta.table_name)}  # noqa: SLF001
-    artist_columns = {column.name for column in db.get_columns(Artist._meta.table_name)}  # noqa: SLF001
+    album_exists = db.table_exists(Album._meta.table_name)  # noqa: SLF001
+    artist_exists = db.table_exists(Artist._meta.table_name)  # noqa: SLF001
+
+    album_columns = (
+        {column.name for column in db.get_columns(Album._meta.table_name)}  # noqa: SLF001
+        if album_exists
+        else set()
+    )
+    artist_columns = (
+        {column.name for column in db.get_columns(Artist._meta.table_name)}  # noqa: SLF001
+        if artist_exists
+        else set()
+    )
 
     migrations = [
         migrator.add_column(
@@ -32,11 +43,14 @@ def get_pending_migrations() -> list:
         ),
     ]
 
-    return [
-        operation
-        for operation, column in zip(
-            migrations,
-            ["album_artist", "last_rating_refresh", "last_influences_refresh"],
-        )
-        if column not in album_columns and column not in artist_columns
-    ]
+    pending = []
+    for operation, column, table_exists, columns in zip(
+        migrations,
+        ["album_artist", "last_rating_refresh", "last_influences_refresh"],
+        [album_exists, album_exists, artist_exists],
+        [album_columns, album_columns, artist_columns],
+    ):
+        if table_exists and column not in columns:
+            pending.append(operation)
+
+    return pending

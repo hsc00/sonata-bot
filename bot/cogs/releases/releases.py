@@ -4,6 +4,7 @@ import logging
 import re
 from datetime import datetime, timezone
 from typing import Literal
+from urllib.parse import unquote
 
 from api.sputnik import fetch_new_releases
 from core.constants import (
@@ -45,27 +46,37 @@ logger = logging.getLogger(__name__)
 
 
 class ReleasesCog(commands.Cog):
+    _RELEASE_URL_PATTERN = re.compile(
+        r"https?://(?:www\.)?rateyourmusic\.com/release/"
+        r"(?:album|mixtape|ep|single|musicvideo|comp|unauth|video|additional)"
+        r"/([^/]+)/([^/]+)/?(?:\?.*)?",
+    )
+
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_message(self, message: Message) -> None:
-        # Prevent bot from responding to itself
         if message.author == self.bot.user:
             return
 
-        url_pattern = re.compile(
-            r"https?://(?:www\.)?rateyourmusic\.com/release/.+?/(.+)?/\S*",
-        )
-
-        if matches := url_pattern.search(message.content):
-            album, artist = (
-                x.replace("-", " ") for x in matches.groups()[0].split("/")
-            )
+        if matches := self._RELEASE_URL_PATTERN.search(message.content):
+            artist_slug = unquote(matches.group(1)).replace("-", " ")
+            album_slug = unquote(matches.group(2)).replace("-", " ")
+            release_name = f"{artist_slug} {album_slug}"
+            release_url = matches.group(0)
 
             ctx = await self.bot.get_context(message)
 
-            await self.release.callback(self, ctx, release_name=f"{artist} {album}")
+            release = await fetch_album(
+                str(ctx.author.id),
+                release_name,
+                release_url=release_url,
+            )
+
+            if release is not None:
+                embed = album_embed(release)
+                await ctx.send(embed=embed)
 
     @commands.hybrid_command(
         name="release", aliases=["r", "a", "album"], with_app_command=True
@@ -81,7 +92,19 @@ class ReleasesCog(commands.Cog):
         release_name: str | None = None,
     ) -> None:
         """Get information about a given release."""
-        release = await fetch_album(str(ctx.author.id), release_name)
+        release_url = None
+
+        if release_name and "rateyourmusic.com/release/" in release_name:
+            url_match = self._RELEASE_URL_PATTERN.search(release_name)
+
+            if url_match:
+                release_url = url_match.group(0)
+
+        release = await fetch_album(
+            str(ctx.author.id),
+            release_name,
+            release_url=release_url,
+        )
 
         if release is None:
             logger.error("No album found for %s", release_name)

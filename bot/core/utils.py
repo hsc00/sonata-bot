@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 import re
 from datetime import datetime, timezone
-from urllib.parse import quote
+from urllib.parse import quote, unquote, urlparse
 
 import discord  # noqa: TC002
 from api.google_search import search_google, search_google_async
@@ -12,6 +12,11 @@ from core.constants import FULL_STAR, HALF_STAR, RATING_SCORE_MAX, RATING_SCORE_
 from core.errors import NoLastFMUsernameError, SonataError
 from core.rating_history import maybe_schedule_refresh
 from database import Album, AlbumIndex, UserInfo
+
+
+def _normalize_url(url: str) -> str:
+    parsed = urlparse(url)
+    return f"{parsed.scheme}://{parsed.netloc}{unquote(parsed.path).rstrip('/')}"
 
 
 def get_user_display_names(guild: discord.Guild, user_ids: set[str]) -> dict[str, str]:
@@ -82,9 +87,13 @@ def search_album(album_name: str, artist_name: str = "") -> Album | None:
     return query.first().album if query.exists() else None
 
 
-async def fetch_album(user_id: str | None, query: str | None) -> Album | None:
+async def fetch_album(
+    user_id: str | None,
+    query: str | None,
+    release_url: str | None = None,
+) -> Album | None:
     album_name, artist_name = await _resolve_album_query(user_id, query)
-    album = await _fetch_or_create_album(album_name, artist_name)
+    album = await _fetch_or_create_album(album_name, artist_name, release_url)
     if album is None:
         return None
     album = _update_missing_album_details(album, album_name, artist_name)
@@ -117,7 +126,18 @@ async def _resolve_album_query(
     return query, ""
 
 
-async def _fetch_or_create_album(album_name: str, artist_name: str) -> Album | None:
+async def _fetch_or_create_album(
+    album_name: str,
+    artist_name: str,
+    release_url: str | None = None,
+) -> Album | None:
+    if release_url:
+        normalized_url = _normalize_url(release_url)
+        non_null = False
+        for candidate in Album.select().where(Album.url.is_null(non_null)):
+            if _normalize_url(str(candidate.url)) == normalized_url:
+                return candidate
+
     album = search_album(album_name, artist_name)
 
     if not album:
@@ -136,8 +156,62 @@ async def _fetch_or_create_album(album_name: str, artist_name: str) -> Album | N
             album.last_rating_refresh = datetime.now(timezone.utc)
             album.save()
             store_album(album)
+        elif not _album_matches_query(album, album_name, artist_name):
+            return None
 
     return album
+
+
+def _album_matches_query(
+    album: Album,
+    album_name: str,
+    artist_name: str,
+) -> bool:
+    query_text = f"{artist_name} {album_name}".strip().lower()
+    query_tokens = query_text.split()
+    title_tokens = album.title.lower().split()
+    artist_tokens = album.artist.lower().split()
+
+    stopwords = {
+        "the",
+        "a",
+        "an",
+        "and",
+        "or",
+        "of",
+        "in",
+        "on",
+        "at",
+        "to",
+        "for",
+        "with",
+        "by",
+    }
+    significant_query = [t for t in query_tokens if t not in stopwords]
+    significant_title = [t for t in title_tokens if t not in stopwords]
+    significant_artist = [t for t in artist_tokens if t not in stopwords]
+
+    query_numbers = {t for t in significant_query if t.isdigit()}
+    title_numbers = {t for t in significant_title if t.isdigit()}
+    artist_numbers = {t for t in significant_artist if t.isdigit()}
+
+    if query_numbers:
+        all_result_numbers = title_numbers | artist_numbers
+        if not query_numbers.intersection(all_result_numbers):
+            return False
+
+    matched_tokens = {
+        t
+        for t in significant_query
+        if t in significant_title or t in significant_artist
+    }
+
+    match_ratio = len(matched_tokens) / len(significant_query)
+
+    if match_ratio < 0.7:
+        return False
+
+    return not (artist_name and album.artist.lower() != artist_name.lower())
 
 
 def _update_missing_album_details(
@@ -179,16 +253,26 @@ def _finalize_album(album: Album) -> Album:
     return album
 
 
-def album_from_google_result(result: dict) -> Album:
+def album_from_google_result(result: dict) -> Album | None:
     """Create an Album object from a Google search result."""
-    pagemap = result["pagemap"]
+    pagemap = result.get("pagemap", {})
 
-    title = pagemap["musicalbum"][0]["name"]
-    artist = pagemap["musicgroup"][0]["name"]
+    musicalbum = pagemap.get("musicalbum", [])
+    musicgroup = pagemap.get("musicgroup", [])
+    metatags = pagemap.get("metatags", [])
+
+    if not musicalbum or not musicgroup or not metatags:
+        return None
+
+    title = musicalbum[0].get("name")
+    artist = musicgroup[0].get("name")
+
+    if not title or not artist:
+        return None
 
     release_year_match = re.search(
         r"Released .*? (\d{4})",
-        pagemap["metatags"][0]["og:description"],
+        metatags[0].get("og:description", ""),
     )
 
     release_year = int(release_year_match.group(1)) if release_year_match else None
@@ -196,14 +280,14 @@ def album_from_google_result(result: dict) -> Album:
     if "cse_image" in pagemap:
         cover_url = f"{pagemap['cse_image'][0]['src']}/cover.jpg"
 
-    elif "og:image" in pagemap["metatags"][0]:
-        cover_url = f"{pagemap['metatags'][0]['og:image']}/cover.jpg"
+    elif "og:image" in metatags[0]:
+        cover_url = f"{metatags[0]['og:image']}/cover.jpg"
 
     else:
         cover_url = None
 
     genres = (
-        match := re.search(r"Genres: (.*?)\.", pagemap["metatags"][0]["og:description"])
+        match := re.search(r"Genres: (.*?)\.", metatags[0].get("og:description", ""))
     ) and match.group(1)
 
     rating = pagemap.get("aggregaterating", [None])[0]
@@ -211,9 +295,7 @@ def album_from_google_result(result: dict) -> Album:
     if rating is not None:
         rating_score, rating_count = (
             float(rating["ratingvalue"]),
-            int(
-                rating["ratingcount"],
-            ),
+            int(rating["ratingcount"]),
         )
 
     else:
@@ -221,7 +303,7 @@ def album_from_google_result(result: dict) -> Album:
 
     if matches := re.search(
         r"Rated #(\d+) in the best albums of \d+(?:, and #(\d+) of all time)?",
-        pagemap["metatags"][0]["og:description"],
+        metatags[0].get("og:description", ""),
     ):
         year_position, overall_position = (
             int(x) if x else None for x in matches.groups()
@@ -230,7 +312,7 @@ def album_from_google_result(result: dict) -> Album:
     else:
         year_position, overall_position = None, None
 
-    url = result["link"]
+    url = result.get("link", "")
 
     return Album(
         title=title,
