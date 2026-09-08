@@ -556,6 +556,26 @@ def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:  # noqa: A
     )
 
 
+def diff_embed(ratings: list, start: int = 1) -> discord.Embed:
+    """Create an embed showing albums one user has rated that another hasn't."""
+    description = f"Albums <@{ratings[0]['user1']}> has rated that <@{ratings[0]['user2']}> hasn't\n\n"
+
+    for i, row in enumerate(ratings, start=start):
+        score = row.get("score1")
+        if score is None:
+            continue
+        description += (
+            f"{i}. **{row['artist']}** - *{row['title']}* ({score / 2:.1f} ⭐)\n"
+        )
+
+    return (
+        EmbedBuilder()
+        .with_title("Rating Difference")
+        .with_description(description)
+        .build()
+    )
+
+
 def ratings_per_year_embed(
     ratings: list[Rating],
     user: str,

@@ -99,3 +99,19 @@ Shows only releases where your ratings differ, with ⬆️/⬇️ indicators sho
      !compare 408671768002297856
      !c 999888777666555444
      `
+
+### !diff (`!d`)
+
+Show releases you've rated that another user hasn't.
+
+Useful for finding albums to recommend or spotting gaps in someone's library.
+
+**Options:**
+
+- **User** – Mention a user or provide their Discord user ID.
+
+!!! example "Usage Examples"
+`     !diff @user
+     !diff 408671768002297856
+     !d 999888777666555444
+     `

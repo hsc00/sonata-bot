@@ -42,7 +42,7 @@ These are the Sonata bible commands:
 - `aoty (year) (user)`: Checks the highest rated releases from a year. ✅
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
 - `c` or `compare user`: Compare ratings between users. ✅
-- `diff`: check releases I've listened that other user hasn't
+- `d` or `diff user`: Check releases you've rated that another user hasn't. ✅
 
 roadmap:
 randomrating of the day (cronjob that triggers a random rating every 24h - configurable by guild and channel)

@@ -19,6 +19,7 @@ from core.constants import (
 from core.embeds import (
     EmbedBuilder,
     comparison_embed,
+    diff_embed,
     glazers_haters_rank_view,
     paginate_embeds,
     profile_embed,
@@ -423,6 +424,69 @@ class UsersCog(commands.Cog):
             return
 
         view, pages = paginate_embeds(ratings, comparison_embed, per_page=5)
+
+        await ctx.send(embed=pages[0], view=view)
+
+    @commands.hybrid_command(
+        name="diff",
+        aliases=["d"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    @app_commands.describe(user="User to compare against")
+    async def diff(
+        self,
+        ctx: commands.Context,
+        user: discord.User | discord.Member | None = None,
+    ) -> None:
+        """Show releases you've rated that another user hasn't."""
+        other_user_id = None
+
+        if user is not None:
+            other_user_id = str(user.id)
+
+        elif ctx.message:
+            content = ctx.message.content
+            parts = content.split(maxsplit=1)
+            if len(parts) == 2:
+                arg = parts[1].strip()
+                match = re.match(r"<@!?(\d+)>", arg)
+                if match:
+                    other_user_id = match.group(1)
+                elif arg.isdigit():
+                    other_user_id = arg
+
+        if not other_user_id:
+            await ctx.send("Please mention a user or provide their user ID.")
+
+            return
+
+        user_id = str(ctx.author.id)
+
+        other_ratings = Rating.select(Rating.album).where(Rating.user == other_user_id)
+
+        diff_ratings = (
+            Rating.select(
+                Rating.album, Rating.score.alias("score1"), Album.title, Album.artist
+            )
+            .join(Album, on=(Rating.album == Album.id))
+            .where(Rating.user == user_id)
+            .where(Rating.album.not_in(other_ratings))
+            .order_by(Rating.score.desc())
+        )
+
+        ratings = list(diff_ratings.dicts())
+
+        if not ratings:
+            await ctx.send("💔 No unique ratings found.")
+
+            return
+
+        view, pages = paginate_embeds(
+            [{"user1": user_id, "user2": other_user_id, **r} for r in ratings],
+            diff_embed,
+            per_page=10,
+        )
 
         await ctx.send(embed=pages[0], view=view)
 
