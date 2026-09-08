@@ -115,3 +115,22 @@ Useful for finding albums to recommend or spotting gaps in someone's library.
      !diff 408671768002297856
      !d 999888777666555444
      `
+
+### /dailyrandomrating (`/drr`)
+
+Configure or disable the daily random rating feature for this guild.
+
+The bot will pick a random rating from the database and post it to the configured channel every day at noon UTC.
+
+**Options:**
+
+- **Channel** (optional) – The text channel to post to. Defaults to the current channel.
+- **Disable** (optional) – Set to `true` to disable daily random ratings for this guild.
+- **Hour** (optional) – Hour of the day in UTC (0-23) to post the random rating.
+
+!!! example "Usage Examples"
+`     /dailyrandomrating
+     /dailyrandomrating #random-ratings
+     /dailyrandomrating disable=true
+     /dailyrandomrating hour=14
+     `

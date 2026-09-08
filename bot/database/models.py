@@ -57,6 +57,13 @@ class UserInfo(BaseModel):
     lastfm_username = TextField(null=True)
 
 
+class GuildConfig(BaseModel):
+    guild_id = TextField(unique=True)
+    channel_id = TextField(null=True)
+    daily_random_rating_enabled = IntegerField(default=0)
+    daily_random_rating_hour = IntegerField(default=12)
+
+
 class RatingHistory(BaseModel):
     album = ForeignKeyField(Album, backref="rating_histories")
     rating_score = FloatField()

@@ -9,6 +9,7 @@ from database import (
     Album,
     AlbumIndex,
     Artist,
+    GuildConfig,
     Influence,
     Rating,
     RatingHistory,
@@ -42,6 +43,7 @@ initial_extensions = [
     "cogs.releases",
     "cogs.tracks",
     "cogs.users",
+    "cogs.daily_rating",
 ]
 
 
@@ -74,7 +76,16 @@ async def main() -> None:
         # Create the database tables
         with db:
             db.create_tables(
-                [Album, AlbumIndex, Artist, Influence, Rating, RatingHistory, UserInfo]
+                [
+                    Album,
+                    AlbumIndex,
+                    Artist,
+                    GuildConfig,
+                    Influence,
+                    Rating,
+                    RatingHistory,
+                    UserInfo,
+                ]
             )
             pending = get_pending_migrations()
 

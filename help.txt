@@ -43,9 +43,9 @@ These are the Sonata bible commands:
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
 - `c` or `compare user`: Compare ratings between users. ✅
 - `d` or `diff user`: Check releases you've rated that another user hasn't. ✅
+- `drr` or `dailyrandomrating [channel] [disable]`: Configure or disable daily random rating for this guild. ✅
 
 roadmap:
-randomrating of the day (cronjob that triggers a random rating every 24h - configurable by guild and channel)
 !newreleases cron job (configurable by guild and channel)
 implement graphs for rating history
 more user stats (like rym page)
