@@ -81,5 +81,21 @@ View a leaderboard of server members ranked by the number of ratings they have s
 
 !!! example "Usage Examples"
 `     !ratingsrank
-    !rr
-    `
+     !rr
+     `
+
+### !compare (`!c`)
+
+Compare your ratings with another user.
+
+Shows only releases where your ratings differ, with ⬆️/⬇️ indicators showing which user rated higher. Results are paginated for easier browsing.
+
+**Options:**
+
+- **User** – Mention a user or provide their Discord user ID.
+
+!!! example "Usage Examples"
+`     !compare @user
+     !compare 408671768002297856
+     !c 999888777666555444
+     `

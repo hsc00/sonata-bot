@@ -535,16 +535,17 @@ def lyrics_embed(
     return EmbedBuilder().with_title(embed_title).with_description(description).build()
 
 
-def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:
+def comparison_embed(ratings: list, start: int = 1) -> discord.Embed:  # noqa: ARG001
     """Create an embed comparing two users' ratings."""
     description = f"<@{ratings[0]['user1']}> vs <@{ratings[0]['user2']}>\n\n"
 
-    for row in ratings[start : start + 10]:
+    for row in ratings:
         user1_score = row["score1"] / 2
         user2_score = row["score2"] / 2
+        emoji = "⬆️" if user2_score > user1_score else "⬇️"
         description += (
             f"**{row['artist']}** - *{row['title']}*\n"
-            f"{user1_score:.1f} ⭐ | {user2_score:.1f} ⭐ ({user1_score - user2_score:.1f} ⭐)\n\n"
+            f"{user1_score:.1f} ⭐ | {user2_score:.1f} ⭐ {emoji}\n\n"
         )
 
     return (

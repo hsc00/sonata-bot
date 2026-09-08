@@ -41,7 +41,7 @@ These are the Sonata bible commands:
 - `rh` or `ratingshaters`: Checks the ratings haters rank. ✅
 - `aoty (year) (user)`: Checks the highest rated releases from a year. ✅
 - `laoty (year) (user)`: Checks the lowest rated releases from a year. ✅
-- `compare`: compare ratings between users
+- `c` or `compare user`: Compare ratings between users. ✅
 - `diff`: check releases I've listened that other user hasn't
 
 roadmap:

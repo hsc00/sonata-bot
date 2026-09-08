@@ -16,7 +16,6 @@ from core.constants import (
     RATING_SCORE_MAX,
     RATING_SCORE_MIN,
 )
-from core.decorators import disabled
 from core.embeds import (
     EmbedBuilder,
     comparison_embed,
@@ -356,22 +355,40 @@ class UsersCog(commands.Cog):
 
         await ctx.send(embed=pages[0], view=view)
 
-    @disabled()
-    @commands.command(aliases=["c"])
-    async def compare(self, ctx: commands.Context, *, query: str | None = None) -> None:
+    @commands.hybrid_command(
+        name="compare",
+        aliases=["c"],
+        with_app_command=True,
+    )
+    @app_commands.allowed_contexts(guilds=True, dms=True, private_channels=True)
+    @app_commands.describe(user="User to compare ratings with")
+    async def compare(
+        self,
+        ctx: commands.Context,
+        user: discord.User | discord.Member | None = None,
+    ) -> None:
         """Compare your ratings with another user."""
-        if not query:
+        other_user_id = None
+
+        if user is not None:
+            other_user_id = str(user.id)
+
+        elif ctx.message:
+            content = ctx.message.content
+            parts = content.split(maxsplit=1)
+            if len(parts) == 2:
+                arg = parts[1].strip()
+                match = re.match(r"<@!?(\d+)>", arg)
+                if match:
+                    other_user_id = match.group(1)
+                elif arg.isdigit():
+                    other_user_id = arg
+
+        if not other_user_id:
             raise InvalidUserMentionError
 
-        match = re.match(r"<@!?(\d+)>", query)
-
-        if not match:
-            raise InvalidUserMentionError(query)
-
         user_id = str(ctx.author.id)
-        other_user_id = match.group(1)
 
-        # Fetch ratings for albums in common between the two users
         r1 = Rating.alias()
         r2 = Rating.alias()
 
@@ -392,18 +409,22 @@ class UsersCog(commands.Cog):
                 (r1.user == user_id) & (r2.user == other_user_id),
             )
             .order_by(r1.score - r2.score)
-            .limit(100)
         )
 
-        if common_ratings.limit(1).first() is None:
+        ratings = [
+            row
+            for row in common_ratings.dicts()
+            if (row["score1"] - row["score2"]) != 0
+        ]
+
+        if not ratings:
             await ctx.send("💔 No ratings in common found.")
 
             return
 
-        # Compare ratings and create an embed
-        embed = comparison_embed(list(common_ratings.dicts()))
+        view, pages = paginate_embeds(ratings, comparison_embed, per_page=5)
 
-        await ctx.send(embed=embed)
+        await ctx.send(embed=pages[0], view=view)
 
     @commands.hybrid_command(with_app_command=True)
     async def profile(
